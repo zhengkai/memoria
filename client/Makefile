@@ -8,4 +8,4 @@ pb:
 	./node_modules/protobufjs-cli/bin/pbts -o src/pb/pb.d.ts src/pb/pb.js
 
 build:
-	./node_modules/vite/bin/vite.js build --outDir dist --base /ruin-editor/
+	./node_modules/vite/bin/vite.js build --outDir dist

@@ -1,0 +1,5 @@
+@use 'config';
+
+textarea {
+	font-family: config.$font-mono;
+}
