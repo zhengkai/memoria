@@ -5,4 +5,5 @@ package pb;
 message Demo {
 	uint32 ID = 1;
 	string name = 2;
+	Foo foo = 3;
 }

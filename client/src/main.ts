@@ -2,6 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './style/index.scss'
 import { Edit } from './edit'
 
+import protobuf from "protobufjs";
+import Long from "long";
+
+protobuf.util.Long = Long;
+protobuf.configure();
+
 (() => {
 
 	const el = document.querySelector('body > main > section') as HTMLElement;

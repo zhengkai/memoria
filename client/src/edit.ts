@@ -1,5 +1,7 @@
 import tpl from './tpl/edit.html?raw'
 
+import { pb } from './pb';
+
 export class Edit {
 
 	id: number;
@@ -16,6 +18,9 @@ export class Edit {
 		} else {
 			this.genHTML();
 		}
+
+		const o = pb.Demo.fromObject({});
+		console.log('debug', o.name, o.name.length);
 	}
 
 	async getData() {
