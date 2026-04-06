@@ -1,0 +1,47 @@
+name: Build Client Dist
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: build-client-dist
+  cancel-in-progress: true
+
+jobs:
+  build-client-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        run: |
+          git clone --depth 1 "https://github.com/zhengkai/memoria.git" main && \
+          git clone --branch client-dist "https://x-access-token:${{ secrets.MEMORIA_TOKEN }}@github.com/zhengkai/memoria.git" dist
+
+      - name: npm
+        run: |
+          cd main/client && npm i
+
+      - name: protobuf
+        run: |
+          cd main/proto && make client
+
+      - name: build
+        run: |
+          cd main/client && make build
+
+      - name: sync files
+        run: |
+          rsync -av --delete --exclude='.git/' main/client/dist/ dist/
+
+      - name: commit
+        run: |
+          cd dist && \
+          git config user.name "GitHub Actions" && \
+          git config user.email "memoria.bot@soulogic.com" && \
+          git commit --all --message="Update WASM build" || echo "No changes to commit"
+
+      - name: push
+        run: |
+          cd dist && \
+          git push --force
