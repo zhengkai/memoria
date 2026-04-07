@@ -5,6 +5,7 @@ go 1.26.0
 require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/prometheus/client_golang v1.23.2
+	github.com/zhengkai/coral/v2 v2.0.5
 	github.com/zhengkai/life-go v1.0.3
 	github.com/zhengkai/zog v1.0.3
 	go.uber.org/automaxprocs v1.6.0

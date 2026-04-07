@@ -1,5 +1,9 @@
 @use 'config';
 
+body {
+	background-color: #ddd;
+}
+
 textarea {
 	font-family: config.$font-mono;
 }

@@ -1,3 +1,4 @@
+// Package db MySQL
 package db
 
 import (

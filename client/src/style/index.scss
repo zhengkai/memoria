@@ -1,8 +1,5 @@
+@forward "bootstrap/dist/css/bootstrap.min.css";
+
 @use "layout";
 @use 'global';
-
-@import "bootstrap/dist/css/bootstrap.min.css";
-
-body {
-	background-color: #ddd;
-}
+@use 'item';

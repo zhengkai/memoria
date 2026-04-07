@@ -30,13 +30,14 @@ body {
 			padding: 0 0 0 200px;
 			background-color: rgba(100, 150, 200, 0.5);
 			height: config.$layout-header-height;
+			line-height: config.$layout-header-height;
 		}
 		section {
 			padding: 0 16px 0 200px;
-			height: 200vh;
 		}
 		footer {
 			height: config.$layout-footer-height;
+			line-height: config.$layout-header-height;
 			padding: 0 0 0 200px;
 			background-color: rgba(100, 150, 200, 0.5);
 			margin-top: auto;

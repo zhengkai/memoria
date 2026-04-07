@@ -15,7 +15,7 @@ class API {
 			buf.byteOffset + buf.byteLength
 		) as ArrayBuffer;
 
-		const res = await fetch(path, {
+		const res = await fetch(`${path}?${req?.one}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/protobuf'
@@ -37,6 +37,14 @@ class API {
 		});
 		const rsp = await this.gateway(req);
 		return rsp?.itemEdit || null;
+	}
+
+	async itemListRecent() {
+		const req = pb.APIReq.fromObject({
+			itemListRecent: 100,
+		});
+		const rsp = await this.gateway(req);
+		return rsp?.itemListRecent || null;
 	}
 }
 

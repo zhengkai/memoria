@@ -1,0 +1,10 @@
+.item-list {
+	> div {
+		cursor: default;
+		padding: 16px 0;
+		div.content {
+			max-height: 48px;
+			overflow: hidden;
+		}
+	}
+}

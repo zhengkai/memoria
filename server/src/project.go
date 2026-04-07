@@ -1,7 +1,9 @@
+// Package project
 package project
 
 import (
 	"project/build"
+	"project/db"
 	"project/web"
 	"project/zj"
 )
@@ -12,7 +14,7 @@ func run() {
 
 	zj.Init()
 
-	// db.WaitConn()
+	db.WaitConn()
 
 	go web.Server()
 }
