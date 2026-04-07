@@ -1,0 +1,11 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+message Format {
+	enum Enum {
+		Plain = 0;
+		Markdown = 1;
+		AsciiDoc = 2;
+	}
+}

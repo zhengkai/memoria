@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+import "item.proto";
+
+message APIError {
+	uint32 code = 1;
+	string message = 2;
+}
+
+message APIReq {
+	oneof one {
+		ItemEdit itemEdit = 100;
+	}
+}
+
+message APIRsp {
+	APIError error = 1;
+	oneof one {
+		bool itemEdit = 100;
+	}
+}

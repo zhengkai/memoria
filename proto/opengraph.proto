@@ -1,0 +1,16 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+message OpenGraph {
+	uint64 image = 1;
+	string description = 2;
+	repeated uint64 tag = 3;
+}
+
+message OpenGraphBook {
+	string title = 1;
+	string isbn = 2;
+	repeated string author = 3;
+	string release_date = 4;
+}

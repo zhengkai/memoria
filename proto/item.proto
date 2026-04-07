@@ -1,0 +1,53 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+import "revision.proto";
+import "opengraph.proto";
+
+message Item {
+	uint64 ID = 1;
+	ItemMeta meta = 2;
+	Revision content = 3;
+	OpenGraph og = 4;
+}
+
+message ItemLite {
+	uint64 ID = 1;
+	ItemMeta meta = 2;
+}
+
+message ItemMeta {
+	uint64 tsCreate = 1;
+	uint64 tsRevise = 2;
+	uint64 tsHide = 3;
+	uint64 root = 4;
+	string title = 5;
+	bool original = 6;
+	bool trivial = 7;
+	string tweetID = 8;
+}
+
+message ItemDB {
+	uint64 ID = 1;
+	ItemMeta meta = 2;
+	uint64 revisionID = 3;
+	uint64 ogID = 4;
+}
+
+message ItemEdit {
+	uint64 ID = 1;
+	Revision content = 2;
+	string title = 3;
+	uint64 root = 4;
+	uint64 tsCreate = 5;
+	bool hide = 6;
+	bool original = 7;
+	bool trivial = 8;
+	OpenGraph og = 9;
+	string tweetID = 10;
+}
+
+message ItemList {
+	repeated Item list = 1;
+}

@@ -1,6 +1,9 @@
+// Package web
 package web
 
 import (
+	"project/api"
+
 	"net/http"
 	"project/config"
 	"project/metrics"
@@ -8,11 +11,12 @@ import (
 	"time"
 )
 
-// Server ...
 func Server() {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc(`/api`, apiHandle)
+
+	mux.Handle(`/api`, api.Handler)
+
 	mux.HandleFunc(`/`, failbackHandle)
 
 	s := &http.Server{
@@ -30,11 +34,6 @@ func Server() {
 		zj.W(err)
 		return
 	}
-}
-
-func apiHandle(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"ok":true}`))
 }
 
 func failbackHandle(w http.ResponseWriter, r *http.Request) {

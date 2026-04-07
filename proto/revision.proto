@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+import "format.proto";
+
+message Revision {
+	Format.Enum format = 1;
+	string raw = 2;
+}
+
+message RevisionDB {
+	uint64 ID = 1;
+	bytes hash = 2;
+}

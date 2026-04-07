@@ -1,6 +1,6 @@
 import tpl from './tpl/edit.html?raw'
-
 import { pb } from './pb';
+import { api } from './api';
 
 export class Edit {
 
@@ -18,9 +18,6 @@ export class Edit {
 		} else {
 			this.genHTML();
 		}
-
-		const o = pb.Demo.fromObject({});
-		console.log('debug', o.name, o.name.length);
 	}
 
 	async getData() {
@@ -39,11 +36,27 @@ export class Edit {
 			this.submit(form);
 		});
 
-		form.querySelector('textarea')!.value = data;
+		form.querySelector<HTMLTextAreaElement>('textarea[name=content]')!.value = data;
+
+		form.querySelector<HTMLTextAreaElement>('textarea[name=content]')!.value = '' + (new Date());
+
 		form.querySelector<HTMLInputElement>('input[value="asciidoc"]')!.checked = true;
 	}
 
-	submit(form: HTMLFormElement) {
-		console.log('debug', form);
+	async submit(form: HTMLFormElement) {
+
+		const fd = new FormData(form);
+
+		const o = pb.ItemEdit.fromObject({
+			title: fd.get('content'),
+		});
+		console.log('debug', o);
+
+		for (const [key, value] of new FormData(form)) {
+			console.log('debug form', key, value);
+		}
+
+		const re = await api.itemEdit(o);
+		console.log('debug re', re);
 	}
 }
