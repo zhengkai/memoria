@@ -11,13 +11,13 @@ message APIError {
 
 message APIReq {
 	oneof one {
-		ItemEdit itemEdit = 100;
+		ItemEdit itemEdit = 10;
 	}
 }
 
 message APIRsp {
 	APIError error = 1;
 	oneof one {
-		bool itemEdit = 100;
+		bool itemEdit = 10;
 	}
 }
