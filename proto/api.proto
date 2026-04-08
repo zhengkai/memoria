@@ -11,7 +11,8 @@ message APIError {
 
 message APIReq {
 	oneof one {
-		ItemEdit itemEdit = 10;
+		uint32 itemGet = 10;
+		ItemEdit itemSet = 11;
 		uint32 itemListRecent = 20;
 	}
 }
@@ -19,7 +20,8 @@ message APIReq {
 message APIRsp {
 	APIError error = 1;
 	oneof one {
-		bool itemEdit = 10;
+		Item itemGet = 10;
+		bool itemSet = 11;
 		ItemList itemListRecent = 20;
 	}
 }

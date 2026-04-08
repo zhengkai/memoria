@@ -6,8 +6,18 @@ import (
 	"project/pb"
 )
 
-func itemEdit(_ *pb.ItemEdit) (rsp bool, ae *pb.APIError) {
+func itemSet(_ *pb.ItemEdit) (bool, *pb.APIError) {
 	return true, nil
+}
+
+func itemGet(id uint32) (*pb.Item, *pb.APIError) {
+
+	it, err := item.Get(uint64(id))
+	if err != nil {
+		return nil, ErrUnknown
+	}
+
+	return it, nil
 }
 
 func itemListRecent(n uint32) (*pb.ItemList, *pb.APIError) {

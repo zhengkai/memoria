@@ -6,6 +6,7 @@ export class Edit {
 
 	id: number;
 	root: HTMLElement;
+	item = pb.Item.create();
 
 	constructor(url: URL, root: HTMLElement) {
 
@@ -21,10 +22,17 @@ export class Edit {
 	}
 
 	async getData() {
+
+		const it = await api.itemGet(this.id);
+		if (!it) {
+			return;
+		}
+		this.item = pb.Item.create(it);
+
 		this.genHTML();
 	}
 
-	genHTML(data = '') {
+	genHTML() {
 		const r = this.root;
 
 		r.innerHTML = tpl;
@@ -36,11 +44,24 @@ export class Edit {
 			this.submit(form);
 		});
 
-		form.querySelector<HTMLTextAreaElement>('textarea[name=content]')!.value = data;
+		const it = this.item;
+		var sid = 'New'
+		if (it.ID > 0) {
+			sid = '' + it.ID;
+		}
+		form.querySelector<HTMLSpanElement>(
+			'span.id'
+		)!.innerText = sid;
 
-		form.querySelector<HTMLTextAreaElement>('textarea[name=content]')!.value = '' + (new Date());
+		const content = pb.Revision.create(it.content ?? undefined);
 
-		form.querySelector<HTMLInputElement>('input[value="asciidoc"]')!.checked = true;
+		form.querySelector<HTMLInputElement>(
+			`input[name="format"][value="${content.format}"]`
+		)!.checked = true;
+
+		form.querySelector<HTMLTextAreaElement>(
+			'textarea[name=content]'
+		)!.value = content.raw;
 	}
 
 	async submit(form: HTMLFormElement) {
@@ -48,15 +69,19 @@ export class Edit {
 		const fd = new FormData(form);
 
 		const o = pb.ItemEdit.fromObject({
-			title: fd.get('content'),
+			title: fd.get('title'),
+			content: pb.Revision.fromObject({
+				format: Number(fd.get('format')),
+				raw: fd.get('content'),
+			}),
 		});
-		console.log('debug', o);
+		console.log('debug', o, fd.get('format'));
 
 		for (const [key, value] of new FormData(form)) {
 			console.log('debug form', key, value);
 		}
 
-		const re = await api.itemEdit(o);
+		const re = await api.itemSet(o);
 		console.log('debug re', re);
 	}
 }

@@ -4,9 +4,13 @@ import "project/pb"
 
 func (gw *Gateway) dispatch(req *pb.APIReq) (rsp pb.IfAPIRspOne, ae *pb.APIError) {
 	switch r := req.One.(type) {
-	case *pb.APIReq_ItemEdit:
-		x := &pb.APIRsp_ItemEdit{}
-		x.ItemEdit, ae = itemEdit(r.ItemEdit)
+	case *pb.APIReq_ItemGet:
+		x := &pb.APIRsp_ItemGet{}
+		x.ItemGet, ae = itemGet(r.ItemGet)
+		rsp = x
+	case *pb.APIReq_ItemSet:
+		x := &pb.APIRsp_ItemSet{}
+		x.ItemSet, ae = itemSet(r.ItemSet)
 		rsp = x
 	case *pb.APIReq_ItemListRecent:
 		x := &pb.APIRsp_ItemListRecent{}

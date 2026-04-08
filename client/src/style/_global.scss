@@ -2,8 +2,18 @@
 
 body {
 	background-color: #ddd;
+	overflow-y: scroll;
 }
 
 textarea {
 	font-family: config.$font-mono;
+}
+
+form {
+	div.row {
+		margin-bottom: 16px;
+	}
+	label.form-check-label {
+		margin-right: 12px;
+	}
 }

@@ -38,7 +38,7 @@ export class List {
 			const d = document.createElement('div');
 			const ts = it.meta!.tsCreate! as unknown as Long;
 			d.innerHTML = `<div>
-				<div>${it.ID}</div>
+				<div><a href="?action=edit&id=${it.ID}" target="_blank">${it.ID}</a></div>
 				<div class="content">${it.content!.raw}</div>
 				<div>${formatDateTime(ts)}</div>
 			</div>`;

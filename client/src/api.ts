@@ -31,12 +31,20 @@ class API {
 		return pb.APIRsp.decode(re);
 	}
 
-	async itemEdit(e: pb.ItemEdit) {
+	async itemGet(id: number) {
 		const req = pb.APIReq.fromObject({
-			itemEdit: e,
+			itemGet: id,
 		});
 		const rsp = await this.gateway(req);
-		return rsp?.itemEdit || null;
+		return rsp?.itemGet || null;
+	}
+
+	async itemSet(e: pb.ItemEdit) {
+		const req = pb.APIReq.fromObject({
+			itemSet: e,
+		});
+		const rsp = await this.gateway(req);
+		return rsp?.itemSet || null;
 	}
 
 	async itemListRecent() {
