@@ -53,6 +53,12 @@ export class Edit {
 			'span.id'
 		)!.innerText = sid;
 
+		const meta = pb.ItemMeta.create(it.meta ?? undefined);
+
+		form.querySelector<HTMLTextAreaElement>(
+			'input[name=title]'
+		)!.value = meta.title;
+
 		const content = pb.Revision.create(it.content ?? undefined);
 
 		form.querySelector<HTMLInputElement>(

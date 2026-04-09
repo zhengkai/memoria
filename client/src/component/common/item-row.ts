@@ -1,0 +1,24 @@
+import { pb } from '../../pb';
+import { formatDateTime } from '../../util';
+
+export const tplItemList = (li: pb.IItem[], div: HTMLDivElement | null) => {
+	if (!div) {
+		return;
+	}
+	div.textContent = '';
+	for (const it of li) {
+		div.appendChild(tplItemRow(it));
+	}
+};
+
+export const tplItemRow = (it: pb.IItem): HTMLDivElement => {
+	const d = document.createElement('div');
+	const datetime = formatDateTime(it.meta!.tsCreate! as unknown as Long);
+	const url = `?action=edit&id=${it.ID}`;
+	d.innerHTML = `<div>
+		<div><a href="${url}" target="_blank">${it.ID}</a></div>
+		<div class="content">${it.content!.raw}</div>
+		<div>${datetime}</div>
+	</div>`;
+	return d;
+};

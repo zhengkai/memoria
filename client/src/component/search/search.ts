@@ -1,6 +1,7 @@
 import tpl from './search.html?raw'
 import { pb } from '../../pb';
 import { api } from '../../api';
+import { tplItemList } from '../common/item-row';
 
 export class Search {
 
@@ -39,21 +40,40 @@ export class Search {
 		});
 	}
 
+	buildData(fd: FormData) {
+		const d: { [k: string]: any } = {};
+		for (const key of ['og', 'title', 'original', 'trivial']) {
+			const v = fd.get(key);
+			let r = pb.ItemSearch.Cmd.NONE;
+			switch (v) {
+				case '1':
+					r = pb.ItemSearch.Cmd.HAVE;
+					break;
+				case '2':
+					r = pb.ItemSearch.Cmd.NOT_HAVE;
+					break;
+			}
+			d[key] = r;
+
+		}
+		return d;
+	}
+
 	async submit(form: HTMLFormElement) {
 
 		const fd = new FormData(form);
-
-		const o = pb.ItemSearch.fromObject({
-			og: pb.ItemSearch.Cmd.HAVE,
-			title: pb.ItemSearch.Cmd.HAVE,
-		});
-		console.log('debug', o, fd.get('og'));
+		const d = this.buildData(fd);
+		d['keyword'] = fd.get('keyword')?.toString() || '';
 
 		for (const [key, value] of new FormData(form)) {
 			console.log('debug form', key, value);
 		}
 
-		const re = await api.itemSearch(o);
-		console.log('debug re', re);
+		const re = await api.itemSearch(pb.ItemSearch.fromObject(d));
+		if (!re?.list?.length) {
+			return;
+		}
+
+		tplItemList(re.list, this.root.querySelector('div.item-list'));
 	}
 }

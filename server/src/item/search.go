@@ -4,13 +4,14 @@ import (
 	"project/db"
 	"project/pb"
 	"project/zj"
+	"strings"
 )
 
 func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 
 	zj.J(s)
 
-	target := 100
+	target := 20
 
 	var re []*pb.Item
 	var li []uint64
@@ -46,6 +47,9 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 			if s.Trivial != pb.ItemSearch_NONE && (s.Trivial == pb.ItemSearch_HAVE) != it.GetMeta().GetTrivial() {
 				continue
 			}
+			if s.Keyword != `` && !strings.Contains(it.Content.Raw, s.Keyword) && !strings.Contains(it.GetMeta().GetTitle(), s.Keyword) {
+				continue
+			}
 			re = append(re, it)
 			if len(re) >= limit {
 				break
@@ -55,10 +59,6 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 			break
 		}
 		if len(li) < limit {
-			break
-		}
-		// TODO
-		if len(re) > 0 {
 			break
 		}
 		if searchID == 0 || searchID > id {

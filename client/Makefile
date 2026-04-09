@@ -9,3 +9,6 @@ pb:
 
 build:
 	./node_modules/vite/bin/vite.js build --outDir dist
+
+dist:
+	git clone --branch client-dist git@github.com:zhengkai/memoria.git dist-git
