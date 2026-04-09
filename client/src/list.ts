@@ -11,10 +11,8 @@ export class List {
 
 	constructor(_: URL, root: HTMLElement) {
 
+		root.innerHTML = tpl;
 		this.root = root;
-
-		const r = this.root;
-		r.innerHTML = tpl;
 
 		this.getData();
 	}

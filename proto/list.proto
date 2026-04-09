@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "/pb";
+package pb;
+
+message ItemSearch {
+	enum Cmd {
+		NONE = 0;
+		HAVE = 1;
+		NOT_HAVE = 2;
+	}
+	uint64 id = 1;
+	Cmd og = 2;
+	Cmd title = 3;
+	Cmd original = 4;
+	Cmd trivial = 5;
+	string keyword = 6;
+}

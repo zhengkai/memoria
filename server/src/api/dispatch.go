@@ -16,6 +16,10 @@ func (gw *Gateway) dispatch(req *pb.APIReq) (rsp pb.IfAPIRspOne, ae *pb.APIError
 		x := &pb.APIRsp_ItemListRecent{}
 		x.ItemListRecent, ae = itemListRecent(r.ItemListRecent)
 		rsp = x
+	case *pb.APIReq_ItemSearch:
+		x := &pb.APIRsp_ItemSearch{}
+		x.ItemSearch, ae = itemSearch(r.ItemSearch)
+		rsp = x
 	}
 	return
 }

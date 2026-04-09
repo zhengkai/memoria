@@ -3,6 +3,7 @@ option go_package = "/pb";
 package pb;
 
 import "item.proto";
+import "list.proto";
 
 message APIError {
 	uint32 code = 1;
@@ -14,6 +15,7 @@ message APIReq {
 		uint32 itemGet = 10;
 		ItemEdit itemSet = 11;
 		uint32 itemListRecent = 20;
+		ItemSearch itemSearch = 21;
 	}
 }
 
@@ -23,5 +25,6 @@ message APIRsp {
 		Item itemGet = 10;
 		bool itemSet = 11;
 		ItemList itemListRecent = 20;
+		ItemList itemSearch = 21;
 	}
 }

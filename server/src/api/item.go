@@ -22,7 +22,7 @@ func itemGet(id uint32) (*pb.Item, *pb.APIError) {
 
 func itemListRecent(n uint32) (*pb.ItemList, *pb.APIError) {
 
-	li, err := db.ListItem(int(n))
+	li, err := db.ListItem(0, int(n), true)
 	if err != nil {
 		return nil, ErrDBFail
 	}
@@ -40,4 +40,12 @@ func itemListRecent(n uint32) (*pb.ItemList, *pb.APIError) {
 	}
 
 	return re, nil
+}
+
+func itemSearch(s *pb.ItemSearch) (*pb.ItemList, *pb.APIError) {
+	li, err := item.Search(s)
+	if err != nil {
+		return nil, ErrUnknown
+	}
+	return &pb.ItemList{List: li}, nil
 }

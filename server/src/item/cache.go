@@ -38,10 +38,16 @@ func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 		return nil, err
 	}
 
+	og, err := ogPool.Get(d.OgID)
+	if err != nil {
+		return nil, err
+	}
+
 	it := &pb.Item{
 		ID:      d.ID,
 		Meta:    d.Meta,
 		Content: r,
+		Og:      og,
 	}
 
 	return it, nil

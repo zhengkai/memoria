@@ -15,7 +15,6 @@ body {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
-		background-color: rgba(0, 100, 200, 0.5);
 	}
 
 	> main {
@@ -33,7 +32,7 @@ body {
 			line-height: config.$layout-header-height;
 		}
 		section {
-			padding: 0 16px 0 200px;
+			padding: 16px 16px 16px 200px;
 		}
 		footer {
 			height: config.$layout-footer-height;

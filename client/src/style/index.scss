@@ -1,5 +1,6 @@
 @forward "bootstrap/dist/css/bootstrap.min.css";
 
-@use "layout";
 @use 'global';
+@use "layout";
+@use "sidebar";
 @use 'item';
