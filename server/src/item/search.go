@@ -26,8 +26,6 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 			return nil, err
 		}
 
-		zj.J(`li`, searchID, len(li))
-
 		var id uint64
 		for _, id = range li {
 			it, err = Get(id)
@@ -65,7 +63,6 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 			searchID = id
 		}
 	}
-	zj.J(`re`, len(re))
 
 	return re, nil
 }

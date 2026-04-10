@@ -23,7 +23,7 @@ message APIRsp {
 	APIError error = 1;
 	oneof one {
 		Item itemGet = 10;
-		bool itemSet = 11;
+		uint64 itemSet = 11;
 		ItemList itemListRecent = 20;
 		ItemList itemSearch = 21;
 	}

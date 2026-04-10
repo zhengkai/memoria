@@ -4,10 +4,16 @@ import (
 	"project/db"
 	"project/item"
 	"project/pb"
+	"project/zj"
 )
 
-func itemSet(_ *pb.ItemEdit) (bool, *pb.APIError) {
-	return true, nil
+func itemSet(ie *pb.ItemEdit) (uint64, *pb.APIError) {
+	err := item.Edit(ie)
+	if err != nil {
+		zj.W(`item edit fail`, ie.ID, err.Error())
+		return 0, ErrUnknown
+	}
+	return ie.ID, nil
 }
 
 func itemGet(id uint32) (*pb.Item, *pb.APIError) {
