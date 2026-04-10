@@ -1,9 +1,9 @@
 package item
 
 import (
-	"fmt"
 	"project/db"
 	"project/pb"
+	"project/zj"
 	"time"
 )
 
@@ -11,7 +11,7 @@ func Edit(ie *pb.ItemEdit) error {
 	if ie.ID == 0 {
 		return newItem(ie)
 	}
-	fmt.Println(`test`)
+	zj.J("item.Edit", ie)
 	return nil
 }
 

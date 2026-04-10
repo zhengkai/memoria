@@ -54,14 +54,35 @@ export class Edit {
 			'span.id'
 		)!.innerText = sid;
 
-		const meta = pb.ItemMeta.create(it.meta ?? undefined);
+		this.formMeta(pb.ItemMeta.create(it.meta!), form);
 
-		form.querySelector<HTMLTextAreaElement>(
+		this.formContent(pb.Revision.create(it.content!), form);
+
+		if (it.og) {
+			this.formOg(pb.OpenGraph.create(it.og), form);
+		}
+	}
+
+	formMeta(meta: pb.ItemMeta, form: HTMLFormElement) {
+
+		form.querySelector<HTMLInputElement>(
 			'input[name=title]'
 		)!.value = meta.title;
 
-		const content = pb.Revision.create(it.content ?? undefined);
+		form.querySelector<HTMLInputElement>(
+			'input[name=original]'
+		)!.checked = meta.original;
 
+		form.querySelector<HTMLInputElement>(
+			'input[name=trivial]'
+		)!.checked = meta.trivial;
+
+		form.querySelector<HTMLInputElement>(
+			'input[name=hide]'
+		)!.checked = meta.tsHide > 0;
+	}
+
+	formContent(content: pb.Revision, form: HTMLFormElement) {
 		form.querySelector<HTMLInputElement>(
 			`input[name="format"][value="${content.format}"]`
 		)!.checked = true;
@@ -71,22 +92,61 @@ export class Edit {
 		)!.value = content.raw;
 	}
 
+	formOg(og: pb.OpenGraph, form: HTMLFormElement) {
+		form.querySelector<HTMLInputElement>(
+			`input[name="og-image"]`
+		)!.value = '' + og.image;
+
+		form.querySelector<HTMLInputElement>(
+			`input[name="og-description"]`
+		)!.value = og.description;
+
+		form.querySelector<HTMLInputElement>(
+			`input[name="og-tag"]`
+		)!.value = og.tag.join(',');
+	}
+
+	valTsCreate(fd: FormData) {
+		const dt = '' + fd.get('time-create');
+		if (!(dt?.length > 18)) {
+			return 0;
+		}
+
+		let ts = new Date(dt).getTime() || 0;
+		if (ts < 946656000000 || ts > (Date.now() + 10 * 86400 * 1000)) {
+			ts = 0;
+		}
+		return ts;
+	}
+
+	valOpenGraph(fd: FormData) {
+		let tag = ('' + fd.get('og-tag')).split(',').map(s => Number(s.trim())).filter(n => n > 0);
+		const og = pb.OpenGraph.fromObject({
+			image: fd.get('og-image') || 0,
+			description: '' + fd.get('og-description'),
+			tag,
+		});
+		return og;
+	}
+
 	async submit(form: HTMLFormElement) {
 
 		const fd = new FormData(form);
 
 		const o = pb.ItemEdit.fromObject({
+			ID: this.item.ID,
 			title: fd.get('title'),
 			content: pb.Revision.fromObject({
 				format: Number(fd.get('format')),
 				raw: fd.get('content'),
 			}),
+			root: fd.get('root') || 0,
+			tsCreate: this.valTsCreate(fd),
+			original: !!fd.get('original'),
+			trivial: !!fd.get('trivial'),
+			og: this.valOpenGraph(fd),
+			hide: !!fd.get('hide'),
 		});
-		console.log('debug', o, fd.get('format'));
-
-		for (const [key, value] of new FormData(form)) {
-			console.log('debug form', key, value);
-		}
 
 		const re = await api.itemSet(o);
 		console.log('debug re', re);
