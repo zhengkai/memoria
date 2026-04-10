@@ -1,5 +1,6 @@
 import tpl from './edit.html?raw'
 import { api, pb } from '../../inc';
+import { nav } from '../common/nav';
 
 export class Edit {
 
@@ -16,6 +17,7 @@ export class Edit {
 		if (this.id) {
 			this.getData();
 		} else {
+			nav('new');
 			this.genHTML();
 		}
 	}

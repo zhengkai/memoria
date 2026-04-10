@@ -5,11 +5,21 @@ body {
 	overflow-y: scroll;
 }
 
+body > aside,
+body > main > header,
+body > main > footer {
+	cursor: default;
+	user-select: none;
+}
+
 textarea {
 	font-family: config.$font-mono;
 }
 
 form {
+	h1, label {
+		user-select: none;
+	}
 	div.row {
 		margin-bottom: 16px;
 	}

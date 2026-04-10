@@ -1,6 +1,7 @@
 import tpl from './list.html?raw'
 import { api, pb } from '../../inc';
 import { tplItemList } from '../common/item-row';
+import { nav } from '../common/nav';
 
 export class List {
 
@@ -9,6 +10,8 @@ export class List {
 	root: HTMLElement;
 
 	constructor(_: URL, root: HTMLElement) {
+
+		nav('recent');
 
 		this.root = root;
 

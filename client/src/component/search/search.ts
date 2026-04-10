@@ -1,6 +1,7 @@
 import tpl from './search.html?raw'
 import { api, pb } from '../../inc';
 import { tplItemList } from '../common/item-row';
+import { nav } from '../common/nav';
 
 export class Search {
 
@@ -9,6 +10,8 @@ export class Search {
 	root: HTMLElement;
 
 	constructor(_: URL, root: HTMLElement) {
+
+		nav('search');
 
 		root.innerHTML = tpl;
 		this.root = root;
