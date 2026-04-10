@@ -1,7 +1,6 @@
-import tpl from './tpl/list.html?raw'
-import { pb } from './pb';
-import { api } from './api';
-import { tplItemList } from './component/common/item-row';
+import tpl from './list.html?raw'
+import { api, pb } from '../../inc';
+import { tplItemList } from '../common/item-row';
 
 export class List {
 

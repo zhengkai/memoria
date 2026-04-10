@@ -1,5 +1,4 @@
-import { pb } from '../../pb';
-import { formatDateTime } from '../../util';
+import { pb, util } from '../../inc';
 
 export const tplItemList = (li: pb.IItem[], div: HTMLDivElement | null) => {
 	if (!div) {
@@ -13,7 +12,7 @@ export const tplItemList = (li: pb.IItem[], div: HTMLDivElement | null) => {
 
 export const tplItemRow = (it: pb.IItem): HTMLDivElement => {
 	const d = document.createElement('div');
-	const datetime = formatDateTime(it.meta!.tsCreate! as unknown as Long);
+	const datetime = util.formatDateTime(it.meta!.tsCreate! as unknown as Long);
 	const url = `?action=edit&id=${it.ID}`;
 	d.innerHTML = `<div>
 		<div><a href="${url}" target="_blank">${it.ID}</a></div>

@@ -8,7 +8,7 @@ server:
 	go run ./gen/gen.go
 
 client:
-	$(PBJS) -t static-module -w es6 --es6 --force-number -o ../client/src/pb/pb.js *.proto
-	$(PBTS) -o ../client/src/pb/pb.d.ts ../client/src/pb/pb.js
+	$(PBJS) -t static-module -w es6 --es6 --force-number -o ../client/src/inc/pb/pb.js *.proto
+	$(PBTS) -o ../client/src/inc/pb/pb.d.ts ../client/src/inc/pb/pb.js
 
 all: server client

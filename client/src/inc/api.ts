@@ -1,4 +1,4 @@
-import { pb } from './pb';
+import { pb } from './pb/pb';
 
 const path = '/api';
 

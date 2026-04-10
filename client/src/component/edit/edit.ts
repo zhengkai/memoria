@@ -1,6 +1,5 @@
-import tpl from './tpl/edit.html?raw'
-import { pb } from './pb';
-import { api } from './api';
+import tpl from './edit.html?raw'
+import { api, pb } from '../../inc';
 
 export class Edit {
 

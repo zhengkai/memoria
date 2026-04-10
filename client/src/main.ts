@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './style/index.scss'
-import { Edit } from './edit'
-import { List } from './list'
+import { Edit } from './component/edit/edit'
+import { List } from './component/list/list'
 import { Search } from './component/search/search'
 
 import protobuf from "protobufjs";
@@ -26,7 +26,7 @@ protobuf.configure();
 			new Search(url, el);
 			break;
 		default:
-			new Edit(url, el);
+			new Search(url, el);
 			break;
 	}
 })()

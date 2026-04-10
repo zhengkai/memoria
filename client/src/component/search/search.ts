@@ -1,6 +1,5 @@
 import tpl from './search.html?raw'
-import { pb } from '../../pb';
-import { api } from '../../api';
+import { api, pb } from '../../inc';
 import { tplItemList } from '../common/item-row';
 
 export class Search {
@@ -14,26 +13,12 @@ export class Search {
 		root.innerHTML = tpl;
 		this.root = root;
 
-		this.genHTML();
-
-		// this.getData();
+		this.initHTML();
 	}
 
-	async getData() {
-		const re = await api.itemListRecent();
-		if (re?.list) {
-			this.data = re.list.map(it => pb.Item.create(it));
-			console.log('list', re.list);
-		}
-
-		this.genHTML();
-	}
-
-	genHTML() {
-
+	initHTML() {
 		const form = this.root.querySelector<HTMLFormElement>('form')!;
-		console.log(form);
-
+		this.submit(form);
 		form.addEventListener("submit", (event: SubmitEvent) => {
 			event.preventDefault();
 			this.submit(form);
@@ -41,7 +26,9 @@ export class Search {
 	}
 
 	buildData(fd: FormData) {
-		const d: { [k: string]: any } = {};
+		const d: { [k: string]: any } = {
+			keyword: fd.get('keyword')?.toString() || '',
+		};
 		for (const key of ['og', 'title', 'original', 'trivial']) {
 			const v = fd.get(key);
 			let r = pb.ItemSearch.Cmd.NONE;
@@ -56,20 +43,12 @@ export class Search {
 			d[key] = r;
 
 		}
-		return d;
+		return pb.ItemSearch.fromObject(d);
 	}
 
 	async submit(form: HTMLFormElement) {
 
-		const fd = new FormData(form);
-		const d = this.buildData(fd);
-		d['keyword'] = fd.get('keyword')?.toString() || '';
-
-		for (const [key, value] of new FormData(form)) {
-			console.log('debug form', key, value);
-		}
-
-		const re = await api.itemSearch(pb.ItemSearch.fromObject(d));
+		const re = await api.itemSearch(this.buildData(new FormData(form)));
 		if (!re?.list?.length) {
 			return;
 		}
