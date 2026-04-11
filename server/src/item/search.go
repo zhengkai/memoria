@@ -17,7 +17,7 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 	var li []uint64
 	var err error
 	var it *pb.Item
-	searchID := s.Id
+	searchID := s.GetId()
 	for {
 		limit := target - len(re)
 		li, err = db.ListItem(int(searchID), limit, true)
@@ -33,19 +33,19 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 				zj.W(err)
 				return nil, err
 			}
-			if s.Og != pb.ItemSearch_NONE && (s.Og == pb.ItemSearch_HAVE) != (it.Og != nil) {
+			if s.GetOg() != pb.ItemSearch_NONE && (s.GetOg() == pb.ItemSearch_HAVE) != (it.GetOg() != nil) {
 				continue
 			}
-			if s.Title != pb.ItemSearch_NONE && (s.Title == pb.ItemSearch_HAVE) != (it.GetMeta().GetTitle() != ``) {
+			if s.GetTitle() != pb.ItemSearch_NONE && (s.GetTitle() == pb.ItemSearch_HAVE) != (it.GetMeta().GetTitle() != ``) {
 				continue
 			}
-			if s.Original != pb.ItemSearch_NONE && (s.Original == pb.ItemSearch_HAVE) != it.GetMeta().GetOriginal() {
+			if s.GetOriginal() != pb.ItemSearch_NONE && (s.GetOriginal() == pb.ItemSearch_HAVE) != it.GetMeta().GetOriginal() {
 				continue
 			}
-			if s.Trivial != pb.ItemSearch_NONE && (s.Trivial == pb.ItemSearch_HAVE) != it.GetMeta().GetTrivial() {
+			if s.GetTrivial() != pb.ItemSearch_NONE && (s.GetTrivial() == pb.ItemSearch_HAVE) != it.GetMeta().GetTrivial() {
 				continue
 			}
-			if s.Keyword != `` && !strings.Contains(it.Content.Raw, s.Keyword) && !strings.Contains(it.GetMeta().GetTitle(), s.Keyword) {
+			if s.GetKeyword() != `` && !strings.Contains(it.GetContent().GetRaw(), s.GetKeyword()) && !strings.Contains(it.GetMeta().GetTitle(), s.GetKeyword()) {
 				continue
 			}
 			re = append(re, it)

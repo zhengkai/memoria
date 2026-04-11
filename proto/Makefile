@@ -1,14 +1,14 @@
 SHELL:=/bin/bash
 
-PBJS=../client/node_modules/protobufjs-cli/bin/pbjs
-PBTS=../client/node_modules/protobufjs-cli/bin/pbts
+PB_BIN=../client/node_modules/protobufjs-cli/bin
+PB_JS=../client/src/inc/pb
 
 server:
-	protoc --go_out=../server/src *.proto
+	/usr/local/bin/protoc --go_out=../server/src *.proto
 	go run ./gen/gen.go
 
 client:
-	$(PBJS) -t static-module -w es6 --es6 --force-number -o ../client/src/inc/pb/pb.js *.proto
-	$(PBTS) -o ../client/src/inc/pb/pb.d.ts ../client/src/inc/pb/pb.js
+	$(PB_BIN)/pbjs -t static-module -w es6 --es6 --force-number -o ${PB_JS}/pb.js *.proto
+	$(PB_BIN)/pbts -o ${PB_JS}/pb.d.ts ${PB_JS}/pb.js
 
 all: server client

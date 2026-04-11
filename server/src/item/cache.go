@@ -33,22 +33,22 @@ func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 		return nil, err
 	}
 
-	r, err := revisionPool.Get(d.RevisionID)
+	r, err := revisionPool.Get(d.GetRevisionId())
 	if err != nil {
 		return nil, err
 	}
 
-	og, err := ogPool.Get(d.OgID)
+	og, err := ogPool.Get(d.GetOgId())
 	if err != nil {
 		return nil, err
 	}
 
-	it := &pb.Item{
-		ID:      d.ID,
-		Meta:    d.Meta,
+	it := pb.Item_builder{
+		Id:      new(d.GetId()),
+		Meta:    d.GetMeta(),
 		Content: r,
 		Og:      og,
-	}
+	}.Build()
 
 	return it, nil
 }

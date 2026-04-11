@@ -2,6 +2,7 @@ package db
 
 import (
 	"project/pb"
+	"project/util"
 	"project/zj"
 
 	"google.golang.org/protobuf/proto"
@@ -11,8 +12,8 @@ func NewItem(item *pb.ItemDB) (id uint64, err error) {
 
 	defer zj.Watch(&err)
 
-	v := proto.Clone(item).(*pb.ItemDB)
-	v.ID = 0
+	v := util.ClonePB(item)
+	v.SetId(0)
 
 	ab, err := proto.Marshal(v)
 	if err != nil {
@@ -37,10 +38,10 @@ func SaveItem(item *pb.ItemDB) (err error) {
 
 	defer zj.Watch(&err)
 
-	id := item.ID
+	id := item.GetId()
 
-	v := proto.Clone(item).(*pb.ItemDB)
-	v.ID = 0
+	v := util.ClonePB(item)
+	v.SetId(0)
 
 	ab, err := proto.Marshal(v)
 	if err != nil {
@@ -76,7 +77,6 @@ func LoadItem(id uint64) (item *pb.ItemDB, err error) {
 		return
 	}
 
-	item.ID = id
-
+	item.SetId(id)
 	return
 }

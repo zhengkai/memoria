@@ -53,15 +53,7 @@ func (gw *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rsp, ae := gw.dispatch(req)
-	re := &pb.APIRsp{}
-	if ae != nil {
-		re.Error = ae
-	} else {
-		re.One = rsp
-	}
-
-	gw.marshalRsp(re)
+	gw.marshalRsp(gw.dispatch(req))
 }
 
 func (gw *Gateway) readBody(w http.ResponseWriter, r *http.Request) (body []byte, ok bool) {

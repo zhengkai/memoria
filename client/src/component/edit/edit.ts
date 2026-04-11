@@ -47,8 +47,8 @@ export class Edit {
 
 		const it = this.item;
 		var sid = 'New'
-		if (it.ID > 0) {
-			sid = '' + it.ID;
+		if (it.id > 0) {
+			sid = '' + it.id;
 		}
 		form.querySelector<HTMLSpanElement>(
 			'span.id'
@@ -134,7 +134,7 @@ export class Edit {
 		const fd = new FormData(form);
 
 		const o = pb.ItemEdit.fromObject({
-			ID: this.item.ID,
+			id: this.item.id,
 			title: fd.get('title'),
 			content: pb.Revision.fromObject({
 				format: Number(fd.get('format')),

@@ -8,7 +8,7 @@ import (
 )
 
 func Edit(ie *pb.ItemEdit) error {
-	if ie.ID == 0 {
+	if ie.GetId() == 0 {
 		return newItem(ie)
 	}
 	zj.J("item.Edit", ie)
@@ -17,29 +17,30 @@ func Edit(ie *pb.ItemEdit) error {
 
 func newItem(ie *pb.ItemEdit) error {
 
-	rid, err := db.SaveRevision(ie.Content)
+	rid, err := db.SaveRevision(ie.GetContent())
 	if err != nil {
 		return err
 	}
 
-	meta := &pb.ItemMeta{
-		TsCreate: uint64(time.Now().UnixMilli()),
-		TsRevise: 0,
-		TsHide:   0,
-		Root:     ie.Root,
-		Title:    ie.Title,
-		Original: ie.Original,
-		Trivial:  ie.Trivial,
-		TweetID:  ie.TweetID,
-	}
-	if ie.Hide {
-		meta.TsHide = meta.TsCreate
+	meta := pb.ItemMeta_builder{
+		TsCreate: new(uint64(time.Now().UnixMilli())),
+		TsRevise: new(uint64(0)),
+		TsHide:   new(uint64(0)),
+		Root:     new(ie.GetRoot()),
+		Title:    new(ie.GetTitle()),
+		Original: new(ie.GetOriginal()),
+		Trivial:  new(ie.GetTrivial()),
+		TweetId:  new(ie.GetTweetId()),
+	}.Build()
+	if ie.GetHide() {
+		meta.SetTsHide(meta.GetTsCreate())
 	}
 
-	d := &pb.ItemDB{
+	d := pb.ItemDB_builder{
 		Meta:       meta,
-		RevisionID: rid,
-	}
-	ie.ID, err = db.NewItem(d)
+		RevisionId: &rid,
+	}.Build()
+	id, err := db.NewItem(d)
+	ie.SetId(id)
 	return err
 }

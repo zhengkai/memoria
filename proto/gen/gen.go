@@ -17,8 +17,18 @@ import (
 	"strings"
 )
 
-func upperFirst(s string) string {
-	return strings.ToUpper(s[:1]) + s[1:]
+func lowerFirst(s string) string {
+	return strings.ToLower(s[:1]) + s[1:]
+}
+
+func snakeToPascal(s string) string {
+	p := strings.Split(s, `_`)
+	for i := range len(p) {
+		if len(p[i]) > 0 {
+			p[i] = strings.ToUpper(p[i][:1]) + p[i][1:]
+		}
+	}
+	return strings.Join(p, ``)
 }
 
 func parseStmt(code string) ast.Stmt {
@@ -130,37 +140,33 @@ func main() {
 	}
 
 	ast.Inspect(file, func(n ast.Node) bool {
-		sw, ok := n.(*ast.TypeSwitchStmt)
+		sw, ok := n.(*ast.SwitchStmt)
 		if !ok {
 			return true
 		}
 
-		// 匹配：switch r := req.One.(type)
-		assign, ok := sw.Assign.(*ast.AssignStmt)
-		if !ok || len(assign.Rhs) != 1 {
+		// 匹配：switch req.WhichOne()
+		// sw.Tag 是 switch 后面的表达式
+		call, ok := sw.Tag.(*ast.CallExpr)
+		if !ok {
 			return true
 		}
 
-		assert, ok := assign.Rhs[0].(*ast.TypeAssertExpr)
-		if !ok || assert.Type != nil {
-			return true
-		}
-
-		sel, ok := assert.X.(*ast.SelectorExpr)
-		if !ok || sel.Sel.Name != "One" {
+		// 匹配方法调用 req.WhichOne()
+		sel, ok := call.Fun.(*ast.SelectorExpr)
+		if !ok || sel.Sel.Name != "WhichOne" {
 			return true
 		}
 
 		var newList []ast.Stmt
 		for _, f := range fields {
-			F := upperFirst(f)
+			F := snakeToPascal(f)
+			f = lowerFirst(F)
 
 			code := fmt.Sprintf(`
-case *pb.APIReq_%s:
-	x := &pb.APIRsp_%s{}
-	x.%s, ae = %s(r.%s)
-	rsp = x
-`, F, F, F, f, F)
+case pb.APIReq_%s_case:
+	rsp.Set%s(%s(req.Get%s(), e))
+`, F, F, f, F)
 
 			stmt := parseStmt(code)
 			newList = append(newList, stmt)
@@ -176,6 +182,10 @@ case *pb.APIReq_%s:
 	}
 
 	ab := buf.Bytes()
+
+	ab = bytes.ReplaceAll(ab, []byte("\n\tcase"), []byte("\n\n\tcase"))
+	ab = bytes.ReplaceAll(ab, []byte("\n\tswitch"), []byte("\n\n\tswitch"))
+
 	if bytes.Equal(srcAB, ab) {
 		fmt.Println(`no change, skip writing file`)
 		return

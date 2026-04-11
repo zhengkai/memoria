@@ -4,12 +4,6 @@ import { Edit } from './component/edit/edit'
 import { List } from './component/list/list'
 import { Search } from './component/search/search'
 
-import protobuf from "protobufjs";
-import Long from "long";
-
-protobuf.util.Long = Long;
-protobuf.configure();
-
 (() => {
 
 	const el = document.querySelector('body > main > section') as HTMLElement;

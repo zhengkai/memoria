@@ -1,11 +1,13 @@
-syntax = "proto3";
+edition = "2024";
+
+option features.default_symbol_visibility = EXPORT_ALL;
 option go_package = "/pb";
 package pb;
 
 message Format {
 	enum Enum {
-		Plain = 0;
-		Markdown = 1;
-		AsciiDoc = 2;
+		PLAIN = 0;
+		MARKDOWN = 1;
+		ASCIIDOC = 2;
 	}
 }

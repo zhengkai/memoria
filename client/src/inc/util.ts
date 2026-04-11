@@ -1,8 +1,8 @@
 import Long from "long";
 
-export const formatDateTime = (ts: Long) => {
+export const formatDateTime = (ts: number) => {
 
-	const date = new Date(ts.toNumber());
+	const date = new Date(ts);
 
 	const f = new Intl.DateTimeFormat('en-CA', {  // en-CA 天然是 YYYY-MM-DD
 		year: 'numeric', month: '2-digit', day: '2-digit',
