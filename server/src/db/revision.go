@@ -1,33 +1,27 @@
 package db
 
 import (
-	"crypto/sha256"
 	"errors"
 	"project/pb"
+	"project/util"
 	"project/zj"
 
 	"github.com/go-sql-driver/mysql"
 	"google.golang.org/protobuf/proto"
 )
 
-func SaveRevision(rev *pb.Revision) (id uint64, err error) {
+func SaveRevision(hash []byte, ab []byte) (id uint64, err error) {
 
 	defer zj.Watch(&err)
 
-	ab, err := proto.Marshal(rev)
-	if err != nil {
-		return
-	}
-
-	hash := sha256.Sum256(ab)
 	query := `INSERT INTO revision SET hash = ?, bin = ?`
-	r, err := d.Exec(query, hash[:], ab)
+	r, err := d.Exec(query, hash, ab)
 	if err != nil {
 		var me *mysql.MySQLError
 		if errors.As(err, &me) && me.Number == 1062 {
 			// hash 冲突则取出已有 id
 			query := `SELECT revision_id FROM revision WHERE hash = ?`
-			row := d.QueryRow(query, hash[:])
+			row := d.QueryRow(query, hash)
 			err = row.Scan(&id)
 			if err != nil {
 				return
@@ -82,4 +76,10 @@ func LoadRevisionIDByHash(hash [32]byte) (id uint64, err error) {
 	}
 
 	return
+}
+
+func AddRevisionHistory(itemID, revisionID uint64) error {
+	query := `INSERT INTO edit_history SET item_id = ?, revision_id = ?, ts_create = ?`
+	_, err := d.Exec(query, itemID, revisionID, util.Now())
+	return err
 }

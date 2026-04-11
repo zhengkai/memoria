@@ -4,6 +4,7 @@ import (
 	"project/db"
 	"project/pb"
 	"project/util"
+	"project/zj"
 	"time"
 
 	"google.golang.org/protobuf/proto"
@@ -25,7 +26,7 @@ func editItem(ie *pb.ItemEdit) error {
 
 	n := util.ClonePB(raw)
 
-	rid, err := db.SaveRevision(ie.GetContent())
+	rid, err := revisionPool.Save(ie.GetContent())
 	if err != nil {
 		return err
 	}
@@ -51,11 +52,20 @@ func editItem(ie *pb.ItemEdit) error {
 	// n.SetOg(ie.GetOg())
 	n.GetMeta().SetTweetId(ie.GetTweetId())
 
+	if proto.Equal(n, raw) {
+		zj.J(`item no change`, raw.GetId(), rid)
+		return nil
+	}
+
 	err = db.SaveItem(n)
 	if err != nil {
 		return err
 	}
 
+	zj.J(`rid`, raw.GetRevisionId(), rid)
+	if raw.GetRevisionId() != rid {
+		db.AddRevisionHistory(ie.GetId(), rid)
+	}
 	proto.Reset(raw)
 	proto.Merge(raw, n)
 
@@ -64,7 +74,7 @@ func editItem(ie *pb.ItemEdit) error {
 
 func newItem(ie *pb.ItemEdit) error {
 
-	rid, err := db.SaveRevision(ie.GetContent())
+	rid, err := revisionPool.Save(ie.GetContent())
 	if err != nil {
 		return err
 	}
@@ -88,6 +98,9 @@ func newItem(ie *pb.ItemEdit) error {
 		RevisionId: &rid,
 	}.Build()
 	id, err := db.NewItem(d)
+	if err != nil {
+		return err
+	}
 	ie.SetId(id)
 	return err
 }
