@@ -6,16 +6,14 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"go/ast"
-	"go/format"
-	"go/parser"
-	"go/token"
 	"os"
 	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
 )
+
+var reSwitchBlock = regexp.MustCompile(`(?s)(switch req\.WhichOne\(\) \{).*?(\})`)
 
 func lowerFirst(s string) string {
 	return strings.ToLower(s[:1]) + s[1:]
@@ -29,21 +27,6 @@ func snakeToPascal(s string) string {
 		}
 	}
 	return strings.Join(p, ``)
-}
-
-func parseStmt(code string) ast.Stmt {
-	src := "package api\nfunc _(){\nswitch r := x.(type) {\n" + code + "}\n}"
-
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, "", src, 0)
-	if err != nil {
-		panic(err)
-	}
-
-	fn := f.Decls[0].(*ast.FuncDecl)
-	sw := fn.Body.List[0].(*ast.TypeSwitchStmt)
-
-	return sw.Body.List[0] // *ast.CaseClause
 }
 
 func extractFieldsFromProto(path string) ([]string, error) {
@@ -114,84 +97,67 @@ func main() {
 		panic(`cannot get current file`)
 	}
 
+	srcFile, fields, src, err := getSource(filename)
+	if err != nil {
+		return
+	}
+
+	var rp bytes.Buffer
+	rp.WriteString("${1}\n")
+
+	for _, f := range fields {
+		F := snakeToPascal(f)
+		f = lowerFirst(F)
+
+		fmt.Fprintf(&rp, `
+	case pb.APIReq_%s_case:
+		rsp.Set%s(%s(req.Get%s(), e))
+`, F, F, f, F)
+	}
+
+	rp.WriteString(`
+	default:
+		ae.SetCode(pb.APIError_INPUT)
+		ae.SetMessage("invalid APIReq, unknown oneof field")`)
+
+	rp.WriteString("\n\t${2}")
+
+	dst := reSwitchBlock.ReplaceAll(src, rp.Bytes())
+
+	// fmt.Println(`[`, rp.String(), `]`)
+	fmt.Println()
+	for _, s := range fields {
+		fmt.Println("\t", s)
+	}
+
+	fmt.Println()
+	if bytes.Equal(src, dst) {
+		fmt.Println(`no change, skip writing file`)
+		return
+	}
+	fmt.Println(`writing file`, srcFile)
+	os.WriteFile(srcFile, dst, 0644)
+}
+
+func getSource(filename string) (string, []string, []byte, error) {
+
 	protoDir := filepath.Dir(filepath.Dir(filename))
 	protoFile := filepath.Join(protoDir, `api.proto`)
 
 	fields, err := extractFieldsFromProto(protoFile)
 	if err != nil {
 		fmt.Println("read api.proto failed:", err)
-		return
+		return ``, nil, nil, err
 	}
 
 	dir := filepath.Dir(protoDir)
 	filename = filepath.Join(dir, `server`, `src`, `api`, `dispatch.go`)
 
-	srcAB, err := os.ReadFile(filename)
+	src, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Println(`can not read file`, filename)
-		return
+		return ``, nil, nil, err
 	}
 
-	fset := token.NewFileSet()
-	file, err := parser.ParseFile(token.NewFileSet(), ``, srcAB, parser.ParseComments)
-	if err != nil {
-		fmt.Println(`parse file failed:`, err)
-		return
-	}
-
-	ast.Inspect(file, func(n ast.Node) bool {
-		sw, ok := n.(*ast.SwitchStmt)
-		if !ok {
-			return true
-		}
-
-		// 匹配：switch req.WhichOne()
-		// sw.Tag 是 switch 后面的表达式
-		call, ok := sw.Tag.(*ast.CallExpr)
-		if !ok {
-			return true
-		}
-
-		// 匹配方法调用 req.WhichOne()
-		sel, ok := call.Fun.(*ast.SelectorExpr)
-		if !ok || sel.Sel.Name != "WhichOne" {
-			return true
-		}
-
-		var newList []ast.Stmt
-		for _, f := range fields {
-			F := snakeToPascal(f)
-			f = lowerFirst(F)
-
-			code := fmt.Sprintf(`
-case pb.APIReq_%s_case:
-	rsp.Set%s(%s(req.Get%s(), e))
-`, F, F, f, F)
-
-			stmt := parseStmt(code)
-			newList = append(newList, stmt)
-		}
-
-		sw.Body.List = newList
-		return false
-	})
-
-	var buf bytes.Buffer
-	if err = format.Node(&buf, fset, file); err != nil {
-		panic(err)
-	}
-
-	ab := buf.Bytes()
-
-	ab = bytes.ReplaceAll(ab, []byte("\n\tcase"), []byte("\n\n\tcase"))
-	ab = bytes.ReplaceAll(ab, []byte("\n\tswitch"), []byte("\n\n\tswitch"))
-
-	if bytes.Equal(srcAB, ab) {
-		fmt.Println(`no change, skip writing file`)
-		return
-	}
-
-	fmt.Println(string(ab))
-
-	os.WriteFile(filename, ab, 0644)
+	return filename, fields, src, nil
 }
