@@ -12097,6 +12097,12 @@ body > main > footer {
   user-select: none;
 }
 
+body > main,
+body > main > header,
+body > main > footer {
+  background-color: rgba(100, 150, 200, 0.5);
+}
+
 textarea {
   font-family: "JetBrains Mono", "Source Han Sans SC", monospace;
 }
@@ -12133,11 +12139,9 @@ body > main {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  background-color: rgba(100, 150, 200, 0.5);
 }
 body > main header {
   padding: 0 0 0 200px;
-  background-color: rgba(100, 150, 200, 0.5);
   height: 50px;
   line-height: 50px;
 }
@@ -12148,7 +12152,6 @@ body > main footer {
   height: 50px;
   line-height: 50px;
   padding: 0 0 0 200px;
-  background-color: rgba(100, 150, 200, 0.5);
   margin-top: auto;
 }
 

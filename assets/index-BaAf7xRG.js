@@ -7631,7 +7631,7 @@ var Edit = class {
 	}
 	formMeta(meta, form) {
 		form.querySelector("input[name=title]").value = meta.title;
-		form.querySelector("input[name=root]").value = "" + meta.root;
+		if (meta.root) form.querySelector("input[name=root]").value = "" + meta.root;
 		form.querySelector("input[name=original]").checked = meta.original;
 		form.querySelector("input[name=trivial]").checked = meta.trivial;
 		form.querySelector("input[name=hide]").checked = meta.tsHide > 0;
@@ -7641,7 +7641,7 @@ var Edit = class {
 		form.querySelector("textarea[name=content]").value = content.raw;
 	}
 	formOg(og, form) {
-		form.querySelector(`input[name="og-image"]`).value = "" + og.image;
+		if (og.image) form.querySelector(`input[name="og-image"]`).value = "" + og.image;
 		form.querySelector(`input[name="og-description"]`).value = og.description;
 		form.querySelector(`input[name="og-tag"]`).value = og.tag.join(",");
 	}
@@ -7790,7 +7790,11 @@ var Search = class {
 			new Search(url, el);
 			break;
 	}
+	if (window.location.host !== "memoria.anna.9farm.com") {
+		const h = document.querySelector("body > main> header");
+		if (h) h.style.backgroundColor = "rgba(200, 150, 100, 0.5)";
+	}
 })();
 //#endregion
 
-//# sourceMappingURL=index-CEKO4yF9.js.map
+//# sourceMappingURL=index-BaAf7xRG.js.map
