@@ -4,7 +4,7 @@ PB_BIN=../client/node_modules/protobufjs-cli/bin
 PB_JS=../client/src/inc/pb
 
 server:
-	/usr/local/bin/protoc --go_out=../server/src *.proto
+	protoc --go_out=../server/src *.proto
 	go run ./gen/gen.go
 
 client:

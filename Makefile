@@ -19,3 +19,7 @@ prod:
 
 stopprod:
 	./server/build/stop-server.sh prod
+
+.PHONY: docker
+docker:
+	sudo docker build -t memoria -f docker/Dockerfile .

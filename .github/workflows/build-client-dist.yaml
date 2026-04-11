@@ -40,7 +40,7 @@ jobs:
           git config user.name "GitHub Actions" && \
           git config user.email "memoria.bot@soulogic.com" && \
           git add . && \
-          git commit --all --message="Update WASM build" || echo "No changes to commit"
+          git commit --all --message="Client Dist by Github Action" || echo "No changes to commit"
 
       - name: push
         run: |

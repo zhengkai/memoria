@@ -1,6 +1,2 @@
-/misc/
-/static/
-/client/
-/server/dist
-/server/build/env.sh
+/client/src/inc/pb/pb.*
 /server/src/pb/*.pb.go
