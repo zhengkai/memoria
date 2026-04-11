@@ -25,10 +25,8 @@ body {
 		display: flex;
 		justify-content: flex-start;
 		flex-direction: column;
-		background-color: rgba(100, 150, 200, 0.5);
 		header {
 			padding: 0 0 0 200px;
-			background-color: rgba(100, 150, 200, 0.5);
 			height: config.$layout-header-height;
 			line-height: config.$layout-header-height;
 		}
@@ -39,7 +37,6 @@ body {
 			height: config.$layout-footer-height;
 			line-height: config.$layout-header-height;
 			padding: 0 0 0 200px;
-			background-color: rgba(100, 150, 200, 0.5);
 			margin-top: auto;
 		}
 	}

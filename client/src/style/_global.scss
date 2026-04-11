@@ -12,6 +12,12 @@ body > main > footer {
 	user-select: none;
 }
 
+body > main,
+body > main > header,
+body > main > footer {
+	background-color: rgba(100, 150, 200, 0.5);
+}
+
 textarea {
 	font-family: config.$font-mono;
 }

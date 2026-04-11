@@ -23,4 +23,11 @@ import { Search } from './component/search/search'
 			new Search(url, el);
 			break;
 	}
+
+	if (window.location.host !== 'memoria.anna.9farm.com') {
+		const h = document.querySelector('body > main> header') as HTMLElement;
+		if (h) {
+			h.style.backgroundColor = 'rgba(200, 150, 100, 0.5)';
+		}
+	}
 })()
