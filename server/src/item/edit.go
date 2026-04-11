@@ -30,25 +30,44 @@ func editItem(ie *pb.ItemEdit) error {
 	if err != nil {
 		return err
 	}
-	n.SetRevisionId(rid)
 
-	n.GetMeta().SetTitle(ie.GetTitle())
-	n.GetMeta().SetRoot(ie.GetRoot())
+	meta := n.GetMeta()
+
+	// ts_create
 	if ie.GetTsCreate() > 0 {
-		n.GetMeta().SetTsCreate(ie.GetTsCreate())
+		meta.SetTsCreate(ie.GetTsCreate())
 	}
+
+	// ts_revise
+	if raw.GetRevisionId() != rid {
+		n.SetRevisionId(rid)
+		meta.SetTsRevise(util.Now())
+	}
+
+	// ts_hide
 	if ie.GetHide() {
-		if n.GetMeta().GetTsHide() == 0 {
-			n.GetMeta().SetTsHide(util.Now())
+		if meta.GetTsHide() == 0 {
+			meta.SetTsHide(util.Now())
 		}
 	} else {
-		if n.GetMeta().GetTsHide() > 0 {
-			n.GetMeta().SetTsHide(0)
+		if meta.GetTsHide() > 0 {
+			meta.SetTsHide(0)
 		}
 	}
 
-	n.GetMeta().SetOriginal(ie.GetOriginal())
-	n.GetMeta().SetTrivial(ie.GetTrivial())
+	meta.SetRoot(ie.GetRoot())
+	meta.SetTitle(ie.GetTitle())
+
+	meta.SetOriginal(ie.GetOriginal())
+	meta.SetTrivial(ie.GetTrivial())
+
+	meta.SetTweetId(ie.GetTweetId())
+
+	ogID, err := binPool.Save(ie.GetOg())
+	if err == nil {
+		n.SetOgId(ogID)
+	}
+
 	// n.SetOg(ie.GetOg())
 	n.GetMeta().SetTweetId(ie.GetTweetId())
 

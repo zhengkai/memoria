@@ -69,9 +69,11 @@ export class Edit {
 			'input[name=title]'
 		)!.value = meta.title;
 
-		form.querySelector<HTMLInputElement>(
-			'input[name=root]'
-		)!.value = '' + meta.root;
+		if (meta.root) {
+			form.querySelector<HTMLInputElement>(
+				'input[name=root]'
+			)!.value = '' + meta.root;
+		}
 
 		form.querySelector<HTMLInputElement>(
 			'input[name=original]'
@@ -97,9 +99,11 @@ export class Edit {
 	}
 
 	formOg(og: pb.OpenGraph, form: HTMLFormElement) {
-		form.querySelector<HTMLInputElement>(
-			`input[name="og-image"]`
-		)!.value = '' + og.image;
+		if (og.image) {
+			form.querySelector<HTMLInputElement>(
+				`input[name="og-image"]`
+			)!.value = '' + og.image;
+		}
 
 		form.querySelector<HTMLInputElement>(
 			`input[name="og-description"]`

@@ -10,7 +10,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func SaveRevision(hash []byte, ab []byte) (id uint64, err error) {
+func SaveRevision(hash, ab []byte) (id uint64, err error) {
 
 	defer zj.Watch(&err)
 

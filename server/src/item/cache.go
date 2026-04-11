@@ -46,9 +46,13 @@ func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 		return nil, err
 	}
 
-	og, err := ogPool.Get(d.GetOgId())
-	if err != nil {
-		return nil, err
+	ogID := d.GetOgId()
+	var og = &pb.OpenGraph{}
+	if ogID > 0 {
+		err := binPool.Get(ogID, og)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	it := pb.Item_builder{

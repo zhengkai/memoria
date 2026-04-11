@@ -26,8 +26,24 @@ func IsEmptyPB(m proto.Message) bool {
 	}
 	isEmpty := true
 	m.ProtoReflect().Range(func(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
+		if isDefaultValue(fd, v) {
+			return true
+		}
 		isEmpty = false
 		return false
 	})
 	return isEmpty
+}
+
+func isDefaultValue(fd protoreflect.FieldDescriptor, v protoreflect.Value) bool {
+	if fd.IsList() {
+		return v.List().Len() == 0
+	}
+	if fd.IsMap() {
+		return v.Map().Len() == 0
+	}
+	if fd.Kind() == protoreflect.MessageKind || fd.Kind() == protoreflect.GroupKind {
+		return !v.Message().IsValid()
+	}
+	return v.Interface() == fd.Default().Interface()
 }
