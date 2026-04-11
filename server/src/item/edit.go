@@ -3,15 +3,62 @@ package item
 import (
 	"project/db"
 	"project/pb"
-	"project/zj"
+	"project/util"
 	"time"
+
+	"google.golang.org/protobuf/proto"
 )
 
 func Edit(ie *pb.ItemEdit) error {
 	if ie.GetId() == 0 {
 		return newItem(ie)
 	}
-	zj.J("item.Edit", ie)
+	return editItem(ie)
+}
+
+func editItem(ie *pb.ItemEdit) error {
+
+	raw, err := itemPool.GetDB(ie.GetId())
+	if err != nil {
+		return err
+	}
+
+	n := util.ClonePB(raw)
+
+	rid, err := db.SaveRevision(ie.GetContent())
+	if err != nil {
+		return err
+	}
+	n.SetRevisionId(rid)
+
+	n.GetMeta().SetTitle(ie.GetTitle())
+	n.GetMeta().SetRoot(ie.GetRoot())
+	if ie.GetTsCreate() > 0 {
+		n.GetMeta().SetTsCreate(ie.GetTsCreate())
+	}
+	if ie.GetHide() {
+		if n.GetMeta().GetTsHide() == 0 {
+			n.GetMeta().SetTsHide(util.Now())
+		}
+	} else {
+		if n.GetMeta().GetTsHide() > 0 {
+			n.GetMeta().SetTsHide(0)
+		}
+	}
+
+	n.GetMeta().SetOriginal(ie.GetOriginal())
+	n.GetMeta().SetTrivial(ie.GetTrivial())
+	// n.SetOg(ie.GetOg())
+	n.GetMeta().SetTweetId(ie.GetTweetId())
+
+	err = db.SaveItem(n)
+	if err != nil {
+		return err
+	}
+
+	proto.Reset(raw)
+	proto.Merge(raw, n)
+
 	return nil
 }
 

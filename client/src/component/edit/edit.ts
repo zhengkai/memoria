@@ -70,6 +70,10 @@ export class Edit {
 		)!.value = meta.title;
 
 		form.querySelector<HTMLInputElement>(
+			'input[name=root]'
+		)!.value = '' + meta.root;
+
+		form.querySelector<HTMLInputElement>(
 			'input[name=original]'
 		)!.checked = meta.original;
 

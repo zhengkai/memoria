@@ -1,11 +1,20 @@
 package api
 
-import "project/pb"
+import (
+	"project/pb"
+	"project/zj"
+
+	"google.golang.org/protobuf/reflect/protoreflect"
+)
 
 func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 	rsp := new(pb.APIRsp)
 	ae := new(pb.APIError)
 	e := &Error{AE: ae}
+
+	// util.DebugPB(req)
+
+	zj.IO("api req:", getReqOneName(req))
 
 	switch req.WhichOne() {
 
@@ -26,4 +35,18 @@ func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 		return er
 	}
 	return rsp
+}
+
+func getReqOneName(req *pb.APIReq) string {
+	which := req.WhichOne()
+	if which == pb.APIReq_One_not_set_case {
+		return "not_set"
+	}
+
+	fieldNum := protoreflect.FieldNumber(which)
+	fd := req.ProtoReflect().Descriptor().Fields().ByNumber(fieldNum)
+	if fd == nil {
+		return "unknown"
+	}
+	return string(fd.Name())
 }

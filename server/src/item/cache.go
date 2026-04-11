@@ -27,6 +27,14 @@ func newItemPool() *ItemPool {
 	return rp
 }
 
+func (rp *ItemPool) GetDB(id uint64) (*pb.ItemDB, error) {
+	d, err := rp.cache.Get(id)
+	if err != nil {
+		return nil, err
+	}
+	return d, nil
+}
+
 func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 	d, err := rp.cache.Get(id)
 	if err != nil {
