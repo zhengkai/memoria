@@ -53,7 +53,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 })();
 //#endregion
 //#region src/component/edit/edit.html?raw
-var edit_default = "<form>\n<div class=\"row\">\n	<div class=\"col-12\">\n		<h1>Edit <span class=\"id\"></span></h1>\n	</div>\n</div>\n<div class=\"row\">\n	<div class=\"col-12\">\n		<input name=\"title\" class=\"form-control\" placeholder=\"Title\">\n	</div>\n</div>\n<div class=\"row\">\n	<div class=\"col-12\">\n		<textarea name=\"content\" class=\"form-control\" rows=\"6\"></textarea>\n	</div>\n</div>\n<div class=\"row\">\n	<div class=\"col\">\n		<label class=\"form-check-label\">\n			<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"0\">\n				Plain\n		</label><label class=\"form-check-label\">\n			<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"1\">\n				Markdown\n		</label><label class=\"form-check-label\">\n			<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"2\" checked>\n				AsciiDoc\n		</label>\n	</div>\n</div>\n<div class=\"row\">\n	<div class=\"col-auto\">\n		<label class=\"form-check-label\">\n			<input type=\"checkbox\" name=\"original\" value=\"1\">\n				原创\n		</label>\n	</div>\n	<div class=\"col-auto\">\n		<label class=\"form-check-label\">\n			<input type=\"checkbox\" name=\"trivial\" value=\"1\">\n				琐事\n		</label>\n	</div>\n	<div class=\"col-auto\">\n		<label class=\"form-check-label\">\n			<input type=\"checkbox\" name=\"hide\" value=\"1\">\n				隐藏\n		</label>\n	</div>\n</div>\n<div class=\"row\">\n	<label for=\"itemRoot\" class=\"col-3 col-form-label text-end\">\n		root\n	</label>\n	<div class=\"col-4\">\n		<input name=\"root\" id=\"itemRoot\" type=\"number\" class=\"form-control\">\n	</div>\n</div>\n<div class=\"row\">\n	<label for=\"timeCreate\" class=\"col-3 col-form-label text-end\">\n		创建日期\n	</label>\n	<div class=\"col\">\n		<input name=\"time-create\" id=\"timeCreate\" type=\"text\" class=\"form-control\">\n	</div>\n</div>\n<div class=\"row\">\n	<label for=\"ogImage\" class=\"col-3 col-form-label text-end\">\n		OpenGraph 封面\n	</label>\n	<div class=\"col-4\">\n		<input name=\"og-image\" id=\"ogImage\" type=\"number\" class=\"form-control\">\n	</div>\n</div>\n<div class=\"row\">\n	<label for=\"ogDescription\" class=\"col-3 col-form-label text-end\">\n		OpenGraph 描述\n	</label>\n	<div class=\"col\">\n		<input name=\"og-description\" id=\"ogDescription\" type=\"text\" class=\"form-control\">\n	</div>\n</div>\n<div class=\"row\">\n	<label for=\"ogTag\" class=\"col-3 col-form-label text-end\">\n		OpenGraph 标签\n	</label>\n	<div class=\"col\">\n		<input name=\"og-tag\" id=\"ogTag\" type=\"text\" class=\"form-control\">\n	</div>\n</div>\n\n<div class=\"row\">\n	<div class=\"col\">\n	</div>\n	<div class=\"col-auto\">\n		<button type=\"submit\" class=\"btn btn-primary\">Save</button>\n	</div>\n</div>\n</form>\n";
+var edit_default = "<form>\n	<fieldset>\n		<div class=\"row\">\n			<div class=\"col-12\">\n				<h1>Edit <span class=\"id\"></span></h1>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-12\">\n				<input name=\"title\" class=\"form-control\" placeholder=\"Title\">\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-12\">\n				<textarea name=\"content\" class=\"form-control\" rows=\"6\"></textarea>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col\">\n				<label class=\"form-check-label\">\n					<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"0\">\n					Plain\n				</label><label class=\"form-check-label\">\n					<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"1\">\n					Markdown\n				</label><label class=\"form-check-label\">\n					<input class=\"form-check-input\" type=\"radio\" name=\"format\" value=\"2\" checked>\n					AsciiDoc\n				</label>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-auto\">\n				<label class=\"form-check-label\">\n					<input type=\"checkbox\" name=\"original\" value=\"1\">\n					原创\n				</label>\n			</div>\n			<div class=\"col-auto\">\n				<label class=\"form-check-label\">\n					<input type=\"checkbox\" name=\"trivial\" value=\"1\">\n					琐事\n				</label>\n			</div>\n			<div class=\"col-auto\">\n				<label class=\"form-check-label\">\n					<input type=\"checkbox\" name=\"hide\" value=\"1\">\n					隐藏\n				</label>\n			</div>\n		</div>\n		<div class=\"row\">\n			<label for=\"itemRoot\" class=\"col-3 col-form-label text-end\">\n				root\n			</label>\n			<div class=\"col-4\">\n				<input name=\"root\" id=\"itemRoot\" type=\"number\" class=\"form-control\">\n			</div>\n		</div>\n		<div class=\"row\">\n			<label for=\"timeCreate\" class=\"col-3 col-form-label text-end\">\n				创建日期\n			</label>\n			<div class=\"col\">\n				<input name=\"time-create\" id=\"timeCreate\" type=\"text\" class=\"form-control\">\n			</div>\n		</div>\n		<div class=\"row\">\n			<label for=\"ogImage\" class=\"col-3 col-form-label text-end\">\n				OpenGraph 封面\n			</label>\n			<div class=\"col-4\">\n				<input name=\"og-image\" id=\"ogImage\" type=\"number\" class=\"form-control\">\n			</div>\n		</div>\n		<div class=\"row\">\n			<label for=\"ogDescription\" class=\"col-3 col-form-label text-end\">\n				OpenGraph 描述\n			</label>\n			<div class=\"col\">\n				<input name=\"og-description\" id=\"ogDescription\" type=\"text\" class=\"form-control\">\n			</div>\n		</div>\n		<div class=\"row\">\n			<label for=\"ogTag\" class=\"col-3 col-form-label text-end\">\n				OpenGraph 标签\n			</label>\n			<div class=\"col\">\n				<input name=\"og-tag\" id=\"ogTag\" type=\"text\" class=\"form-control\">\n			</div>\n		</div>\n\n		<div class=\"row\">\n		<div class=\"col\">\n		</div>\n		<div class=\"col-auto\">\n			<button type=\"submit\" class=\"btn btn-primary\">Save</button>\n		</div>\n	</div>\n	</fieldset>\n\n	<div class=\"row\">\n		<div class=\"alert alert-danger\" role=\"alert\">\n			A simple warning alert—check it out!\n		</div>\n	</div>\n</form>\n";
 //#endregion
 //#region node_modules/@protobufjs/aspromise/index.js
 var require_aspromise = /* @__PURE__ */ __commonJSMin(((exports, module) => {
@@ -2184,238 +2184,6 @@ var pb = $root.pb = (() => {
 	* @namespace
 	*/
 	const pb = {};
-	pb.APIError = (function() {
-		/**
-		* Properties of a APIError.
-		* @memberof pb
-		* @interface IAPIError
-		* @property {pb.APIError.Enum|null} [code] APIError code
-		* @property {string|null} [message] APIError message
-		*/
-		/**
-		* Constructs a new APIError.
-		* @memberof pb
-		* @classdesc Represents a APIError.
-		* @implements IAPIError
-		* @constructor
-		* @param {pb.IAPIError=} [properties] Properties to set
-		*/
-		function APIError(properties) {
-			if (properties) {
-				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]];
-			}
-		}
-		/**
-		* APIError code.
-		* @member {pb.APIError.Enum} code
-		* @memberof pb.APIError
-		* @instance
-		*/
-		APIError.prototype.code = 0;
-		/**
-		* APIError message.
-		* @member {string} message
-		* @memberof pb.APIError
-		* @instance
-		*/
-		APIError.prototype.message = "";
-		/**
-		* Creates a new APIError instance using the specified properties.
-		* @function create
-		* @memberof pb.APIError
-		* @static
-		* @param {pb.IAPIError=} [properties] Properties to set
-		* @returns {pb.APIError} APIError instance
-		*/
-		APIError.create = function create(properties) {
-			return new APIError(properties);
-		};
-		/**
-		* Encodes the specified APIError message. Does not implicitly {@link pb.APIError.verify|verify} messages.
-		* @function encode
-		* @memberof pb.APIError
-		* @static
-		* @param {pb.IAPIError} message APIError message or plain object to encode
-		* @param {$protobuf.Writer} [writer] Writer to encode to
-		* @returns {$protobuf.Writer} Writer
-		*/
-		APIError.encode = function encode(message, writer) {
-			if (!writer) writer = $Writer.create();
-			if (message.code != null && Object.hasOwnProperty.call(message, "code")) writer.uint32(8).int32(message.code);
-			if (message.message != null && Object.hasOwnProperty.call(message, "message")) writer.uint32(18).string(message.message);
-			return writer;
-		};
-		/**
-		* Encodes the specified APIError message, length delimited. Does not implicitly {@link pb.APIError.verify|verify} messages.
-		* @function encodeDelimited
-		* @memberof pb.APIError
-		* @static
-		* @param {pb.IAPIError} message APIError message or plain object to encode
-		* @param {$protobuf.Writer} [writer] Writer to encode to
-		* @returns {$protobuf.Writer} Writer
-		*/
-		APIError.encodeDelimited = function encodeDelimited(message, writer) {
-			return this.encode(message, writer).ldelim();
-		};
-		/**
-		* Decodes a APIError message from the specified reader or buffer.
-		* @function decode
-		* @memberof pb.APIError
-		* @static
-		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-		* @param {number} [length] Message length if known beforehand
-		* @returns {pb.APIError} APIError
-		* @throws {Error} If the payload is not a reader or valid buffer
-		* @throws {$protobuf.util.ProtocolError} If required fields are missing
-		*/
-		APIError.decode = function decode(reader, length, error) {
-			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
-			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.APIError();
-			while (reader.pos < end) {
-				let tag = reader.uint32();
-				if (tag === error) break;
-				switch (tag >>> 3) {
-					case 1:
-						message.code = reader.int32();
-						break;
-					case 2:
-						message.message = reader.string();
-						break;
-					default:
-						reader.skipType(tag & 7);
-						break;
-				}
-			}
-			return message;
-		};
-		/**
-		* Decodes a APIError message from the specified reader or buffer, length delimited.
-		* @function decodeDelimited
-		* @memberof pb.APIError
-		* @static
-		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-		* @returns {pb.APIError} APIError
-		* @throws {Error} If the payload is not a reader or valid buffer
-		* @throws {$protobuf.util.ProtocolError} If required fields are missing
-		*/
-		APIError.decodeDelimited = function decodeDelimited(reader) {
-			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
-			return this.decode(reader, reader.uint32());
-		};
-		/**
-		* Verifies a APIError message.
-		* @function verify
-		* @memberof pb.APIError
-		* @static
-		* @param {Object.<string,*>} message Plain object to verify
-		* @returns {string|null} `null` if valid, otherwise the reason why it is not
-		*/
-		APIError.verify = function verify(message) {
-			if (typeof message !== "object" || message === null) return "object expected";
-			if (message.code != null && message.hasOwnProperty("code")) switch (message.code) {
-				default: return "code: enum value expected";
-				case 0:
-				case 100:
-				case 300: break;
-			}
-			if (message.message != null && message.hasOwnProperty("message")) {
-				if (!$util.isString(message.message)) return "message: string expected";
-			}
-			return null;
-		};
-		/**
-		* Creates a APIError message from a plain object. Also converts values to their respective internal types.
-		* @function fromObject
-		* @memberof pb.APIError
-		* @static
-		* @param {Object.<string,*>} object Plain object
-		* @returns {pb.APIError} APIError
-		*/
-		APIError.fromObject = function fromObject(object) {
-			if (object instanceof $root.pb.APIError) return object;
-			let message = new $root.pb.APIError();
-			switch (object.code) {
-				default:
-					if (typeof object.code === "number") {
-						message.code = object.code;
-						break;
-					}
-					break;
-				case "NONE":
-				case 0:
-					message.code = 0;
-					break;
-				case "INPUT":
-				case 100:
-					message.code = 100;
-					break;
-				case "DB":
-				case 300:
-					message.code = 300;
-					break;
-			}
-			if (object.message != null) message.message = String(object.message);
-			return message;
-		};
-		/**
-		* Creates a plain object from a APIError message. Also converts values to other types if specified.
-		* @function toObject
-		* @memberof pb.APIError
-		* @static
-		* @param {pb.APIError} message APIError
-		* @param {$protobuf.IConversionOptions} [options] Conversion options
-		* @returns {Object.<string,*>} Plain object
-		*/
-		APIError.toObject = function toObject(message, options) {
-			if (!options) options = {};
-			let object = {};
-			if (options.defaults) {
-				object.code = options.enums === String ? "NONE" : 0;
-				object.message = "";
-			}
-			if (message.code != null && message.hasOwnProperty("code")) object.code = options.enums === String ? $root.pb.APIError.Enum[message.code] === void 0 ? message.code : $root.pb.APIError.Enum[message.code] : message.code;
-			if (message.message != null && message.hasOwnProperty("message")) object.message = message.message;
-			return object;
-		};
-		/**
-		* Converts this APIError to JSON.
-		* @function toJSON
-		* @memberof pb.APIError
-		* @instance
-		* @returns {Object.<string,*>} JSON object
-		*/
-		APIError.prototype.toJSON = function toJSON() {
-			return this.constructor.toObject(this, import_minimal.util.toJSONOptions);
-		};
-		/**
-		* Gets the default type url for APIError
-		* @function getTypeUrl
-		* @memberof pb.APIError
-		* @static
-		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-		* @returns {string} The default type url
-		*/
-		APIError.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
-			return typeUrlPrefix + "/pb.APIError";
-		};
-		/**
-		* Enum enum.
-		* @name pb.APIError.Enum
-		* @enum {number}
-		* @property {number} NONE=0 NONE value
-		* @property {number} INPUT=100 INPUT value
-		* @property {number} DB=300 DB value
-		*/
-		APIError.Enum = (function() {
-			const valuesById = {}, values = Object.create(valuesById);
-			values[valuesById[0] = "NONE"] = 0;
-			values[valuesById[100] = "INPUT"] = 100;
-			values[valuesById[300] = "DB"] = 300;
-			return values;
-		})();
-		return APIError;
-	})();
 	pb.APIReq = (function() {
 		/**
 		* Properties of a APIReq.
@@ -2505,7 +2273,7 @@ var pb = $root.pb = (() => {
 		*/
 		APIReq.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
-			if (message.itemGet != null && Object.hasOwnProperty.call(message, "itemGet")) writer.uint32(80).uint32(message.itemGet);
+			if (message.itemGet != null && Object.hasOwnProperty.call(message, "itemGet")) writer.uint32(80).uint64(message.itemGet);
 			if (message.itemSet != null && Object.hasOwnProperty.call(message, "itemSet")) $root.pb.ItemEdit.encode(message.itemSet, writer.uint32(90).fork()).ldelim();
 			if (message.itemListRecent != null && Object.hasOwnProperty.call(message, "itemListRecent")) writer.uint32(160).uint32(message.itemListRecent);
 			if (message.itemSearch != null && Object.hasOwnProperty.call(message, "itemSearch")) $root.pb.ItemSearch.encode(message.itemSearch, writer.uint32(170).fork()).ldelim();
@@ -2542,7 +2310,7 @@ var pb = $root.pb = (() => {
 				if (tag === error) break;
 				switch (tag >>> 3) {
 					case 10:
-						message.itemGet = reader.uint32();
+						message.itemGet = reader.uint64();
 						break;
 					case 11:
 						message.itemSet = $root.pb.ItemEdit.decode(reader, reader.uint32());
@@ -2587,7 +2355,7 @@ var pb = $root.pb = (() => {
 			let properties = {};
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
 				properties.one = 1;
-				if (!$util.isInteger(message.itemGet)) return "itemGet: integer expected";
+				if (!$util.isInteger(message.itemGet) && !(message.itemGet && $util.isInteger(message.itemGet.low) && $util.isInteger(message.itemGet.high))) return "itemGet: integer|Long expected";
 			}
 			if (message.itemSet != null && message.hasOwnProperty("itemSet")) {
 				if (properties.one === 1) return "one: multiple values";
@@ -2623,7 +2391,12 @@ var pb = $root.pb = (() => {
 		APIReq.fromObject = function fromObject(object) {
 			if (object instanceof $root.pb.APIReq) return object;
 			let message = new $root.pb.APIReq();
-			if (object.itemGet != null) message.itemGet = object.itemGet >>> 0;
+			if (object.itemGet != null) {
+				if ($util.Long) (message.itemGet = $util.Long.fromValue(object.itemGet)).unsigned = true;
+				else if (typeof object.itemGet === "string") message.itemGet = parseInt(object.itemGet, 10);
+				else if (typeof object.itemGet === "number") message.itemGet = object.itemGet;
+				else if (typeof object.itemGet === "object") message.itemGet = new $util.LongBits(object.itemGet.low >>> 0, object.itemGet.high >>> 0).toNumber(true);
+			}
 			if (object.itemSet != null) {
 				if (typeof object.itemSet !== "object") throw TypeError(".pb.APIReq.itemSet: object expected");
 				message.itemSet = $root.pb.ItemEdit.fromObject(object.itemSet);
@@ -2648,7 +2421,8 @@ var pb = $root.pb = (() => {
 			if (!options) options = {};
 			let object = {};
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
-				object.itemGet = message.itemGet;
+				if (typeof message.itemGet === "number") object.itemGet = options.longs === String ? String(message.itemGet) : message.itemGet;
+				else object.itemGet = options.longs === String ? $util.Long.prototype.toString.call(message.itemGet) : options.longs === Number ? new $util.LongBits(message.itemGet.low >>> 0, message.itemGet.high >>> 0).toNumber(true) : message.itemGet;
 				if (options.oneofs) object.one = "itemGet";
 			}
 			if (message.itemSet != null && message.hasOwnProperty("itemSet")) {
@@ -2694,7 +2468,7 @@ var pb = $root.pb = (() => {
 		* Properties of a APIRsp.
 		* @memberof pb
 		* @interface IAPIRsp
-		* @property {pb.IAPIError|null} [error] APIRsp error
+		* @property {pb.IError|null} [error] APIRsp error
 		* @property {pb.IItem|null} [itemGet] APIRsp itemGet
 		* @property {number|null} [itemSet] APIRsp itemSet
 		* @property {pb.IItemList|null} [itemListRecent] APIRsp itemListRecent
@@ -2715,7 +2489,7 @@ var pb = $root.pb = (() => {
 		}
 		/**
 		* APIRsp error.
-		* @member {pb.IAPIError|null|undefined} error
+		* @member {pb.IError|null|undefined} error
 		* @memberof pb.APIRsp
 		* @instance
 		*/
@@ -2786,7 +2560,7 @@ var pb = $root.pb = (() => {
 		*/
 		APIRsp.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
-			if (message.error != null && Object.hasOwnProperty.call(message, "error")) $root.pb.APIError.encode(message.error, writer.uint32(10).fork()).ldelim();
+			if (message.error != null && Object.hasOwnProperty.call(message, "error")) $root.pb.Error.encode(message.error, writer.uint32(10).fork()).ldelim();
 			if (message.itemGet != null && Object.hasOwnProperty.call(message, "itemGet")) $root.pb.Item.encode(message.itemGet, writer.uint32(82).fork()).ldelim();
 			if (message.itemSet != null && Object.hasOwnProperty.call(message, "itemSet")) writer.uint32(88).uint64(message.itemSet);
 			if (message.itemListRecent != null && Object.hasOwnProperty.call(message, "itemListRecent")) $root.pb.ItemList.encode(message.itemListRecent, writer.uint32(162).fork()).ldelim();
@@ -2824,7 +2598,7 @@ var pb = $root.pb = (() => {
 				if (tag === error) break;
 				switch (tag >>> 3) {
 					case 1:
-						message.error = $root.pb.APIError.decode(reader, reader.uint32());
+						message.error = $root.pb.Error.decode(reader, reader.uint32());
 						break;
 					case 10:
 						message.itemGet = $root.pb.Item.decode(reader, reader.uint32());
@@ -2871,7 +2645,7 @@ var pb = $root.pb = (() => {
 			if (typeof message !== "object" || message === null) return "object expected";
 			let properties = {};
 			if (message.error != null && message.hasOwnProperty("error")) {
-				let error = $root.pb.APIError.verify(message.error);
+				let error = $root.pb.Error.verify(message.error);
 				if (error) return "error." + error;
 			}
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
@@ -2917,7 +2691,7 @@ var pb = $root.pb = (() => {
 			let message = new $root.pb.APIRsp();
 			if (object.error != null) {
 				if (typeof object.error !== "object") throw TypeError(".pb.APIRsp.error: object expected");
-				message.error = $root.pb.APIError.fromObject(object.error);
+				message.error = $root.pb.Error.fromObject(object.error);
 			}
 			if (object.itemGet != null) {
 				if (typeof object.itemGet !== "object") throw TypeError(".pb.APIRsp.itemGet: object expected");
@@ -2952,7 +2726,7 @@ var pb = $root.pb = (() => {
 			if (!options) options = {};
 			let object = {};
 			if (options.defaults) object.error = null;
-			if (message.error != null && message.hasOwnProperty("error")) object.error = $root.pb.APIError.toObject(message.error, options);
+			if (message.error != null && message.hasOwnProperty("error")) object.error = $root.pb.Error.toObject(message.error, options);
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
 				object.itemGet = $root.pb.Item.toObject(message.itemGet, options);
 				if (options.oneofs) object.one = "itemGet";
@@ -2995,6 +2769,294 @@ var pb = $root.pb = (() => {
 			return typeUrlPrefix + "/pb.APIRsp";
 		};
 		return APIRsp;
+	})();
+	pb.Error = (function() {
+		/**
+		* Properties of an Error.
+		* @memberof pb
+		* @interface IError
+		* @property {pb.Error.Code|null} [code] Error code
+		* @property {string|null} [message] Error message
+		*/
+		/**
+		* Constructs a new Error.
+		* @memberof pb
+		* @classdesc Represents an Error.
+		* @implements IError
+		* @constructor
+		* @param {pb.IError=} [properties] Properties to set
+		*/
+		function Error(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* Error code.
+		* @member {pb.Error.Code} code
+		* @memberof pb.Error
+		* @instance
+		*/
+		Error.prototype.code = 0;
+		/**
+		* Error message.
+		* @member {string} message
+		* @memberof pb.Error
+		* @instance
+		*/
+		Error.prototype.message = "";
+		/**
+		* Creates a new Error instance using the specified properties.
+		* @function create
+		* @memberof pb.Error
+		* @static
+		* @param {pb.IError=} [properties] Properties to set
+		* @returns {pb.Error} Error instance
+		*/
+		Error.create = function create(properties) {
+			return new Error(properties);
+		};
+		/**
+		* Encodes the specified Error message. Does not implicitly {@link pb.Error.verify|verify} messages.
+		* @function encode
+		* @memberof pb.Error
+		* @static
+		* @param {pb.IError} message Error message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Error.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.code != null && Object.hasOwnProperty.call(message, "code")) writer.uint32(8).int32(message.code);
+			if (message.message != null && Object.hasOwnProperty.call(message, "message")) writer.uint32(18).string(message.message);
+			return writer;
+		};
+		/**
+		* Encodes the specified Error message, length delimited. Does not implicitly {@link pb.Error.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.Error
+		* @static
+		* @param {pb.IError} message Error message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Error.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an Error message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.Error
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.Error} Error
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Error.decode = function decode(reader, length, error) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.Error();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.code = reader.int32();
+						break;
+					case 2:
+						message.message = reader.string();
+						break;
+					default:
+						reader.skipType(tag & 7);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an Error message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.Error
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.Error} Error
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Error.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an Error message.
+		* @function verify
+		* @memberof pb.Error
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		Error.verify = function verify(message) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (message.code != null && message.hasOwnProperty("code")) switch (message.code) {
+				default: return "code: enum value expected";
+				case 0:
+				case 1:
+				case 2:
+				case 100:
+				case 101:
+				case 300:
+				case 301:
+				case 302:
+				case 303:
+				case 304:
+				case 305: break;
+			}
+			if (message.message != null && message.hasOwnProperty("message")) {
+				if (!$util.isString(message.message)) return "message: string expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an Error message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.Error
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.Error} Error
+		*/
+		Error.fromObject = function fromObject(object) {
+			if (object instanceof $root.pb.Error) return object;
+			let message = new $root.pb.Error();
+			switch (object.code) {
+				default:
+					if (typeof object.code === "number") {
+						message.code = object.code;
+						break;
+					}
+					break;
+				case "NONE":
+				case 0:
+					message.code = 0;
+					break;
+				case "UNKNOWN":
+				case 1:
+					message.code = 1;
+					break;
+				case "INTERNAL":
+				case 2:
+					message.code = 2;
+					break;
+				case "INPUT":
+				case 100:
+					message.code = 100;
+					break;
+				case "INPUT_MISSING":
+				case 101:
+					message.code = 101;
+					break;
+				case "DB":
+				case 300:
+					message.code = 300;
+					break;
+				case "DB_CONNECT":
+				case 301:
+					message.code = 301;
+					break;
+				case "DB_NOT_FOUND":
+				case 302:
+					message.code = 302;
+					break;
+				case "DB_DUPLICATE":
+				case 303:
+					message.code = 303;
+					break;
+				case "DB_INSERT":
+				case 304:
+					message.code = 304;
+					break;
+				case "DB_SELECT":
+				case 305:
+					message.code = 305;
+					break;
+			}
+			if (object.message != null) message.message = String(object.message);
+			return message;
+		};
+		/**
+		* Creates a plain object from an Error message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.Error
+		* @static
+		* @param {pb.Error} message Error
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		Error.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				object.code = options.enums === String ? "NONE" : 0;
+				object.message = "";
+			}
+			if (message.code != null && message.hasOwnProperty("code")) object.code = options.enums === String ? $root.pb.Error.Code[message.code] === void 0 ? message.code : $root.pb.Error.Code[message.code] : message.code;
+			if (message.message != null && message.hasOwnProperty("message")) object.message = message.message;
+			return object;
+		};
+		/**
+		* Converts this Error to JSON.
+		* @function toJSON
+		* @memberof pb.Error
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		Error.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for Error
+		* @function getTypeUrl
+		* @memberof pb.Error
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		Error.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.Error";
+		};
+		/**
+		* Code enum.
+		* @name pb.Error.Code
+		* @enum {number}
+		* @property {number} NONE=0 NONE value
+		* @property {number} UNKNOWN=1 UNKNOWN value
+		* @property {number} INTERNAL=2 INTERNAL value
+		* @property {number} INPUT=100 INPUT value
+		* @property {number} INPUT_MISSING=101 INPUT_MISSING value
+		* @property {number} DB=300 DB value
+		* @property {number} DB_CONNECT=301 DB_CONNECT value
+		* @property {number} DB_NOT_FOUND=302 DB_NOT_FOUND value
+		* @property {number} DB_DUPLICATE=303 DB_DUPLICATE value
+		* @property {number} DB_INSERT=304 DB_INSERT value
+		* @property {number} DB_SELECT=305 DB_SELECT value
+		*/
+		Error.Code = (function() {
+			const valuesById = {}, values = Object.create(valuesById);
+			values[valuesById[0] = "NONE"] = 0;
+			values[valuesById[1] = "UNKNOWN"] = 1;
+			values[valuesById[2] = "INTERNAL"] = 2;
+			values[valuesById[100] = "INPUT"] = 100;
+			values[valuesById[101] = "INPUT_MISSING"] = 101;
+			values[valuesById[300] = "DB"] = 300;
+			values[valuesById[301] = "DB_CONNECT"] = 301;
+			values[valuesById[302] = "DB_NOT_FOUND"] = 302;
+			values[valuesById[303] = "DB_DUPLICATE"] = 303;
+			values[valuesById[304] = "DB_INSERT"] = 304;
+			values[valuesById[305] = "DB_SELECT"] = 305;
+			return values;
+		})();
+		return Error;
 	})();
 	pb.Item = (function() {
 		/**
@@ -4437,6 +4499,7 @@ var pb = $root.pb = (() => {
 		* @memberof pb
 		* @interface IItemList
 		* @property {Array.<pb.IItem>|null} [list] ItemList list
+		* @property {number|null} [cursor] ItemList cursor
 		*/
 		/**
 		* Constructs a new ItemList.
@@ -4460,6 +4523,13 @@ var pb = $root.pb = (() => {
 		*/
 		ItemList.prototype.list = $util.emptyArray;
 		/**
+		* ItemList cursor.
+		* @member {number} cursor
+		* @memberof pb.ItemList
+		* @instance
+		*/
+		ItemList.prototype.cursor = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
 		* Creates a new ItemList instance using the specified properties.
 		* @function create
 		* @memberof pb.ItemList
@@ -4482,6 +4552,7 @@ var pb = $root.pb = (() => {
 		ItemList.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
 			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.Item.encode(message.list[i], writer.uint32(10).fork()).ldelim();
+			if (message.cursor != null && Object.hasOwnProperty.call(message, "cursor")) writer.uint32(16).uint64(message.cursor);
 			return writer;
 		};
 		/**
@@ -4517,6 +4588,9 @@ var pb = $root.pb = (() => {
 					case 1:
 						if (!(message.list && message.list.length)) message.list = [];
 						message.list.push($root.pb.Item.decode(reader, reader.uint32()));
+						break;
+					case 2:
+						message.cursor = reader.uint64();
 						break;
 					default:
 						reader.skipType(tag & 7);
@@ -4556,6 +4630,9 @@ var pb = $root.pb = (() => {
 					if (error) return "list." + error;
 				}
 			}
+			if (message.cursor != null && message.hasOwnProperty("cursor")) {
+				if (!$util.isInteger(message.cursor) && !(message.cursor && $util.isInteger(message.cursor.low) && $util.isInteger(message.cursor.high))) return "cursor: integer|Long expected";
+			}
 			return null;
 		};
 		/**
@@ -4577,6 +4654,12 @@ var pb = $root.pb = (() => {
 					message.list[i] = $root.pb.Item.fromObject(object.list[i]);
 				}
 			}
+			if (object.cursor != null) {
+				if ($util.Long) (message.cursor = $util.Long.fromValue(object.cursor)).unsigned = true;
+				else if (typeof object.cursor === "string") message.cursor = parseInt(object.cursor, 10);
+				else if (typeof object.cursor === "number") message.cursor = object.cursor;
+				else if (typeof object.cursor === "object") message.cursor = new $util.LongBits(object.cursor.low >>> 0, object.cursor.high >>> 0).toNumber(true);
+			}
 			return message;
 		};
 		/**
@@ -4592,10 +4675,16 @@ var pb = $root.pb = (() => {
 			if (!options) options = {};
 			let object = {};
 			if (options.arrays || options.defaults) object.list = [];
+			if (options.defaults) if ($util.Long) {
+				let long = new $util.Long(0, 0, true);
+				object.cursor = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+			} else object.cursor = options.longs === String ? "0" : 0;
 			if (message.list && message.list.length) {
 				object.list = [];
 				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.Item.toObject(message.list[j], options);
 			}
+			if (message.cursor != null && message.hasOwnProperty("cursor")) if (typeof message.cursor === "number") object.cursor = options.longs === String ? String(message.cursor) : message.cursor;
+			else object.cursor = options.longs === String ? $util.Long.prototype.toString.call(message.cursor) : options.longs === Number ? new $util.LongBits(message.cursor.low >>> 0, message.cursor.high >>> 0).toNumber(true) : message.cursor;
 			return object;
 		};
 		/**
@@ -6099,21 +6188,30 @@ var gateway = async (req) => {
 	const re = new Uint8Array(await res.arrayBuffer());
 	return pb.APIRsp.decode(re);
 };
-var apiCall = async (key, req) => {
-	return (await gateway(pb.APIReq.fromObject({ [key]: req })))?.[key] ?? null;
-};
 var API = class {
+	lastError = null;
+	async _apiCall(key, req) {
+		const rsp = await gateway(pb.APIReq.fromObject({ [key]: req }));
+		if (rsp?.error) {
+			const e = pb.Error.create(rsp.error);
+			this.lastError = e;
+			console.warn(`api error ${e.code}: ${e.message}`);
+			return null;
+		}
+		this.lastError = null;
+		return rsp?.[key] ?? null;
+	}
 	async itemGet(id) {
-		return await apiCall("itemGet", id);
+		return await this._apiCall("itemGet", id);
 	}
 	async itemSet(e) {
-		return await apiCall("itemSet", e);
+		return await this._apiCall("itemSet", e);
 	}
 	async itemListRecent() {
-		return await apiCall("itemListRecent", 100);
+		return await this._apiCall("itemListRecent", 100);
 	}
 	async itemSearch(s) {
-		return await apiCall("itemSearch", s);
+		return await this._apiCall("itemSearch", s);
 	}
 };
 var api = new API();
@@ -7593,6 +7691,19 @@ var nav = (key) => {
 	});
 };
 //#endregion
+//#region src/component/common/error.ts
+var showError = (form, e) => {
+	const div = form.querySelector("div.alert");
+	if (!div) return;
+	if (!e?.code) {
+		div.textContent = "";
+		div.style.display = "none";
+		return;
+	}
+	div.innerText = `Error ${e.code}: ${e.message}`;
+	div.style.display = "block";
+};
+//#endregion
 //#region src/component/edit/edit.ts
 var Edit = class {
 	id;
@@ -7661,6 +7772,7 @@ var Edit = class {
 		});
 	}
 	async submit(form) {
+		showError(form, null);
 		const fd = new FormData(form);
 		const o = pb.ItemEdit.fromObject({
 			id: this.item.id,
@@ -7676,7 +7788,11 @@ var Edit = class {
 			og: this.valOpenGraph(fd),
 			hide: !!fd.get("hide")
 		});
+		form.querySelector("fieldset").disabled = true;
 		const re = await api.itemSet(o);
+		form.querySelector("fieldset").disabled = false;
+		if (!!re) window.location.href = "?action=search";
+		showError(form, api.lastError);
 		console.log("debug re", re);
 	}
 };
@@ -7797,4 +7913,4 @@ var Search = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-BaAf7xRG.js.map
+//# sourceMappingURL=index-CHpVo0LB.js.map
