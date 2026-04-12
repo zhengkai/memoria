@@ -3,6 +3,7 @@ import './style/index.scss'
 import { Edit } from './component/edit/edit'
 import { List } from './component/list/list'
 import { Search } from './component/search/search'
+import { FileList } from './component/file/list'
 
 (() => {
 
@@ -18,6 +19,9 @@ import { Search } from './component/search/search'
 			break;
 		case 'search':
 			new Search(url, el);
+			break;
+		case 'file':
+			new FileList(url, el);
 			break;
 		default:
 			new Search(url, el);

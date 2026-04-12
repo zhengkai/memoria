@@ -1,12 +1,15 @@
 package db
 
 import (
+	"database/sql"
 	"project/pb"
 	"project/util"
 	"project/zj"
 
 	"google.golang.org/protobuf/proto"
 )
+
+const queryItemList = `SELECT item_id FROM item WHERE project_id = 1 `
 
 func NewItem(item *pb.ItemDB) (id uint64, err error) {
 
@@ -84,4 +87,41 @@ func LoadItem(id uint64) (item *pb.ItemDB, err error) {
 
 	item.SetId(id)
 	return
+}
+
+func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
+
+	var rows *sql.Rows
+	var err error
+	if startID > 0 {
+		if orderDesc {
+			rows, err = d.Query(queryItemList+`AND item_id < ? ORDER BY item_id DESC LIMIT ?`, startID, limit)
+		} else {
+			rows, err = d.Query(queryItemList+`AND item_id > ? ORDER BY item_id ASC LIMIT ?`, startID, limit)
+		}
+	} else {
+		if orderDesc {
+			rows, err = d.Query(queryItemList+`ORDER BY item_id DESC LIMIT ?`, limit)
+		} else {
+			rows, err = d.Query(queryItemList+`ORDER BY item_id ASC LIMIT ?`, limit)
+		}
+	}
+	if err != nil {
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail")
+	}
+	defer rows.Close()
+
+	var li []uint64
+
+	for rows.Next() {
+		var id uint64
+
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail (when scan list)")
+		}
+
+		li = append(li, id)
+	}
+	return li, nil
 }

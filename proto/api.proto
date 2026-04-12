@@ -6,7 +6,7 @@ package pb;
 import "error.proto";
 import "item.proto";
 import "list.proto";
-
+import "file.proto";
 
 message APIReq {
 	oneof one {
@@ -14,6 +14,7 @@ message APIReq {
 		ItemEdit item_set = 11;
 		uint32 item_list_recent = 20;
 		ItemSearch item_search = 21;
+		uint64 file_list = 30;
 	}
 }
 
@@ -24,5 +25,6 @@ message APIRsp {
 		uint64 item_set = 11;
 		ItemList item_list_recent = 20;
 		ItemList item_search = 21;
+		FileList file_list = 30;
 	}
 }

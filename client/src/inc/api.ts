@@ -63,6 +63,10 @@ class API {
 	async itemSearch(s: pb.ItemSearch) {
 		return await this._apiCall<pb.ItemList>('itemSearch', s);
 	}
+
+	async fileList(cursor: number) {
+		return await this._apiCall<pb.FileList>('fileList', cursor);
+	}
 }
 
 export const api = new API();

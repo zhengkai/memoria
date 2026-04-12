@@ -1,0 +1,23 @@
+edition = "2024";
+
+option go_package = "/pb";
+package pb;
+
+message FileHash {
+	uint64 id = 1;
+	bytes hash = 2;
+}
+
+message File {
+	uint64 id = 1;
+	bytes hash = 2;
+	string name = 3;
+	uint64 size = 4;
+	string mime = 5;
+	uint64 ts_create = 6;
+}
+
+message FileList {
+	repeated File list = 1;
+	uint64 cursor = 2;
+}

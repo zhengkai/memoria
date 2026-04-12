@@ -28,6 +28,9 @@ func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 	case pb.APIReq_ItemSearch_case:
 		rsp.SetItemSearch(itemSearch(req.GetItemSearch(), e))
 
+	case pb.APIReq_FileList_case:
+		rsp.SetFileList(fileList(req.GetFileList(), e))
+
 	default:
 		e.SetMessage(pb.Error_INPUT_MISSING, "missing oneof field")
 	}
