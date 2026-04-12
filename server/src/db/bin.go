@@ -2,6 +2,8 @@ package db
 
 import (
 	"errors"
+	"project/pb"
+	"project/util"
 	"project/zj"
 
 	"github.com/go-sql-driver/mysql"
@@ -21,10 +23,12 @@ func SaveBin(hash, ab []byte) (id uint64, err error) {
 			row := d.QueryRow(query, hash)
 			err = row.Scan(&id)
 			if err != nil {
+				err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save bin fail: %x", hash[:4])
 				return
 			}
 			return id, nil
 		}
+		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save bin fail: %x", hash[:4])
 		return
 	}
 

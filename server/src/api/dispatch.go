@@ -2,6 +2,7 @@ package api
 
 import (
 	"project/pb"
+	"project/util"
 	"project/zj"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -9,8 +10,7 @@ import (
 
 func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 	rsp := new(pb.APIRsp)
-	ae := &pb.APIError{}
-	e := &Error{AE: ae}
+	e := &util.Error{Message: `ok`}
 	zj.IO("api req:", getReqOneName(req))
 
 	// 注意：switch { } 里的内容由 proto/gen/gen.go 生成
@@ -29,12 +29,15 @@ func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 		rsp.SetItemSearch(itemSearch(req.GetItemSearch(), e))
 
 	default:
-		ae.SetCode(pb.APIError_INPUT)
-		ae.SetMessage("invalid APIReq, unknown oneof field")
+		e.SetMessage(pb.Error_INPUT_MISSING, "missing oneof field")
 	}
 
-	if ae.GetCode() != pb.APIError_NONE {
-		er := pb.APIRsp_builder{Error: ae}.Build()
+	if e.Code != pb.Error_NONE {
+		er := pb.APIRsp_builder{Error: e.AsPB()}.Build()
+		zj.WF(`api error %3d: %s`, e.Code, e.Message)
+		if e.Detail != `` {
+			zj.W(`	detail: %s`, e.Detail)
+		}
 		return er
 	}
 	return rsp

@@ -10,11 +10,21 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+var ErrItemContentEmpty = &util.Error{
+	Code:    pb.Error_INPUT_MISSING,
+	Message: `item content empty`,
+}
+
 func Edit(ie *pb.ItemEdit) error {
+	if util.IsEmptyPB(ie.GetContent()) {
+		return ErrItemContentEmpty
+	}
 	if ie.GetId() == 0 {
 		return newItem(ie)
 	}
-	return editItem(ie)
+	x := editItem(ie)
+	zj.W(`edit error`, x)
+	return x
 }
 
 func editItem(ie *pb.ItemEdit) error {

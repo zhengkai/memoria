@@ -17,17 +17,20 @@ func NewItem(item *pb.ItemDB) (id uint64, err error) {
 
 	ab, err := proto.Marshal(v)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_INPUT).SetDetail("marshal item fail")
 		return
 	}
 
 	query := `INSERT INTO item SET project_id = 1, bin = ?`
 	r, err := d.Exec(query, ab)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).SetDetail("new item fail")
 		return
 	}
 
 	i, err := r.LastInsertId()
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).SetDetail("new item fail (get id)")
 		return
 	}
 
@@ -68,12 +71,14 @@ func LoadItem(id uint64) (item *pb.ItemDB, err error) {
 	var ab []byte
 	err = row.Scan(&ab)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF(`select item %d fail`, id)
 		return
 	}
 
 	item = &pb.ItemDB{}
 	err = proto.Unmarshal(ab, item)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_INTERNAL).DetailF(`unmarshal item %d fail`, id)
 		return
 	}
 

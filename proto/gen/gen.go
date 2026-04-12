@@ -117,8 +117,7 @@ func main() {
 
 	rp.WriteString(`
 	default:
-		ae.SetCode(pb.APIError_INPUT)
-		ae.SetMessage("invalid APIReq, unknown oneof field")`)
+		e.SetMessage(pb.Error_INPUT_MISSING, "missing oneof field")`)
 
 	rp.WriteString("\n\t${2}")
 

@@ -29,30 +29,39 @@ const gateway = async (req: pb.APIReq): Promise<pb.APIRsp | null> => {
 	return pb.APIRsp.decode(re);
 }
 
-const apiCall = async <T>(key: string, req: any): Promise<T | null> => {
-	const o = pb.APIReq.fromObject({
-		[key]: req,
-	});
-	const rsp = await gateway(o) as any;
-	return rsp?.[key] ?? null;
-}
-
 class API {
 
+	lastError: pb.Error | null = null;
+
+	private async _apiCall<T>(key: string, req: any): Promise<T | null> {
+		const o = pb.APIReq.fromObject({
+			[key]: req,
+		});
+		const rsp = await gateway(o) as any;
+		if (rsp?.error) {
+			const e = pb.Error.create(rsp.error);
+			this.lastError = e;
+			console.warn(`api error ${e.code}: ${e.message}`);
+			return null;
+		}
+		this.lastError = null;
+		return rsp?.[key] ?? null;
+	}
+
 	async itemGet(id: number) {
-		return await apiCall<pb.Item>('itemGet', id);
+		return await this._apiCall<pb.Item>('itemGet', id);
 	}
 
 	async itemSet(e: pb.ItemEdit) {
-		return await apiCall<boolean>('itemSet', e);
+		return await this._apiCall<boolean>('itemSet', e);
 	}
 
 	async itemListRecent() {
-		return await apiCall<pb.ItemList>('itemListRecent', 100);
+		return await this._apiCall<pb.ItemList>('itemListRecent', 100);
 	}
 
 	async itemSearch(s: pb.ItemSearch) {
-		return await apiCall<pb.ItemList>('itemSearch', s);
+		return await this._apiCall<pb.ItemList>('itemSearch', s);
 	}
 }
 

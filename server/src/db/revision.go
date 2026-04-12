@@ -24,15 +24,18 @@ func SaveRevision(hash, ab []byte) (id uint64, err error) {
 			row := d.QueryRow(query, hash)
 			err = row.Scan(&id)
 			if err != nil {
+				err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save revision fail: %x", hash[:4])
 				return
 			}
 			return id, nil
 		}
+		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save revision fail: %x", hash[:4])
 		return
 	}
 
 	i, err := r.LastInsertId()
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save revision fail: %x", hash[:4])
 		return
 	}
 
@@ -42,6 +45,10 @@ func SaveRevision(hash, ab []byte) (id uint64, err error) {
 
 func LoadRevision(id uint64) (rev *pb.Revision, hash [32]byte, err error) {
 
+	if id == 0 {
+		return &pb.Revision{}, hash, nil
+	}
+
 	defer zj.Watch(&err)
 
 	var bin []byte
@@ -50,6 +57,7 @@ func LoadRevision(id uint64) (rev *pb.Revision, hash [32]byte, err error) {
 	row := d.QueryRow(query, id)
 	err = row.Scan(&bin)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF("revision %d not found", id)
 		return
 	}
 
@@ -57,6 +65,7 @@ func LoadRevision(id uint64) (rev *pb.Revision, hash [32]byte, err error) {
 
 	err = proto.Unmarshal(bin, rev)
 	if err != nil {
+		err = util.NewError(err).SetCode(pb.Error_INTERNAL).DetailF("unmarshal revision %d fail", id)
 		rev = nil
 		return
 	}

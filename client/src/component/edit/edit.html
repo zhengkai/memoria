@@ -1,99 +1,107 @@
 <form>
-<div class="row">
-	<div class="col-12">
-		<h1>Edit <span class="id"></span></h1>
-	</div>
-</div>
-<div class="row">
-	<div class="col-12">
-		<input name="title" class="form-control" placeholder="Title">
-	</div>
-</div>
-<div class="row">
-	<div class="col-12">
-		<textarea name="content" class="form-control" rows="6"></textarea>
-	</div>
-</div>
-<div class="row">
-	<div class="col">
-		<label class="form-check-label">
-			<input class="form-check-input" type="radio" name="format" value="0">
-				Plain
-		</label><label class="form-check-label">
-			<input class="form-check-input" type="radio" name="format" value="1">
-				Markdown
-		</label><label class="form-check-label">
-			<input class="form-check-input" type="radio" name="format" value="2" checked>
-				AsciiDoc
-		</label>
-	</div>
-</div>
-<div class="row">
-	<div class="col-auto">
-		<label class="form-check-label">
-			<input type="checkbox" name="original" value="1">
-				原创
-		</label>
-	</div>
-	<div class="col-auto">
-		<label class="form-check-label">
-			<input type="checkbox" name="trivial" value="1">
-				琐事
-		</label>
-	</div>
-	<div class="col-auto">
-		<label class="form-check-label">
-			<input type="checkbox" name="hide" value="1">
-				隐藏
-		</label>
-	</div>
-</div>
-<div class="row">
-	<label for="itemRoot" class="col-3 col-form-label text-end">
-		root
-	</label>
-	<div class="col-4">
-		<input name="root" id="itemRoot" type="number" class="form-control">
-	</div>
-</div>
-<div class="row">
-	<label for="timeCreate" class="col-3 col-form-label text-end">
-		创建日期
-	</label>
-	<div class="col">
-		<input name="time-create" id="timeCreate" type="text" class="form-control">
-	</div>
-</div>
-<div class="row">
-	<label for="ogImage" class="col-3 col-form-label text-end">
-		OpenGraph 封面
-	</label>
-	<div class="col-4">
-		<input name="og-image" id="ogImage" type="number" class="form-control">
-	</div>
-</div>
-<div class="row">
-	<label for="ogDescription" class="col-3 col-form-label text-end">
-		OpenGraph 描述
-	</label>
-	<div class="col">
-		<input name="og-description" id="ogDescription" type="text" class="form-control">
-	</div>
-</div>
-<div class="row">
-	<label for="ogTag" class="col-3 col-form-label text-end">
-		OpenGraph 标签
-	</label>
-	<div class="col">
-		<input name="og-tag" id="ogTag" type="text" class="form-control">
-	</div>
-</div>
+	<fieldset>
+		<div class="row">
+			<div class="col-12">
+				<h1>Edit <span class="id"></span></h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<input name="title" class="form-control" placeholder="Title">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<textarea name="content" class="form-control" rows="6"></textarea>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<label class="form-check-label">
+					<input class="form-check-input" type="radio" name="format" value="0">
+					Plain
+				</label><label class="form-check-label">
+					<input class="form-check-input" type="radio" name="format" value="1">
+					Markdown
+				</label><label class="form-check-label">
+					<input class="form-check-input" type="radio" name="format" value="2" checked>
+					AsciiDoc
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-auto">
+				<label class="form-check-label">
+					<input type="checkbox" name="original" value="1">
+					原创
+				</label>
+			</div>
+			<div class="col-auto">
+				<label class="form-check-label">
+					<input type="checkbox" name="trivial" value="1">
+					琐事
+				</label>
+			</div>
+			<div class="col-auto">
+				<label class="form-check-label">
+					<input type="checkbox" name="hide" value="1">
+					隐藏
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<label for="itemRoot" class="col-3 col-form-label text-end">
+				root
+			</label>
+			<div class="col-4">
+				<input name="root" id="itemRoot" type="number" class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<label for="timeCreate" class="col-3 col-form-label text-end">
+				创建日期
+			</label>
+			<div class="col">
+				<input name="time-create" id="timeCreate" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<label for="ogImage" class="col-3 col-form-label text-end">
+				OpenGraph 封面
+			</label>
+			<div class="col-4">
+				<input name="og-image" id="ogImage" type="number" class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<label for="ogDescription" class="col-3 col-form-label text-end">
+				OpenGraph 描述
+			</label>
+			<div class="col">
+				<input name="og-description" id="ogDescription" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="row">
+			<label for="ogTag" class="col-3 col-form-label text-end">
+				OpenGraph 标签
+			</label>
+			<div class="col">
+				<input name="og-tag" id="ogTag" type="text" class="form-control">
+			</div>
+		</div>
 
-<div class="row">
-	<div class="col">
+		<div class="row">
+		<div class="col">
+		</div>
+		<div class="col-auto">
+			<button type="submit" class="btn btn-primary">Save</button>
+		</div>
 	</div>
-	<div class="col-auto">
-		<button type="submit" class="btn btn-primary">Save</button>
+	</fieldset>
+
+	<div class="row">
+		<div class="alert alert-danger" role="alert">
+			A simple warning alert—check it out!
+		</div>
 	</div>
-</div>
 </form>

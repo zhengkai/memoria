@@ -51,4 +51,5 @@ message ItemEdit {
 
 message ItemList {
 	repeated Item list = 1;
+	uint64 cursor = 2;
 }

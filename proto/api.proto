@@ -3,22 +3,14 @@ edition = "2024";
 option go_package = "/pb";
 package pb;
 
+import "error.proto";
 import "item.proto";
 import "list.proto";
 
-message APIError {
-	enum Enum {
-		NONE = 0;
-		INPUT = 100;
-		DB = 300;
-	}
-	Enum code = 1;
-	string message = 2;
-}
 
 message APIReq {
 	oneof one {
-		uint32 item_get = 10;
+		uint64 item_get = 10;
 		ItemEdit item_set = 11;
 		uint32 item_list_recent = 20;
 		ItemSearch item_search = 21;
@@ -26,7 +18,7 @@ message APIReq {
 }
 
 message APIRsp {
-	APIError error = 1;
+	Error error = 1;
 	oneof one {
 		Item item_get = 10;
 		uint64 item_set = 11;

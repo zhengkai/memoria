@@ -1,6 +1,7 @@
 import tpl from './edit.html?raw'
 import { api, pb } from '../../inc';
 import { nav } from '../common/nav';
+import { showError } from '../common/error';;
 
 export class Edit {
 
@@ -99,6 +100,7 @@ export class Edit {
 	}
 
 	formOg(og: pb.OpenGraph, form: HTMLFormElement) {
+
 		if (og.image) {
 			form.querySelector<HTMLInputElement>(
 				`input[name="og-image"]`
@@ -139,6 +141,8 @@ export class Edit {
 
 	async submit(form: HTMLFormElement) {
 
+		showError(form, null);
+
 		const fd = new FormData(form);
 
 		const o = pb.ItemEdit.fromObject({
@@ -156,7 +160,14 @@ export class Edit {
 			hide: !!fd.get('hide'),
 		});
 
+		form.querySelector('fieldset')!.disabled = true;
 		const re = await api.itemSet(o);
+		form.querySelector('fieldset')!.disabled = false;
+		if (!!re) {
+			window.location.href = '?action=search'
+		}
+		showError(form, api.lastError);
+
 		console.log('debug re', re);
 	}
 }

@@ -1,6 +1,10 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+	"project/pb"
+	"project/util"
+)
 
 func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
 
@@ -20,7 +24,7 @@ func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
 		}
 	}
 	if err != nil {
-		return nil, err
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail")
 	}
 	defer rows.Close()
 
@@ -31,7 +35,7 @@ func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
 
 		err = rows.Scan(&id)
 		if err != nil {
-			return nil, err
+			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail (when scan list)")
 		}
 
 		li = append(li, id)

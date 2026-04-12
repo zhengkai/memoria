@@ -1,0 +1,26 @@
+edition = "2024";
+
+option go_package = "/pb";
+package pb;
+
+message Error {
+	enum Code {
+		NONE = 0;
+		UNKNOWN = 1;
+		INTERNAL = 2;
+
+		INPUT = 100;
+		INPUT_MISSING = 101;
+
+		// HTTP 200 段表示正常，故避开
+
+		DB = 300;
+		DB_CONNECT = 301;
+		DB_NOT_FOUND = 302;
+		DB_DUPLICATE = 303;
+		DB_INSERT = 304;
+		DB_SELECT = 305;
+	}
+	Code code = 1;
+	string message = 2;
+}
