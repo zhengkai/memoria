@@ -8,4 +8,5 @@ var (
 	WebAddr   = `:80`
 	MySQL     = `memoria:memoria@/memoria`
 	StaticDir = `/static`
+	ClientDir = ``
 )

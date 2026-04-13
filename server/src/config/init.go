@@ -11,9 +11,10 @@ func init() {
 	Dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 
 	list := map[string]*string{
-		`MEMORIA_WEB`:   &WebAddr,
-		`MEMORIA_MYSQL`: &MySQL,
-		`MEMORIA_DIR`:   &StaticDir,
+		`MEMORIA_WEB`:    &WebAddr,
+		`MEMORIA_MYSQL`:  &MySQL,
+		`MEMORIA_DIR`:    &StaticDir,
+		`MEMORIA_CLIENT`: &ClientDir,
 	}
 	for k, v := range list {
 		s := os.Getenv(k)

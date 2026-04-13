@@ -32,7 +32,8 @@ jobs:
 
       - name: sync files
         run: |
-          rsync -av --delete --exclude='.git/' main/client/dist/ dist/
+          rsync -av --delete --exclude='.git/' main/client/dist/ dist/ && \
+          cp main/client/robots.txt dist/
 
       - name: commit
         run: |

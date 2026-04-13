@@ -8,15 +8,15 @@ import (
 )
 
 func InitDirCheck() {
-	if !canRead() {
+	if !DirCanRead(config.Dir) {
 		zj.WF(`dir %s can not read`, config.Dir)
 	} else if !canWrite() {
 		zj.WF(`dir %s can not write`, config.Dir)
 	}
 }
 
-func canRead() bool {
-	f, err := os.Open(config.Dir)
+func DirCanRead(dir string) bool {
+	f, err := os.Open(dir)
 	if err != nil {
 		return false
 	}

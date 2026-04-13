@@ -3,6 +3,7 @@ package web
 
 import (
 	"project/api"
+	"project/util"
 
 	"net/http"
 	"project/config"
@@ -15,9 +16,19 @@ func Server() {
 
 	mux := http.NewServeMux()
 
+	mux.HandleFunc(`/robots.txt`, robotsHandle)
 	mux.Handle(`/api`, api.Handler)
 
-	mux.HandleFunc(`/`, failbackHandle)
+	if config.ClientDir == `` {
+		mux.HandleFunc(`/`, failbackHandle)
+	} else {
+		if util.DirCanRead(config.ClientDir) {
+			zj.J(`service client dist at`, config.ClientDir)
+			mux.Handle("/", http.FileServer(http.Dir(config.ClientDir)))
+		} else {
+			zj.W(`client dir can not read`, config.ClientDir)
+		}
+	}
 
 	s := &http.Server{
 		Addr:         config.WebAddr,
@@ -39,4 +50,9 @@ func Server() {
 func failbackHandle(w http.ResponseWriter, r *http.Request) {
 	metrics.ErrorCount(http.StatusNotFound)
 	zj.J(`failback handle`, r.URL.String())
+}
+
+func robotsHandle(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("User-agent: *\nDisallow: /\n"))
 }

@@ -35,10 +35,13 @@ RUN mkdir /static
 
 COPY --from=builder /project/server/dist/prod/memoria-server-next /memoria-server
 
+COPY client/dist-git/ /public
+
 ENV TZ="Asia/Shanghai"
 
 ENV MEMORIA_WEB=":80"
 ENV MEMORIA_DIR="/static"
+ENV MEMORIA_CLIENT="/public"
 
 EXPOSE 80
 

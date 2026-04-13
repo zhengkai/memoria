@@ -1,2 +1,3 @@
 /client/src/inc/pb/pb.*
+/client/dist-git/.git
 /server/src/pb/*.pb.go
