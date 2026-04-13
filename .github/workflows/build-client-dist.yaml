@@ -42,6 +42,10 @@ jobs:
           git add . && \
           git commit --all --message="Client Dist by Github Action" || echo "No changes to commit"
 
+      - name: squash commit
+        run: |
+          ./main/misc/git/squash-dist.sh dist
+
       - name: push
         run: |
           cd dist && \
