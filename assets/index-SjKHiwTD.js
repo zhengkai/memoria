@@ -867,13 +867,13 @@ var require_minimal$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	* @type {Array.<*>}
 	* @const
 	*/
-	util.emptyArray = Object.freeze ? Object.freeze([]) : [];
+	util.emptyArray = Object.freeze ? Object.freeze([]) : 	/* istanbul ignore next */ [];
 	/**
 	* An immutable empty object.
 	* @type {Object}
 	* @const
 	*/
-	util.emptyObject = Object.freeze ? Object.freeze({}) : (	/* istanbul ignore next */ {});
+	util.emptyObject = Object.freeze ? Object.freeze({}) : 	/* istanbul ignore next */ {};
 	/**
 	* Tests if the specified value is an integer.
 	* @function
@@ -925,7 +925,7 @@ var require_minimal$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	util.Buffer = (function() {
 		try {
 			var Buffer = util.inquire("buffer").Buffer;
-			return Buffer.prototype.utf8Write ? Buffer : null;
+			return Buffer.prototype.utf8Write ? Buffer : 			/* istanbul ignore next */ null;
 		} catch (e) {
 			/* istanbul ignore next */
 			return null;
@@ -1894,6 +1894,7 @@ var require_reader = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			case 5:
 				this.skip(4);
 				break;
+			/* istanbul ignore next */
 			default: throw Error("invalid wire type " + wireType + " at offset " + this.pos);
 		}
 		return this;
@@ -1902,7 +1903,7 @@ var require_reader = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		BufferReader = BufferReader_;
 		Reader.create = create();
 		BufferReader._configure();
-		var fn = util.Long ? "toLong" : "toNumber";
+		var fn = util.Long ? "toLong" : 		/* istanbul ignore next */ "toNumber";
 		util.merge(Reader.prototype, {
 			int64: function read_int64() {
 				return readLongVarint.call(this)[fn](false);
@@ -8735,4 +8736,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-gOUnAByQ.js.map
+//# sourceMappingURL=index-SjKHiwTD.js.map
