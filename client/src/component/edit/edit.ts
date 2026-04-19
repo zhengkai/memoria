@@ -7,7 +7,11 @@ export class Edit {
 
 	id: number;
 	root: HTMLElement;
-	item = pb.Item.create();
+	item = pb.Item.create({
+		"meta": {
+			"original": true,
+		},
+	});
 
 	constructor(url: URL, root: HTMLElement) {
 
