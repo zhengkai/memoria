@@ -8500,7 +8500,7 @@ var showError = (form, e) => {
 var Edit = class {
 	id;
 	root;
-	item = pb.Item.create();
+	item = pb.Item.create({ "meta": { "original": true } });
 	constructor(url, root) {
 		this.root = root;
 		this.id = Number(url.searchParams.get("id")) | 0;
@@ -8736,4 +8736,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-SjKHiwTD.js.map
+//# sourceMappingURL=index-fo3EaB98.js.map
