@@ -1,4 +1,4 @@
-SHELL:=/bin/bash
+SHELL:=/usr/bin/env bash
 
 PB_BIN=../client/node_modules/protobufjs-cli/bin
 PB_JS=../client/src/inc/pb
