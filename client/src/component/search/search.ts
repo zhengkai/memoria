@@ -46,16 +46,35 @@ export class Search {
 			d[key] = r;
 
 		}
+		console.log('query', fd, d, fd.get('keyword'));
 		return pb.ItemSearch.fromObject(d);
 	}
 
 	async submit(form: HTMLFormElement) {
 
-		const re = await api.itemSearch(this.buildData(new FormData(form)));
+		const fd = this.buildData(new FormData(form));
+		form.querySelector('fieldset')!.disabled = true;
+		const re = await api.itemSearch(fd);
+		form.querySelector('fieldset')!.disabled = false;
+
+		this.resultDetail(re?.list?.length || 0, re?.effected || 0);
+
+		console.log('re', re);
+
+		const div = this.root.querySelector<HTMLDivElement>('div.item-list');
 		if (!re?.list?.length) {
+			tplItemList([], div);
 			return;
 		}
+		tplItemList(re.list, div);
+	}
 
-		tplItemList(re.list, this.root.querySelector('div.item-list'));
+	resultDetail(cnt: number, effected: number) {
+		let text = `查询完成：处理 ${effected} 条，返回 ${cnt} 条`;
+		if (!effected) {
+			text = `异常：未能检索数据`;
+
+		}
+		document.querySelector('.result-detail')!.textContent = text;
 	}
 }

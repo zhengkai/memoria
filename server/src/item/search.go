@@ -7,13 +7,11 @@ import (
 	"strings"
 )
 
-func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
+func Search(s *pb.ItemSearch) (re []*pb.Item, cursor uint64, effected uint64, err error) {
 
 	target := 20
 
-	var re []*pb.Item
 	var li []uint64
-	var err error
 	var it *pb.Item
 	searchID := s.GetId()
 	var isSearch = !util.IsEmptyPB(s)
@@ -21,14 +19,14 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 		limit := target - len(re)
 		li, err = db.ListItem(int(searchID), limit, true)
 		if err != nil {
-			return nil, err
+			return nil, 0, effected, err
 		}
 
-		var id uint64
-		for _, id = range li {
-			it, err = Get(id)
+		for _, cursor = range li {
+			effected++
+			it, err = Get(cursor)
 			if err != nil {
-				return nil, err
+				return nil, 0, effected, err
 			}
 			if isSearch && !filterItem(it, s) {
 				continue
@@ -42,14 +40,15 @@ func Search(s *pb.ItemSearch) ([]*pb.Item, error) {
 			break
 		}
 		if len(li) < limit {
+			cursor = 0
 			break
 		}
-		if searchID == 0 || searchID > id {
-			searchID = id
+		if searchID == 0 || searchID > cursor {
+			searchID = cursor
 		}
 	}
 
-	return re, nil
+	return re, cursor, effected, nil
 }
 
 func filterItem(it *pb.Item, s *pb.ItemSearch) bool {

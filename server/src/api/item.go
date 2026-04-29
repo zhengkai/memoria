@@ -48,10 +48,14 @@ func itemListRecent(n uint32, e *util.Error) *pb.ItemList {
 }
 
 func itemSearch(s *pb.ItemSearch, e *util.Error) *pb.ItemList {
-	li, err := item.Search(s)
+	li, cursor, effected, err := item.Search(s)
 	if err != nil {
 		e.Fill(err)
 		return nil
 	}
-	return pb.ItemList_builder{List: li}.Build()
+	return pb.ItemList_builder{
+		List:     li,
+		Cursor:   &cursor,
+		Effected: &effected,
+	}.Build()
 }
