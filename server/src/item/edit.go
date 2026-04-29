@@ -23,7 +23,7 @@ func Edit(ie *pb.ItemEdit) error {
 		return newItem(ie)
 	}
 	x := editItem(ie)
-	zj.W(`edit error`, x)
+	// zj.W(`edit error`, x)
 	return x
 }
 
@@ -108,8 +108,14 @@ func newItem(ie *pb.ItemEdit) error {
 		return err
 	}
 
+	now := uint64(time.Now().UnixMilli())
+	tsCreate := now
+	if ie.GetTsCreate() > 0 {
+		tsCreate = ie.GetTsCreate()
+	}
+
 	meta := pb.ItemMeta_builder{
-		TsCreate: new(uint64(time.Now().UnixMilli())),
+		TsCreate: &tsCreate,
 		TsRevise: new(uint64(0)),
 		TsHide:   new(uint64(0)),
 		Root:     new(ie.GetRoot()),
@@ -119,7 +125,7 @@ func newItem(ie *pb.ItemEdit) error {
 		TweetId:  new(ie.GetTweetId()),
 	}.Build()
 	if ie.GetHide() {
-		meta.SetTsHide(meta.GetTsCreate())
+		meta.SetTsHide(now)
 	}
 
 	d := pb.ItemDB_builder{
