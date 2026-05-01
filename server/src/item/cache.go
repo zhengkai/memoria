@@ -35,6 +35,10 @@ func (rp *ItemPool) GetDB(id uint64) (*pb.ItemDB, error) {
 	return d, nil
 }
 
+func (rp *ItemPool) Clear() {
+	rp.cache.Reset()
+}
+
 func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 	d, err := rp.cache.Get(id)
 	if err != nil {
