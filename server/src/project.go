@@ -2,6 +2,7 @@
 package project
 
 import (
+	"os"
 	"project/build"
 	"project/db"
 	"project/util"
@@ -12,6 +13,8 @@ import (
 func run() {
 
 	build.DumpBuildInfo()
+
+	os.MkdirAll(util.Static(`tmp`), 0755)
 
 	zj.Init()
 

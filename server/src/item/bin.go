@@ -13,6 +13,8 @@ import (
 
 var binPool = newBinPool()
 
+var BinGet = binPool.GetBin
+
 type BinPool struct {
 	cache coral.Cache[uint64, []byte]
 	hash  map[[32]byte]uint64
@@ -36,6 +38,10 @@ func (bp *BinPool) Get(id uint64, m proto.Message) error {
 	}
 
 	return proto.Unmarshal(ab, m)
+}
+
+func (bp *BinPool) GetBin(id uint64) ([]byte, error) {
+	return bp.cache.Get(id)
 }
 
 func (bp *BinPool) Save(m proto.Message) (uint64, error) {

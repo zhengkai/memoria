@@ -86,6 +86,10 @@ func (g *Gen) run() {
 		zj.W(`gen fail, no time:`, err)
 		return
 	}
+
+	// TODO
+	ts = 0
+
 	g.fetchData(ts)
 	if len(g.item) == 0 {
 		zj.J(`nothing for gen, skip`)

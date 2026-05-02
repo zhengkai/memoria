@@ -14,6 +14,8 @@ import (
 
 var revisionPool = newRevisionPool()
 
+var RevisionGet = revisionPool.Get
+
 type RevisionPool struct {
 	cache coral.Cache[uint64, *pb.Revision]
 	hash  map[[32]byte]uint64
@@ -46,7 +48,6 @@ func (rp *RevisionPool) Save(rev *pb.Revision) (uint64, error) {
 
 	hash := sha256.Sum256(ab)
 	if rp.mux.TryRLock() {
-
 		rid, ok := rp.hash[hash]
 		rp.mux.RUnlock()
 		if ok {
@@ -54,7 +55,7 @@ func (rp *RevisionPool) Save(rev *pb.Revision) (uint64, error) {
 		}
 	}
 
-	id, err := db.SaveRevision(hash[:], ab)
+	id, err := db.SaveRevision(hash, ab)
 	if err != nil {
 		return 0, err
 	}
