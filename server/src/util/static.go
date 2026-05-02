@@ -74,9 +74,5 @@ func ReadStaticData(file string, m proto.Message) (hash [sha256.Size]byte, err e
 	}
 
 	err = proto.Unmarshal(data, m)
-	if err != nil {
-		return
-	}
-
 	return
 }

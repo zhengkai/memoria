@@ -23,15 +23,16 @@ func GetGenTime() (ts uint64, err error) {
 	row := d.QueryRow(query, genTimeIDMain)
 
 	err = row.Scan(&ts)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			query := `INSERT IGNORE INTO gen_time SET gen_id = ?`
-			d.Exec(query, genTimeIDMain)
-			return 0, nil
-		}
-		return 0, err
+	if err == sql.ErrNoRows {
+		err = nil
 	}
-	return ts, nil
+	return
+}
+
+func SetGenTime(ts uint64) error {
+	query := `INSERT INTO gen_time SET gen_id = ?, ts = ? ON DUPLICATE KEY UPDATE ts = ?`
+	_, err := d.Exec(query, genTimeIDMain, ts, ts)
+	return err
 }
 
 func GetAllItemDB(ctx context.Context) func(func(*GenRow, error) bool) {

@@ -2,10 +2,8 @@
 package gen
 
 import (
-	"fmt"
 	"net/http"
 	"project/db"
-	"project/item"
 	"project/pb"
 	"project/util"
 	"project/zj"
@@ -15,21 +13,40 @@ import (
 	"github.com/zhengkai/life-go"
 )
 
-var theGen = &Gen{}
+var mux sync.Mutex
 
 func TestHandle(w http.ResponseWriter, r *http.Request) {
-	if !theGen.Run() {
-		w.Write([]byte(`gen locked`))
+	if Run() {
+		w.Write([]byte(`gen start`))
 		return
 	}
-	w.Write([]byte(`gen start`))
+	w.Write([]byte(`gen locked`))
+}
+
+func Run() bool {
+
+	if !mux.TryLock() {
+		return false
+	}
+	go func() {
+		zj.IO(`gen start`)
+		g := Gen{}
+		g.run()
+		zj.IO(`gen end`)
+		mux.Unlock()
+	}()
+	return true
+}
+
+type GenFail struct {
+	Name  string
+	Error error
 }
 
 type Gen struct {
-	mux sync.Mutex
+	wg sync.WaitGroup
 
-	itemUpdate []*pb.ItemDB
-	itemFull   []*pb.ItemDB
+	item []*pb.ItemDB
 
 	// g.article, g.note 记录对应的全部数据
 	article *ByYear
@@ -38,34 +55,51 @@ type Gen struct {
 	// hasArticle, hasNote 决定更新哪部分
 	hasArticle bool
 	hasNote    map[uint32]bool
+
+	fail *GenFail
+}
+
+func (g *Gen) addFail(name string, err error) {
+	if err == nil || g.fail != nil {
+		return
+	}
+	g.fail = &GenFail{
+		Name:  name,
+		Error: err,
+	}
 }
 
 func (g *Gen) init() {
-
 	g.note = NewByYear()
 	g.article = NewByYear()
 	g.hasNote = make(map[uint32]bool)
 }
 
-func (g *Gen) Run() bool {
-
-	if !g.mux.TryLock() {
-		return false
-	}
-	g.mux.Unlock()
+func (g *Gen) run() {
 
 	g.init()
+
+	now := util.Now()
 
 	ts, err := db.GetGenTime()
 	if err != nil {
 		zj.W(`gen fail, no time:`, err)
-		return false
+		return
 	}
 	g.fetchData(ts)
+	if len(g.item) == 0 {
+		zj.J(`nothing for gen, skip`)
+		return
+	}
 
 	g.doGen()
 
-	return true
+	if g.fail != nil {
+		zj.W(`gen fail:`, g.fail.Name, g.fail.Error)
+		return
+	}
+
+	db.SetGenTime(now)
 }
 
 func (g *Gen) fetchData(ts uint64) bool {
@@ -77,7 +111,6 @@ func (g *Gen) fetchData(ts uint64) bool {
 			zj.W(`db.GetAllItemDB fail:`, err)
 			return false
 		}
-		g.itemFull = append(g.itemFull, row.Item)
 
 		year := GetYear(row.Item)
 		isNote := row.Item.GetMeta().GetTitle() == ``
@@ -87,12 +120,12 @@ func (g *Gen) fetchData(ts uint64) bool {
 			} else {
 				g.hasArticle = true
 			}
-			g.itemUpdate = append(g.itemUpdate, row.Item)
+			g.item = append(g.item, row.Item)
 		}
 		if isNote {
-			g.article.Add(year, row.Item)
-		} else {
 			g.note.Add(year, row.Item)
+		} else {
+			g.article.Add(year, row.Item)
 		}
 	}
 
@@ -101,30 +134,15 @@ func (g *Gen) fetchData(ts uint64) bool {
 
 func (g *Gen) doGen() {
 
-	g.genItem()
+	go g.genItem()
 
 	for year := range g.hasNote {
-		g.genNote(year)
+		go g.genNote(year)
 	}
 
 	if g.hasArticle {
-		g.genArticle()
-	}
-}
-
-func (g *Gen) genItem() bool {
-
-	for _, d := range g.itemUpdate {
-		it, err := item.GetItemFull(d)
-		if err != nil {
-			zj.W(`gen item fail:`, err)
-			continue
-		}
-
-		id := it.GetId()
-		file := fmt.Sprintf(`data/item/%03d/%03d.bin`, id/1000, id%1000)
-		util.WriteStaticData(file, it)
+		go g.genArticle()
 	}
 
-	return true
+	g.wg.Wait()
 }

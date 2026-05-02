@@ -20,5 +20,5 @@ message RenderArticleYear {
 }
 
 message RenderArticleIndex {
-	repeated RenderArticleYear year = 1;
+	repeated RenderArticleYear list = 1;
 }
