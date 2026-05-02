@@ -54,9 +54,8 @@ func SaveItem(item *pb.ItemDB) (err error) {
 		return
 	}
 
-	// query := `INSERT INTO item SET item_id = ?, bin = ?`
 	query := `UPDATE item SET bin = ?, ts_update = ? WHERE item_id = ?`
-	_, err = d.Exec(query, ab, id, util.Now())
+	_, err = d.Exec(query, ab, util.Now(), id)
 	if err != nil {
 		return
 	}

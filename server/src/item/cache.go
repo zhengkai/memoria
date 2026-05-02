@@ -45,28 +45,7 @@ func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 		return nil, err
 	}
 
-	r, err := revisionPool.Get(d.GetRevisionId())
-	if err != nil {
-		return nil, err
-	}
-
-	ogID := d.GetOgId()
-	var og = &pb.OpenGraph{}
-	if ogID > 0 {
-		err := binPool.Get(ogID, og)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	it := pb.Item_builder{
-		Id:      new(d.GetId()),
-		Meta:    d.GetMeta(),
-		Content: r,
-		Og:      og,
-	}.Build()
-
-	return it, nil
+	return GetItemFull(d)
 }
 
 func (rp *ItemPool) cacheLoad(id uint64) (*pb.ItemDB, *time.Time, error) {
