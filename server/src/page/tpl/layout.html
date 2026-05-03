@@ -1,0 +1,23 @@
+{{define "layout"}}
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Talim</title>
+<base href="https://talim.9farm.com/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+
+{{template "header" .}}
+
+<main>
+  {{block "content" .}}{{end}}
+</main>
+
+{{template "footer" .}}
+
+</body>
+</html>
+{{end}}

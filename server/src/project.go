@@ -5,6 +5,7 @@ import (
 	"os"
 	"project/build"
 	"project/db"
+	"project/page"
 	"project/util"
 	"project/web"
 	"project/zj"
@@ -25,6 +26,7 @@ func run() {
 	go web.Server()
 
 	// render.Test()
+	page.Run()
 }
 
 func afterRun() {

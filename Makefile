@@ -26,3 +26,6 @@ docker:
 		git clone --branch=client-dist --depth 1 https://github.com/zhengkai/memoria.git client/dist-git; \
 	fi
 	sudo docker build -t memoria -f docker/Dockerfile .
+
+doc:
+	cd server/src && godoc -http=:6060
