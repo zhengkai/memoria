@@ -2,6 +2,7 @@
 package project
 
 import (
+	"os"
 	"project/build"
 	"project/db"
 	"project/util"
@@ -13,6 +14,8 @@ func run() {
 
 	build.DumpBuildInfo()
 
+	os.MkdirAll(util.Static(`tmp`), 0755)
+
 	zj.Init()
 
 	util.InitDirCheck()
@@ -20,6 +23,8 @@ func run() {
 	db.WaitConn()
 
 	go web.Server()
+
+	// render.Test()
 }
 
 func afterRun() {

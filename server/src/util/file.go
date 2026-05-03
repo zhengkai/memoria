@@ -52,3 +52,24 @@ func canWrite() bool {
 		return mode&0002 != 0 // others write
 	}
 }
+
+func WriteTemp[T []byte | string](content T) (file string, err error) {
+
+	f, err := os.CreateTemp(Static(`tmp`), `tmp-go-*`)
+	if err != nil {
+		return
+	}
+
+	switch v := any(content).(type) {
+	case string:
+		_, err = f.WriteString(v)
+	case []byte:
+		_, err = f.Write(v)
+	}
+	f.Close()
+	file = f.Name()
+	if err != nil {
+		os.Remove(file)
+	}
+	return
+}

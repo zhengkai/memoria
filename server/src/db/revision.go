@@ -10,18 +10,18 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func SaveRevision(hash, ab []byte) (id uint64, err error) {
+func SaveRevision(hash [32]byte, ab []byte) (id uint64, err error) {
 
 	defer zj.Watch(&err)
 
 	query := `INSERT INTO revision SET hash = ?, bin = ?`
-	r, err := d.Exec(query, hash, ab)
+	r, err := d.Exec(query, hash[:], ab)
 	if err != nil {
 		var me *mysql.MySQLError
 		if errors.As(err, &me) && me.Number == 1062 {
 			// hash 冲突则取出已有 id
 			query := `SELECT revision_id FROM revision WHERE hash = ?`
-			row := d.QueryRow(query, hash)
+			row := d.QueryRow(query, hash[:])
 			err = row.Scan(&id)
 			if err != nil {
 				err = util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("save revision fail: %x", hash[:4])
@@ -52,14 +52,17 @@ func LoadRevision(id uint64) (rev *pb.Revision, hash [32]byte, err error) {
 	defer zj.Watch(&err)
 
 	var bin []byte
+	var hashAB []byte
 
-	query := `SELECT bin FROM revision WHERE revision_id = ?`
+	query := `SELECT bin, hash FROM revision WHERE revision_id = ?`
 	row := d.QueryRow(query, id)
-	err = row.Scan(&bin)
+	err = row.Scan(&bin, &hashAB)
 	if err != nil {
 		err = util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF("revision %d not found", id)
 		return
 	}
+
+	copy(hash[:], hashAB)
 
 	rev = &pb.Revision{}
 
@@ -69,7 +72,6 @@ func LoadRevision(id uint64) (rev *pb.Revision, hash [32]byte, err error) {
 		rev = nil
 		return
 	}
-
 	return
 }
 

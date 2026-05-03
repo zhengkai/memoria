@@ -24,8 +24,8 @@ func NewItem(item *pb.ItemDB) (id uint64, err error) {
 		return
 	}
 
-	query := `INSERT INTO item SET project_id = 1, bin = ?`
-	r, err := d.Exec(query, ab)
+	query := `INSERT INTO item SET project_id = 1, bin = ?, ts_update = ?`
+	r, err := d.Exec(query, ab, util.Now())
 	if err != nil {
 		err = util.NewError(err).SetCode(pb.Error_DB_INSERT).SetDetail("new item fail")
 		return
@@ -54,9 +54,8 @@ func SaveItem(item *pb.ItemDB) (err error) {
 		return
 	}
 
-	// query := `INSERT INTO item SET item_id = ?, bin = ?`
-	query := `UPDATE item SET bin = ? WHERE item_id = ?`
-	_, err = d.Exec(query, ab, id)
+	query := `UPDATE item SET bin = ?, ts_update = ? WHERE item_id = ?`
+	_, err = d.Exec(query, ab, util.Now(), id)
 	if err != nil {
 		return
 	}

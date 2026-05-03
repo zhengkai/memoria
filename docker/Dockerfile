@@ -33,6 +33,8 @@ FROM alpine:latest
 
 RUN mkdir /static
 
+RUN apk add --no-cache asciidoctor cmark
+
 COPY --from=builder /project/server/dist/prod/memoria-server-next /memoria-server
 
 COPY client/dist-git/ /public
