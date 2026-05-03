@@ -1,9 +1,9 @@
-// Package render 将 gen 的 static/data 转为 HTML
+// Package render 将 export 的 static/data 转为 HTML
 package render
 
 import (
 	"fmt"
-	"project/gen"
+	"project/export"
 	"project/pb"
 	"project/util"
 	"project/zj"
@@ -28,7 +28,7 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 		return ab, nil
 	}
 
-	revFile := gen.RevisionFileName(it.GetRevisionId())
+	revFile := export.RevisionFileName(it.GetRevisionId())
 
 	rev := &pb.Revision{}
 	err = util.ReadStaticData(revFile, rev)

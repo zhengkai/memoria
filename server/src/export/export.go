@@ -1,5 +1,5 @@
-// Package gen 生成数据
-package gen
+// Package export 生成数据
+package export
 
 import (
 	"net/http"
@@ -17,10 +17,10 @@ var mux sync.Mutex
 
 func TestHandle(w http.ResponseWriter, r *http.Request) {
 	if Run() {
-		w.Write([]byte(`gen start`))
+		w.Write([]byte(`export start`))
 		return
 	}
-	w.Write([]byte(`gen locked`))
+	w.Write([]byte(`export locked`))
 }
 
 func Run() bool {
@@ -29,21 +29,21 @@ func Run() bool {
 		return false
 	}
 	go func() {
-		zj.IO(`gen start`)
-		g := Gen{}
+		zj.IO(`export start`)
+		g := Export{}
 		g.run()
-		zj.IO(`gen end`)
+		zj.IO(`export end`)
 		mux.Unlock()
 	}()
 	return true
 }
 
-type GenFail struct {
+type ExportFail struct {
 	Name  string
 	Error error
 }
 
-type Gen struct {
+type Export struct {
 	wg sync.WaitGroup
 
 	item []*pb.ItemDB
@@ -56,57 +56,57 @@ type Gen struct {
 	hasArticle bool
 	hasNote    map[uint32]bool
 
-	fail *GenFail
+	fail *ExportFail
 }
 
-func (g *Gen) addFail(name string, err error) {
+func (g *Export) addFail(name string, err error) {
 	if err == nil || g.fail != nil {
 		return
 	}
-	g.fail = &GenFail{
+	g.fail = &ExportFail{
 		Name:  name,
 		Error: err,
 	}
 }
 
-func (g *Gen) init() {
+func (g *Export) init() {
 	g.note = NewByYear()
 	g.article = NewByYear()
 	g.hasNote = make(map[uint32]bool)
 }
 
-func (g *Gen) run() {
+func (g *Export) run() {
 
 	g.init()
 
 	now := util.Now()
 
-	ts, err := db.GetGenTime()
+	ts, err := db.GetExportTime()
 	if err != nil {
-		zj.W(`gen fail, no time:`, err)
+		zj.W(`export fail, no time:`, err)
 		return
 	}
 
 	// TODO
-	ts = 0
+	// ts = 0
 
 	g.fetchData(ts)
 	if len(g.item) == 0 {
-		zj.J(`nothing for gen, skip`)
+		zj.J(`nothing for export, skip`)
 		return
 	}
 
-	g.doGen()
+	g.doExport()
 
 	if g.fail != nil {
-		zj.W(`gen fail:`, g.fail.Name, g.fail.Error)
+		zj.W(`export fail:`, g.fail.Name, g.fail.Error)
 		return
 	}
 
-	db.SetGenTime(now)
+	db.SetExportTime(now)
 }
 
-func (g *Gen) fetchData(ts uint64) bool {
+func (g *Export) fetchData(ts uint64) bool {
 
 	ctx, cancel := life.CTXTimeout(10 * time.Minute)
 	defer cancel()
@@ -118,7 +118,7 @@ func (g *Gen) fetchData(ts uint64) bool {
 
 		year := GetYear(row.Item)
 		isNote := row.Item.GetMeta().GetTitle() == ``
-		if row.TsUpdate >= ts {
+		if row.TSUpdate >= ts {
 			if isNote {
 				g.hasNote[year] = true
 			} else {
@@ -136,16 +136,16 @@ func (g *Gen) fetchData(ts uint64) bool {
 	return true
 }
 
-func (g *Gen) doGen() {
+func (g *Export) doExport() {
 
-	go g.genItem()
+	go g.exportItem()
 
 	for year := range g.hasNote {
-		go g.genNote(year)
+		go g.exportNote(year)
 	}
 
 	if g.hasArticle {
-		go g.genArticle()
+		go g.exportArticle()
 	}
 
 	g.wg.Wait()

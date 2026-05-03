@@ -5,7 +5,7 @@ PB_JS=../client/src/inc/pb
 
 server:
 	protoc --go_out=../server/src *.proto
-	go run ./gen/gen.go
+	go run ./codegen/gen.go
 
 client:
 	$(PB_BIN)/pbjs -t static-module -w es6 --es6 --force-number -o ${PB_JS}/pb.js *.proto

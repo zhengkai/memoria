@@ -13,7 +13,7 @@ func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 	e := &util.Error{Message: `ok`}
 	zj.IO("api req:", getReqOneName(req))
 
-	// 注意：switch { } 里的内容由 proto/gen/gen.go 生成
+	// 注意：switch { } 里的内容由 /proto/codegen/gen.go 生成
 	switch req.WhichOne() {
 
 	case pb.APIReq_ItemGet_case:

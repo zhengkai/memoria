@@ -3,7 +3,7 @@ package web
 
 import (
 	"project/api"
-	"project/gen"
+	"project/export"
 	"project/util"
 
 	"net/http"
@@ -18,7 +18,7 @@ func Server() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc(`/robots.txt`, robotsHandle)
-	mux.HandleFunc(`/api/gen`, gen.TestHandle)
+	mux.HandleFunc(`/api/export`, export.TestHandle)
 	mux.Handle(`/api`, api.Handler)
 
 	if config.ClientDir == `` {

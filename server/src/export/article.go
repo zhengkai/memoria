@@ -1,4 +1,4 @@
-package gen
+package export
 
 import (
 	"project/pb"
@@ -9,9 +9,9 @@ import (
 
 const ArticleFileName = `data/article-list.bin`
 
-func (g *Gen) genArticle() {
+func (g *Export) exportArticle() {
 
-	zj.J(`gen article`)
+	zj.J(`export article`)
 	g.wg.Add(1)
 	defer g.wg.Done()
 

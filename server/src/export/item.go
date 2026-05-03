@@ -1,4 +1,4 @@
-package gen
+package export
 
 import (
 	"fmt"
@@ -20,18 +20,18 @@ func BinFileName(id uint64) string {
 	return fmt.Sprintf(`data/bin/%03d/%03d.bin`, id/1000, id%1000)
 }
 
-func (g *Gen) genItem() {
+func (g *Export) exportItem() {
 
-	zj.J(`gen item:`, len(g.item))
+	zj.J(`export item:`, len(g.item))
 	g.wg.Add(1)
 	defer g.wg.Done()
 
 	for _, it := range g.item {
-		g.genItemSingle(it)
+		g.exportItemRow(it)
 	}
 }
 
-func (g *Gen) genItemSingle(it *pb.ItemDB) {
+func (g *Export) exportItemRow(it *pb.ItemDB) {
 
 	// itemDB
 	err := util.WriteStaticData(

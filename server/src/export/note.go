@@ -1,4 +1,4 @@
-package gen
+package export
 
 import (
 	"fmt"
@@ -11,9 +11,9 @@ func NoteFileName(year uint32) string {
 	return fmt.Sprintf(`data/note/%04d.bin`, year)
 }
 
-func (g *Gen) genNote(year uint32) {
+func (g *Export) exportNote(year uint32) {
 
-	zj.J(`gen note:`, year)
+	zj.J(`export note:`, year)
 	g.wg.Add(1)
 	defer g.wg.Done()
 

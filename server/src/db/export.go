@@ -9,18 +9,18 @@ import (
 )
 
 const (
-	genTimeIDMain uint64 = iota
+	exportTimeIDMain uint64 = iota
 )
 
-type GenRow struct {
+type ExportRow struct {
 	Item     *pb.ItemDB
-	TsUpdate uint64
+	TSUpdate uint64
 }
 
-func GetGenTime() (ts uint64, err error) {
+func GetExportTime() (ts uint64, err error) {
 
-	query := `SELECT ts FROM gen_time WHERE gen_id = ?`
-	row := d.QueryRow(query, genTimeIDMain)
+	query := `SELECT ts FROM export_time WHERE export_id = ?`
+	row := d.QueryRow(query, exportTimeIDMain)
 
 	err = row.Scan(&ts)
 	if err == sql.ErrNoRows {
@@ -29,20 +29,20 @@ func GetGenTime() (ts uint64, err error) {
 	return
 }
 
-func SetGenTime(ts uint64) error {
-	query := `INSERT INTO gen_time SET gen_id = ?, ts = ? ON DUPLICATE KEY UPDATE ts = ?`
-	_, err := d.Exec(query, genTimeIDMain, ts, ts)
+func SetExportTime(ts uint64) error {
+	query := `INSERT INTO export_time SET export_id = ?, ts = ? ON DUPLICATE KEY UPDATE ts = ?`
+	_, err := d.Exec(query, exportTimeIDMain, ts, ts)
 	return err
 }
 
-func GetAllItemDB(ctx context.Context) func(func(*GenRow, error) bool) {
-	return func(yield func(*GenRow, error) bool) {
+func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
+	return func(yield func(*ExportRow, error) bool) {
 		var lastID uint64
 		var lastTS uint64
 		const limit = 1000
 
 		for {
-			re := &GenRow{}
+			re := &ExportRow{}
 			rows, err := d.QueryContext(ctx,
 				`SELECT item_id, ts_update, bin FROM item WHERE ts_update >= ? AND item_id  > ? ORDER BY ts_update, item_id ASC LIMIT ?`,
 				lastTS, lastID, limit,
@@ -56,7 +56,7 @@ func GetAllItemDB(ctx context.Context) func(func(*GenRow, error) bool) {
 			for rows.Next() {
 				var id uint64
 				var bin []byte
-				if err := rows.Scan(&id, &re.TsUpdate, &bin); err != nil {
+				if err := rows.Scan(&id, &re.TSUpdate, &bin); err != nil {
 					rows.Close()
 					yield(nil, err)
 					return
@@ -70,7 +70,7 @@ func GetAllItemDB(ctx context.Context) func(func(*GenRow, error) bool) {
 				}
 
 				lastID = id
-				lastTS = re.TsUpdate
+				lastTS = re.TSUpdate
 
 				count++
 
