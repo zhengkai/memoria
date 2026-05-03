@@ -6,10 +6,17 @@ import (
 	"project/gen"
 	"project/pb"
 	"project/util"
+	"project/zj"
 )
 
 func renderFileName(revisionID uint64) string {
 	return fmt.Sprintf(`data/render/%03d/%03d.html`, revisionID/1000, revisionID%1000)
+}
+
+var renderMap = map[pb.Format_Enum]func(string) ([]byte, error){
+	pb.Format_PLAIN:    Plain,
+	pb.Format_MARKDOWN: Markdown,
+	pb.Format_ASCIIDOC: ASCIIDoc,
 }
 
 func Render(it *pb.ItemDB) ([]byte, error) {
@@ -17,6 +24,7 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 	file := renderFileName(it.GetRevisionId())
 	ab, err := util.ReadStaticBin(file)
 	if err == nil {
+		zj.IO(`read render file success:`, file)
 		return ab, nil
 	}
 
@@ -28,14 +36,16 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 		return nil, err
 	}
 
-	switch rev.GetFormat() {
-	case pb.Format_PLAIN:
-		ab, err = Plain(rev.GetRaw())
-	case pb.Format_MARKDOWN:
-		ab, err = Markdown(rev.GetRaw())
-	case pb.Format_ASCIIDOC:
-		ab, err = ASCIIDoc(rev.GetRaw())
+	fn, ok := renderMap[rev.GetFormat()]
+	if !ok {
+		return nil, fmt.Errorf(`unsupported format: %v`, rev.GetFormat().String())
+	}
+	ab, err = fn(rev.GetRaw())
+	if err != nil {
+		return nil, err
 	}
 
-	return ab, err
+	go util.WriteStaticBin(file, ab)
+
+	return ab, nil
 }

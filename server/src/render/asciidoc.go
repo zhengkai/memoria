@@ -1,7 +1,17 @@
 package render
 
-// asciidoctor -s -a nofooter -a showtitle=false -o - test.adoc
+import (
+	"project/util"
+	"strings"
+)
 
 func ASCIIDoc(content string) ([]byte, error) {
-	return nil, nil
+	return util.CmdExec(
+		strings.NewReader(content),
+		`asciidoctor`,
+		`-s`,
+		`-a`, `nofooter`,
+		`-a`, `showtitle=false`,
+		`-`,
+	)
 }

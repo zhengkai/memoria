@@ -23,6 +23,8 @@ func run() {
 	db.WaitConn()
 
 	go web.Server()
+
+	// render.Test()
 }
 
 func afterRun() {
