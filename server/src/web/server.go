@@ -4,6 +4,7 @@ package web
 import (
 	"project/api"
 	"project/export"
+	"project/public"
 	"project/util"
 
 	"net/http"
@@ -20,6 +21,7 @@ func Server() {
 	mux.HandleFunc(`/robots.txt`, robotsHandle)
 	mux.HandleFunc(`/api/export`, export.TestHandle)
 	mux.HandleFunc(`/api`, api.Handle)
+	mux.HandleFunc(`/public/`, public.Handle)
 
 	if config.ClientDir == `` {
 		mux.HandleFunc(`/`, failbackHandle)

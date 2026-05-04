@@ -9,7 +9,7 @@ import (
 )
 
 var articleIndexTpl = makeTpl(`article-index`)
-var articleIndexFile = `page/article.html`
+var ArticleIndexFile = `page/article.html`
 var articleSingleTpl = makeTpl(`article`)
 
 func articleSingleFile(id uint64) string {
@@ -37,7 +37,7 @@ func (p *Page) articleInit() error {
 		}
 	}
 
-	err = execTplToFile(articleIndexFile, articleIndexTpl, index)
+	err = execTplToFile(ArticleIndexFile, articleIndexTpl, index)
 	if err != nil {
 		zj.W(`write article fail:`, err)
 	}

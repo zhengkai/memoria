@@ -37,43 +37,24 @@ const postMaxSize = int64(1e6)
 const mimeProto = `application/protobuf`
 const mimeJSON = `application/protobuf+json`
 
-func Handle(w http.ResponseWriter, r *http.Request) {
-	gw := &Gateway{
-		w: w,
-		r: r,
-	}
+func (gw *Gateway) readBody() (body []byte, ok bool) {
 
-	body, ok := gw.readBody(w, r)
-	if !ok {
-		return
-	}
-
-	req, err := gw.unmarshalReq(body)
-	if err != nil {
-		return
-	}
-
-	gw.marshalRsp(gw.dispatch(req))
-}
-
-func (gw *Gateway) readBody(w http.ResponseWriter, r *http.Request) (body []byte, ok bool) {
-
-	mime := strings.SplitN(r.Header.Get(`Content-Type`), `;`, 2)[0]
+	mime := strings.SplitN(gw.r.Header.Get(`Content-Type`), `;`, 2)[0]
 	if mime == mimeJSON {
 		gw.json = true
 	} else if mime != mimeProto {
-		http.Error(w, `unsupported content type`, http.StatusUnsupportedMediaType)
+		gw.error(`unsupported content type`, http.StatusUnsupportedMediaType)
 		return
 	}
 
-	body, err := io.ReadAll(io.LimitReader(r.Body, postMaxSize))
+	body, err := io.ReadAll(io.LimitReader(gw.r.Body, postMaxSize))
 	if err != nil {
-		http.Error(w, `read body fail`, http.StatusBadRequest)
+		gw.error(`read body fail`, http.StatusBadRequest)
 		return
 	}
 
 	if len(body) == 0 {
-		http.Error(w, `empty body`, http.StatusBadRequest)
+		gw.error(`empty body`, http.StatusBadRequest)
 		return
 	}
 
@@ -91,7 +72,7 @@ func (gw *Gateway) unmarshalReq(body []byte) (*pb.APIReq, error) {
 		err = proto.Unmarshal(body, req)
 	}
 	if err != nil {
-		http.Error(gw.w, `unmarshal fail`, http.StatusBadRequest)
+		gw.error(`unmarshal fail`, http.StatusBadRequest)
 		return nil, err
 	}
 	return req, nil

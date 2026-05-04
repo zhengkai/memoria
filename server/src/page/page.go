@@ -43,5 +43,7 @@ func (p *Page) Init() error {
 	if err := p.articleInit(); err != nil {
 		zj.W(`article fail`, err)
 	}
+
+	p.homeInit()
 	return nil
 }
