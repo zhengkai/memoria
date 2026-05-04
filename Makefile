@@ -29,3 +29,6 @@ docker:
 
 doc:
 	cd server/src && godoc -http=:6060
+
+status:
+	./server/build/status.sh dev

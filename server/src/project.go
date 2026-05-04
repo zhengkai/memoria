@@ -26,7 +26,7 @@ func run() {
 	go web.Server()
 
 	// render.Test()
-	page.Run()
+	page.NewPage()
 }
 
 func afterRun() {

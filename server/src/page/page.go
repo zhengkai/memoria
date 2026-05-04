@@ -9,9 +9,40 @@ import (
 var tplFS embed.FS
 
 var commonTpl = []string{
-	"tpl/layout.html",
-	"tpl/header.html",
-	"tpl/footer.html",
+	// `tpl/layout.html`,
+	`tpl/layout-simple.html`,
+	`tpl/item.html`,
+	`tpl/header.html`,
+	`tpl/footer.html`,
 }
 
-var itemTpl = buildTpl("item")
+var noteTpl = makeTpl(`note`)
+
+var defaultPage *Page
+
+func NewPage() error {
+	p := &Page{}
+	if err := p.Init(); err != nil {
+		return err
+	}
+	defaultPage = p
+
+	return nil
+}
+
+type Page struct {
+	forceRefresh bool
+
+	NoteYearList []uint32
+	Note         map[uint32]*Note
+
+	Item map[uint64]*Item
+}
+
+func (p *Page) Init() error {
+	p.Item = make(map[uint64]*Item, 3000)
+	if err := p.noteInit(); err != nil {
+		return err
+	}
+	return nil
+}

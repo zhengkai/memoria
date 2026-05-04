@@ -6,7 +6,6 @@ import (
 	"project/export"
 	"project/pb"
 	"project/util"
-	"project/zj"
 )
 
 func renderFileName(revisionID uint64) string {
@@ -24,7 +23,7 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 	file := renderFileName(it.GetRevisionId())
 	ab, err := util.ReadStaticBin(file)
 	if err == nil {
-		zj.IO(`read render file success:`, file)
+		// zj.IO(`read render file success:`, file)
 		return ab, nil
 	}
 
