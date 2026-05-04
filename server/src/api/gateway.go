@@ -34,14 +34,14 @@ var jsonMarshaler = protojson.MarshalOptions{
 
 const postMaxSize = int64(1e6)
 
-var Handler = &Gateway{}
-
 const mimeProto = `application/protobuf`
 const mimeJSON = `application/protobuf+json`
 
-func (gw *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	gw.w = w
-	gw.r = r
+func Handle(w http.ResponseWriter, r *http.Request) {
+	gw := &Gateway{
+		w: w,
+		r: r,
+	}
 
 	body, ok := gw.readBody(w, r)
 	if !ok {
