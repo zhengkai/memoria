@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"project/config"
+	"project/zj"
 	"strings"
 
 	"google.golang.org/protobuf/proto"
@@ -103,6 +104,7 @@ func writeBin(file string, li ...[]byte) (err error) {
 
 	for _, ab := range li {
 		if _, err = f.Write(ab); err != nil {
+			zj.W(`write bin fail`, file, len(ab))
 			os.Remove(tmpName)
 			f.Close()
 			return

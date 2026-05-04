@@ -1,0 +1,15 @@
+{{define "content"}}
+<main>
+{{range .GetList}}
+<p id="year-{{.GetYear}}">{{.GetYear}} 年</p>
+<ul>{{range .GetList}}
+	<li><a href="/item/{{.GetId}}.html">{{.GetMeta.GetTitle}} <time datetime="{{.GetMeta.GetTsCreate | RFC3339}}">{{.GetMeta.GetTsCreate | date}}</time></a></li>{{end}}
+</ul>{{end}}
+</main>
+
+<aside>
+	<ul>
+{{range .GetList}}
+	<li><a href="/article.html#year-{{.GetYear}}.html">{{.GetYear}} <span>{{len .GetList}}</span></a></li>{{end}}
+	</ul>
+</aside>{{end}}

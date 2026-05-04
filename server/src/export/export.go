@@ -88,7 +88,7 @@ func (g *Export) run() {
 	}
 
 	// TODO
-	// ts = 0
+	ts = 0
 
 	g.fetchData(ts)
 	if len(g.item) == 0 {

@@ -1,19 +1,19 @@
 package page
 
 import (
-	"crypto/sha256"
 	"fmt"
 	"os"
 	"project/export"
 	"project/pb"
 	"project/util"
-	"project/zj"
 	"regexp"
 	"slices"
 	"strconv"
 )
 
 var reNoteFile = regexp.MustCompile(`^\d{4}\.bin$`)
+
+var noteTpl = makeTpl(`note`, `item`)
 
 const NoteDataDir = `data/note`
 
@@ -44,19 +44,8 @@ func (p *Page) noteInit() error {
 			continue
 		}
 
-		output, _ := execTpl(noteTpl, note)
-		hash := sha256.Sum256(output)
-
 		file := NoteFile(row.Year)
-		prev, err := util.ReadStaticHash(file)
-
-		if err == nil && prev == hash {
-			zj.IO(`hash match, skip`, file)
-			continue
-		}
-
-		zj.IO(`write`, file)
-		util.WriteStaticBin(file, hash[:], output)
+		execTplToFile(file, noteTpl, note)
 	}
 
 	return nil

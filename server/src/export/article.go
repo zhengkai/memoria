@@ -28,7 +28,7 @@ func (g *Export) exportArticle() {
 		List: make([]*pb.RenderArticleYear, len(yl)),
 	}
 
-	for _, y := range yl {
+	for idx, y := range yl {
 		src := g.article.year[y]
 		dst := pb.RenderArticleYear_builder{
 			Year: &y,
@@ -41,7 +41,7 @@ func (g *Export) exportArticle() {
 			}.Build()
 			dst.List[idx] = lite
 		}
-		d.List = append(d.List, dst.Build())
+		d.List[idx] = dst.Build()
 	}
 
 	g.addFail(

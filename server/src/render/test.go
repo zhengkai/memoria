@@ -66,7 +66,7 @@ func TestNote(file string) {
 func TestItem(id uint64) {
 
 	it := &pb.ItemDB{}
-	if err := util.ReadStaticData(export.ItemFileName(id), it); err != nil {
+	if err := util.ReadStaticData(export.ItemFile(id), it); err != nil {
 		zj.WF(`read item %d failed: %v`, id, err)
 		return
 	}

@@ -8,15 +8,15 @@ import (
 	"project/zj"
 )
 
-func ItemFileName(id uint64) string {
+func ItemFile(id uint64) string {
 	return fmt.Sprintf(`data/item/%03d/%03d.bin`, id/1000, id%1000)
 }
 
-func RevisionFileName(id uint64) string {
+func RevisionFile(id uint64) string {
 	return fmt.Sprintf(`data/revision/%03d/%03d.bin`, id/1000, id%1000)
 }
 
-func BinFileName(id uint64) string {
+func BinFile(id uint64) string {
 	return fmt.Sprintf(`data/bin/%03d/%03d.bin`, id/1000, id%1000)
 }
 
@@ -35,7 +35,7 @@ func (g *Export) exportItemRow(it *pb.ItemDB) {
 
 	// itemDB
 	err := util.WriteStaticData(
-		ItemFileName(it.GetId()),
+		ItemFile(it.GetId()),
 		it,
 	)
 	if err != nil {
@@ -51,7 +51,7 @@ func (g *Export) exportItemRow(it *pb.ItemDB) {
 		return
 	}
 	err = util.WriteStaticData(
-		RevisionFileName(it.GetRevisionId()),
+		RevisionFile(it.GetRevisionId()),
 		rev,
 	)
 	if err != nil {
@@ -69,7 +69,7 @@ func (g *Export) exportItemRow(it *pb.ItemDB) {
 			return
 		}
 		err = util.WriteStaticBin(
-			BinFileName(it.GetOgId()),
+			BinFile(it.GetOgId()),
 			bin,
 		)
 		if err != nil {

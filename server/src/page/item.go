@@ -19,7 +19,7 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 	}
 	p.Item[id] = re
 
-	re.Error = util.ReadStaticData(export.ItemFileName(id), &re.DB)
+	re.Error = util.ReadStaticData(export.ItemFile(id), &re.DB)
 	if re.Error != nil {
 		return
 	}

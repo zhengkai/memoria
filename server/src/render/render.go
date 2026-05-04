@@ -27,7 +27,7 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 		return ab, nil
 	}
 
-	revFile := export.RevisionFileName(it.GetRevisionId())
+	revFile := export.RevisionFile(it.GetRevisionId())
 
 	rev := &pb.Revision{}
 	err = util.ReadStaticData(revFile, rev)

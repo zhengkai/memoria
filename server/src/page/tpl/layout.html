@@ -3,8 +3,7 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>Talim</title>
-<base href="https://talim.9farm.com/">
+<title>Soulogic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -12,12 +11,30 @@
 
 {{template "header" .}}
 
-<main>
-  {{block "content" .}}{{end}}
-</main>
+{{block "content" .}}{{end}}
 
 {{template "footer" .}}
 
 </body>
 </html>
+{{end}}
+
+{{define "header"}}
+<header>
+	<nav>
+		<a href="/">Soulogic</a>
+		<ul>
+			<li><a href="/">首页</a></li>
+			<li><a href="/article.html">闲言</a></li>
+			<li><a href="/tweet.html">碎语</a></li>
+		</ul>
+	</nav>
+</header>
+{{end}}
+
+{{define "footer"}}
+<footer>
+	<a href="https://creativecommons.org/licenses/by/4.0/deed.zh-hans">基于知识共享-署名 4.0 共享</a>
+	个人网站，于 2004 年创建。<!--<a href="about.html">关于站长</a>-->
+</footer>
 {{end}}

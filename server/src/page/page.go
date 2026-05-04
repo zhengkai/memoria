@@ -3,20 +3,16 @@ package page
 
 import (
 	"embed"
+	"project/zj"
 )
 
 //go:embed tpl/*.html
 var tplFS embed.FS
 
 var commonTpl = []string{
-	// `tpl/layout.html`,
-	`tpl/layout-simple.html`,
-	`tpl/item.html`,
-	`tpl/header.html`,
-	`tpl/footer.html`,
+	`tpl/layout.html`,
+	// `tpl/layout-simple.html`,
 }
-
-var noteTpl = makeTpl(`note`)
 
 var defaultPage *Page
 
@@ -42,7 +38,10 @@ type Page struct {
 func (p *Page) Init() error {
 	p.Item = make(map[uint64]*Item, 3000)
 	if err := p.noteInit(); err != nil {
-		return err
+		zj.W(`noteInit fail`, err)
+	}
+	if err := p.articleInit(); err != nil {
+		zj.W(`article fail`, err)
 	}
 	return nil
 }
