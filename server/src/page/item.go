@@ -5,7 +5,6 @@ import (
 	"project/export"
 	"project/render"
 	"project/util"
-	"project/zj"
 )
 
 func (p *Page) loadItem(id uint64) (re *Item) {
@@ -31,8 +30,6 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 		return
 	}
 	re.Content = template.HTML(ab)
-
-	zj.J(re)
 
 	// TODO og
 

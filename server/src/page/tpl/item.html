@@ -1,4 +1,19 @@
-{{define "item"}}
-  <p>{{.ID}}</p>
-  <article>{{.Content}}</article>
+{{define "item-row"}}
+<article id="n{{.ID}}">
+	<header>
+		<time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{.DB.GetMeta.GetTsCreate | datetime}}</time>
+	</header>
+
+	{{.Content}}
+
+	<footer>
+		<a href="/note/123#n{{.ID}}" rel="bookmark">永久链接</a>
+	</footer>
+</article>
+{{end}}
+
+{{define "item-article"}}
+<article>
+	<h1></h1>
+</article>
 {{end}}

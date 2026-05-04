@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"project/config"
@@ -19,14 +20,29 @@ func Static(file string) string {
 	return fmt.Sprintf(`%s/%s`, config.StaticDir, file)
 }
 
-func WriteStaticBin(file string, bin []byte) error {
+func WriteStaticBin(file string, bin ...[]byte) error {
 	file = Static(file)
-	os.MkdirAll(filepath.Dir(file), 0755)
-	return os.WriteFile(file, bin, 0644)
+	return writeBin(file, bin...)
 }
 
 func ReadStaticBin(file string) ([]byte, error) {
 	return os.ReadFile(Static(file))
+}
+
+func ReadStaticHash(file string) (hash [sha256.Size]byte, err error) {
+	f, err := os.OpenFile(Static(file), os.O_RDONLY, 0644)
+	if err != nil {
+		return
+	}
+
+	buf := make([]byte, sha256.Size)
+	_, err = io.ReadFull(f, buf)
+	f.Close()
+	if err != nil {
+		return
+	}
+	copy(hash[:], buf)
+	return
 }
 
 func WriteStaticData(file string, m proto.Message) error {
@@ -38,27 +54,18 @@ func WriteStaticData(file string, m proto.Message) error {
 
 	hash := sha256.Sum256(data)
 
-	file = Static(file)
-
 	// 尝试读，文件存在且 hash 一致则跳过
-	rf, err := os.OpenFile(file, os.O_RDONLY, 0644)
+	prevHash, err := ReadStaticHash(file)
+	file = Static(file)
 	if err == nil {
-		prevHash := make([]byte, sha256.Size)
-		i, _ := rf.Read(prevHash)
-		rf.Close()
-		if i == sha256.Size && bytes.Equal(prevHash, hash[:]) {
+		if prevHash == hash {
 			return nil
 		}
 	} else {
 		os.MkdirAll(filepath.Dir(file), 0755)
 	}
 
-	tmpName, err := writeTmp(hash, data)
-	if err != nil {
-		os.Remove(tmpName)
-		return err
-	}
-	return os.Rename(tmpName, file)
+	return writeBin(file, hash[:], data)
 }
 
 func ReadStaticData(file string, m proto.Message) error {
@@ -84,21 +91,24 @@ func ReadStaticData(file string, m proto.Message) error {
 	return proto.Unmarshal(data, m)
 }
 
-func writeTmp(hash [sha256.Size]byte, data []byte) (name string, err error) {
+func writeBin(file string, li ...[]byte) (err error) {
 
 	f, err := os.CreateTemp(Static(`tmp`), `tmp-go-*`)
 	if err != nil {
 		return
 	}
-	defer f.Close()
-	f.Chmod(0644)
-	name = f.Name()
 
-	if _, err = f.Write(hash[:]); err != nil {
-		return
+	f.Chmod(0644)
+	tmpName := f.Name()
+
+	for _, ab := range li {
+		if _, err = f.Write(ab); err != nil {
+			os.Remove(tmpName)
+			f.Close()
+			return
+		}
 	}
-	if _, err = f.Write(data); err != nil {
-		return
-	}
-	return
+	f.Close()
+
+	return os.Rename(tmpName, file)
 }

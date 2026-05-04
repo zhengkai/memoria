@@ -15,19 +15,19 @@ func makeTpl(file ...string) *template.Template {
 	tplList = append(tplList, commonTpl...)
 
 	return template.Must(
-		template.ParseFS(tplFS,
+		template.New("layout").Funcs(tplFunc).ParseFS(tplFS,
 			tplList...,
 		),
 	)
 }
 
-func execTpl(tpl *template.Template, data any) (*bytes.Buffer, error) {
+func execTpl(tpl *template.Template, data any) ([]byte, error) {
 
 	var buf bytes.Buffer
 
-	err := noteTpl.ExecuteTemplate(&buf, `layout`, data)
+	err := noteTpl.Execute(&buf, data)
 	if err != nil {
 		zj.W(`execTpl fail:`, err)
 	}
-	return &buf, err
+	return buf.Bytes(), err
 }

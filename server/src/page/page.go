@@ -33,7 +33,7 @@ func NewPage() error {
 type Page struct {
 	forceRefresh bool
 
-	NoteYearList []uint32
+	NoteYearList []*NoteYear
 	Note         map[uint32]*Note
 
 	Item map[uint64]*Item

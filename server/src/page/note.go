@@ -1,6 +1,8 @@
 package page
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"os"
 	"project/export"
 	"project/pb"
@@ -16,9 +18,18 @@ var reNoteFile = regexp.MustCompile(`^\d{4}\.bin$`)
 const NoteDataDir = `data/note`
 
 type Note struct {
-	YearAll    []uint32
+	YearAll    []*NoteYear
 	YearSelect uint32
 	Item       []*Item
+}
+
+type NoteYear struct {
+	Year  uint32
+	Count int
+}
+
+func NoteFile(year uint32) string {
+	return fmt.Sprintf(`page/note/%04d.html`, year)
 }
 
 func (p *Page) noteInit() error {
@@ -27,24 +38,34 @@ func (p *Page) noteInit() error {
 		return err
 	}
 
-	for _, year := range p.NoteYearList {
-		note, err := p.loadNote(year)
+	for _, row := range p.NoteYearList {
+		note, err := p.loadNote(row)
 		if err != nil {
 			continue
 		}
 
-		buf, _ := execTpl(noteTpl, note)
-		zj.IO(buf.String())
+		output, _ := execTpl(noteTpl, note)
+		hash := sha256.Sum256(output)
 
-		return nil
+		file := NoteFile(row.Year)
+		prev, err := util.ReadStaticHash(file)
+
+		if err == nil && prev == hash {
+			zj.IO(`hash match, skip`, file)
+			continue
+		}
+
+		zj.IO(`write`, file)
+		util.WriteStaticBin(file, hash[:], output)
 	}
 
 	return nil
 }
 
-func (p *Page) loadNote(year uint32) (*Note, error) {
+// 准备用于生成页面的数据
+func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 
-	file := export.NoteFileName(year)
+	file := export.NoteFileName(ny.Year)
 
 	d := &pb.RenderNoteYear{}
 
@@ -54,10 +75,11 @@ func (p *Page) loadNote(year uint32) (*Note, error) {
 	}
 
 	li := d.GetList()
+	ny.Count = len(li)
 
 	n := &Note{
 		YearAll:    p.NoteYearList,
-		YearSelect: year,
+		YearSelect: ny.Year,
 		Item:       make([]*Item, len(li)),
 	}
 	for idx, id := range li {
@@ -73,7 +95,7 @@ func (p *Page) refreshNoteYearList() error {
 		return err
 	}
 
-	yl := make([]uint32, 0, 50)
+	yl := make([]*NoteYear, 0, 50)
 	for _, e := range entries {
 		if e.IsDir() {
 			continue
@@ -84,7 +106,9 @@ func (p *Page) refreshNoteYearList() error {
 			continue
 		}
 		i64, _ := strconv.ParseUint(s[:4], 10, 32)
-		yl = append(yl, uint32(i64))
+		yl = append(yl, &NoteYear{
+			Year: uint32(i64),
+		})
 	}
 
 	slices.Reverse(yl)
