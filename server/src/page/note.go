@@ -15,8 +15,6 @@ var reNoteFile = regexp.MustCompile(`^\d{4}\.bin$`)
 
 var noteTpl = makeTpl(`note`, `item`)
 
-const NoteDataDir = `data/note`
-
 type Note struct {
 	Meta       *Meta
 	YearAll    []*NoteYear
@@ -35,7 +33,9 @@ func NoteFile(year uint32) string {
 
 func (p *Page) noteInit() error {
 
-	if err := p.refreshNoteYearList(); err != nil {
+	var err error
+	p.NoteYearList, err = getNoteYearList()
+	if err != nil {
 		return err
 	}
 
@@ -54,7 +54,9 @@ func (p *Page) noteInit() error {
 			continue
 		}
 		file := NoteFile(note.YearSelect)
-		execTplToFile(file, noteTpl, note)
+		if !p.checkFastPass(file) {
+			execTplToFile(file, noteTpl, note)
+		}
 	}
 
 	return nil
@@ -92,11 +94,11 @@ func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 	return n, nil
 }
 
-func (p *Page) refreshNoteYearList() error {
+func getNoteYearList() ([]*NoteYear, error) {
 
-	entries, err := os.ReadDir(util.Static(NoteDataDir))
+	entries, err := os.ReadDir(util.Static(export.NoteDataDir))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	yl := make([]*NoteYear, 0, 50)
@@ -116,7 +118,5 @@ func (p *Page) refreshNoteYearList() error {
 	}
 
 	slices.Reverse(yl)
-
-	p.NoteYearList = yl
-	return nil
+	return yl, nil
 }

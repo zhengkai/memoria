@@ -42,15 +42,18 @@ func execTplToFile(file string, tpl *template.Template, data any) error {
 	hash := sha256.Sum256(output)
 
 	prev, err := util.ReadStaticHash(file)
+
+	status := "replace"
 	if err == nil {
 		if prev == hash {
 			// zj.IO(`hash match, skip`, file)
 			return nil
 		}
 	} else {
+		status = "new"
 		os.MkdirAll(filepath.Dir(util.Static(file)), 0755)
 	}
 
-	zj.IO(`write`, file)
+	zj.IO(`write`, status, file)
 	return util.WriteStaticBin(file, hash[:], output)
 }

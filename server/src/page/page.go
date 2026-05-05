@@ -3,6 +3,7 @@ package page
 
 import (
 	"embed"
+	"project/util"
 	"project/zj"
 )
 
@@ -14,15 +15,6 @@ var commonTpl = []string{
 	// `tpl/layout-simple.html`,
 }
 
-func NewPage() *Page {
-	p := &Page{}
-	if err := p.Init(); err != nil {
-		zj.W(err)
-		return nil
-	}
-	return p
-}
-
 type Page struct {
 	forceRefresh bool
 
@@ -31,7 +23,11 @@ type Page struct {
 
 	Item map[uint64]*Item
 
+	fast bool
+
 	initDone bool
+
+	errorMeta *Meta
 }
 
 func (p *Page) IsInitDone() bool {
@@ -41,7 +37,10 @@ func (p *Page) IsInitDone() bool {
 	return p.initDone
 }
 
-func (p *Page) Init() error {
+func (p *Page) Init(fast bool) error {
+
+	p.fast = fast
+
 	p.Item = make(map[uint64]*Item, 3000)
 
 	if err := p.noteInit(); err != nil {
@@ -62,4 +61,12 @@ func (p *Page) Init() error {
 
 	p.initDone = true
 	return nil
+}
+
+// 快速启动时，有文件就先用着
+func (p *Page) checkFastPass(file string) bool {
+	if !p.fast {
+		return false
+	}
+	return util.StaticExists(file)
 }

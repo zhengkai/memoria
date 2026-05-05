@@ -38,30 +38,38 @@ func (p *Page) articleInit() error {
 
 	for _, y := range index.GetList() {
 		for _, il := range y.GetList() {
+
 			id := il.GetId()
-			d := p.loadItem(id)
+			file := ArticleSingleFile(id)
 
-			meta := genMeta(`item`)
-			meta.Canonical = fmt.Sprintf(`/item/%03d.html`, id)
-			d.Meta = meta
+			if !p.checkFastPass(ArticleIndexFile) {
+				d := p.loadItem(id)
 
-			err = execTplToFile(ArticleSingleFile(id), articleSingleTpl, d)
-			if err != nil {
-				zj.W(`write article fail:`, id, err)
+				meta := genMeta(`item`)
+				meta.Canonical = fmt.Sprintf(`/item/%03d.html`, id)
+				d.Meta = meta
+
+				err = execTplToFile(file, articleSingleTpl, d)
+				if err != nil {
+					zj.W(`write article fail:`, id, err)
+				}
 			}
 		}
 	}
 
-	meta := genMeta(`article`)
-	meta.Canonical = `/article.html`
-	d := &ArticleIndex{
-		Meta:    meta,
-		Content: index,
-	}
+	if !p.checkFastPass(ArticleIndexFile) {
 
-	err = execTplToFile(ArticleIndexFile, articleIndexTpl, d)
-	if err != nil {
-		zj.W(`write article fail:`, err)
+		meta := genMeta(`article`)
+		meta.Canonical = `/article.html`
+		d := &ArticleIndex{
+			Meta:    meta,
+			Content: index,
+		}
+
+		err = execTplToFile(ArticleIndexFile, articleIndexTpl, d)
+		if err != nil {
+			zj.W(`write article fail:`, err)
+		}
 	}
 	return err
 }

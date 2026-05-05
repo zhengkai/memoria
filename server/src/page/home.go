@@ -9,6 +9,10 @@ type Home struct {
 
 func (p *Page) homeInit() error {
 
+	if p.checkFastPass(HomeFile) {
+		return nil
+	}
+
 	meta := genMeta(`home`)
 	meta.Canonical = `/`
 

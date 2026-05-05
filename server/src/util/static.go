@@ -21,6 +21,14 @@ func Static(file string) string {
 	return fmt.Sprintf(`%s/%s`, config.StaticDir, file)
 }
 
+func StaticExists(path string) bool {
+	_, err := os.Stat(Static(path))
+	if err == nil {
+		return true
+	}
+	return !os.IsNotExist(err)
+}
+
 func WriteStaticBin(file string, bin ...[]byte) error {
 	file = Static(file)
 	return writeBin(file, bin...)

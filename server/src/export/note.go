@@ -7,8 +7,10 @@ import (
 	"project/zj"
 )
 
+const NoteDataDir = `data/note`
+
 func NoteFileName(year uint32) string {
-	return fmt.Sprintf(`data/note/%04d.bin`, year)
+	return fmt.Sprintf(`%s/%04d.bin`, NoteDataDir, year)
 }
 
 func (g *Export) exportNote(year uint32) {
