@@ -30,6 +30,8 @@ type Page struct {
 
 	config *pb.PageConfig
 
+	maxItemID uint64
+
 	errorMeta *Meta
 }
 

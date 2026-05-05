@@ -37,13 +37,13 @@ RUN apk add --no-cache asciidoctor cmark
 
 COPY --from=builder /project/server/dist/prod/memoria-server-next /memoria-server
 
-COPY client/dist-git/ /public
+COPY client/dist-git/ /admin
 
 ENV TZ="Asia/Shanghai"
 
 ENV MEMORIA_WEB=":80"
 ENV MEMORIA_DIR="/static"
-ENV MEMORIA_CLIENT="/public"
+ENV MEMORIA_CLIENT="/admin"
 
 EXPOSE 80
 

@@ -18,7 +18,7 @@ type Item struct {
 }
 
 func (p *Page) LoadItem(id uint64) (re *Item) {
-	if id == 0 {
+	if id == 0 || id > p.maxItemID {
 		return nil
 	}
 	return p.Item[id]
@@ -32,6 +32,9 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 	}
 	re = &Item{
 		ID: id,
+	}
+	if p.maxItemID < id {
+		p.maxItemID = id
 	}
 
 	re.Error = util.ReadStaticData(export.ItemFile(id), &re.DB)

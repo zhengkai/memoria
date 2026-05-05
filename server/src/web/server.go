@@ -21,10 +21,9 @@ func Server() {
 	mux.HandleFunc(`/robots.txt`, robotsHandle)
 	mux.HandleFunc(`/api/export`, export.TestHandle)
 	mux.HandleFunc(`/api`, api.Handle)
-	mux.Handle(`/`, public.Handle)
 
 	if config.ClientDir == `` {
-		mux.HandleFunc(`/`, failbackHandle)
+		mux.Handle(`/`, public.Handle)
 	} else {
 		if util.DirCanRead(config.ClientDir) {
 			zj.J(`service client dist at`, config.ClientDir)
