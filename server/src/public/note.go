@@ -5,9 +5,9 @@ import (
 	"project/util"
 )
 
-func (p *public) note(path string) {
+func (p *public) note() {
 
-	id := uint32(util.FirstNum(path))
+	id := uint32(util.FirstNum(p.path))
 	if id == 0 {
 		id = 2023
 	}

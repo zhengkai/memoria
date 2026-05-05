@@ -5,7 +5,7 @@ import (
 	"os"
 	"project/build"
 	"project/db"
-	"project/page"
+	"project/public"
 	"project/util"
 	"project/web"
 	"project/zj"
@@ -23,10 +23,12 @@ func run() {
 
 	db.WaitConn()
 
+	go public.Handle.Run()
+
 	go web.Server()
 
 	// render.Test()
-	page.NewPage()
+	// page.NewPage()
 }
 
 func afterRun() {

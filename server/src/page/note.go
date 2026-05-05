@@ -85,7 +85,9 @@ func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 		Item:       make([]*Item, len(li)),
 	}
 	for idx, id := range li {
-		n.Item[idx] = p.loadItem(id)
+		it := p.loadItem(id)
+		it.NoteYear = ny.Year
+		n.Item[idx] = it
 	}
 	return n, nil
 }

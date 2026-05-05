@@ -59,6 +59,14 @@ export class Edit {
 			'span.id'
 		)!.innerText = sid;
 
+		const viewPublic = form.querySelector<HTMLLinkElement>('a')!;
+		if (it.id > 0) {
+			viewPublic.href = `/public/item/${it.id}.html`;
+			viewPublic.style.display = 'block';
+		} else {
+			viewPublic.style.display = 'none';
+		}
+
 		this.formMeta(pb.ItemMeta.create(it.meta!), form);
 
 		this.formContent(pb.Revision.create(it.content!), form);

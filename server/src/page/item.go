@@ -9,11 +9,19 @@ import (
 )
 
 type Item struct {
-	ID      uint64
-	DB      pb.ItemDB
-	Content template.HTML
-	Error   error
-	Meta    *Meta
+	ID       uint64
+	DB       pb.ItemDB
+	Content  template.HTML
+	Error    error
+	NoteYear uint32
+	Meta     *Meta
+}
+
+func (p *Page) LoadItem(id uint64) (re *Item) {
+	if id == 0 {
+		return nil
+	}
+	return p.Item[id]
 }
 
 func (p *Page) loadItem(id uint64) (re *Item) {
@@ -22,11 +30,9 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 	if re != nil {
 		return re
 	}
-
 	re = &Item{
 		ID: id,
 	}
-	p.Item[id] = re
 
 	re.Error = util.ReadStaticData(export.ItemFile(id), &re.DB)
 	if re.Error != nil {
@@ -42,5 +48,6 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 
 	// TODO og
 
+	p.Item[id] = re
 	return
 }

@@ -3,6 +3,7 @@ package public
 
 import (
 	"net/http"
+	"project/page"
 	"strings"
 )
 
@@ -11,9 +12,15 @@ type public struct {
 	r    *http.Request
 	gzip bool
 	json bool
+	page *page.Page
+	path string
 }
 
 func (p *public) run() {
-	path := strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
-	p.route(path)
+	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
+	p.route()
+}
+
+func (p *public) redirect(path string) {
+	http.Redirect(p.w, p.r, path, http.StatusPermanentRedirect)
 }
