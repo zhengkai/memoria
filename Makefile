@@ -2,19 +2,19 @@ SHELL:=/usr/bin/env bash
 
 -include ./server/build/config.ini
 
-start:
+start: check-static
 	./server/build/run-server.sh $(type)
 
 stop:
 	./server/build/stop-server.sh $(type)
 
-dev:
+dev: check-static
 	./server/build/run-server.sh dev
 
 stopdev:
 	./server/build/stop-server.sh dev
 
-prod:
+prod: check-static
 	./server/build/run-server.sh prod
 
 stopprod:
@@ -26,6 +26,12 @@ docker:
 		git clone --branch=client-dist --depth 1 https://github.com/zhengkai/memoria.git client/dist-git; \
 	fi
 	sudo docker build -t memoria -f docker/Dockerfile .
+
+check-static:
+	@if [ ! -f "static/config-page.json" ]; then \
+		mkdir -p static; \
+		cp misc/config-page.json static/; \
+	fi
 
 doc:
 	cd server/src && godoc -http=:6060

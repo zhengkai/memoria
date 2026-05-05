@@ -21,7 +21,7 @@ func Server() {
 	mux.HandleFunc(`/robots.txt`, robotsHandle)
 	mux.HandleFunc(`/api/export`, export.TestHandle)
 	mux.HandleFunc(`/api`, api.Handle)
-	mux.Handle(`/public/`, public.Handle)
+	mux.Handle(`/`, public.Handle)
 
 	if config.ClientDir == `` {
 		mux.HandleFunc(`/`, failbackHandle)

@@ -3,6 +3,7 @@ package page
 
 import (
 	"embed"
+	"project/pb"
 	"project/util"
 	"project/zj"
 )
@@ -27,6 +28,8 @@ type Page struct {
 
 	initDone bool
 
+	config *pb.PageConfig
+
 	errorMeta *Meta
 }
 
@@ -40,6 +43,8 @@ func (p *Page) IsInitDone() bool {
 func (p *Page) Init(fast bool) error {
 
 	p.fast = fast
+
+	p.loadConfig()
 
 	p.Item = make(map[uint64]*Item, 3000)
 
