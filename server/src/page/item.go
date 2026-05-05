@@ -3,9 +3,18 @@ package page
 import (
 	"html/template"
 	"project/export"
+	"project/pb"
 	"project/render"
 	"project/util"
 )
+
+type Item struct {
+	ID      uint64
+	DB      pb.ItemDB
+	Content template.HTML
+	Error   error
+	Meta    *Meta
+}
 
 func (p *Page) loadItem(id uint64) (re *Item) {
 

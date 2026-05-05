@@ -18,6 +18,7 @@ var noteTpl = makeTpl(`note`, `item`)
 const NoteDataDir = `data/note`
 
 type Note struct {
+	Meta       *Meta
 	YearAll    []*NoteYear
 	YearSelect uint32
 	Item       []*Item
@@ -38,13 +39,21 @@ func (p *Page) noteInit() error {
 		return err
 	}
 
-	for _, row := range p.NoteYearList {
+	li := make([]*Note, len(p.NoteYearList))
+
+	for idx, row := range p.NoteYearList {
 		note, err := p.loadNote(row)
 		if err != nil {
 			continue
 		}
+		li[idx] = note
+	}
 
-		file := NoteFile(row.Year)
+	for _, note := range li {
+		if note == nil {
+			continue
+		}
+		file := NoteFile(note.YearSelect)
 		execTplToFile(file, noteTpl, note)
 	}
 
@@ -66,7 +75,11 @@ func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 	li := d.GetList()
 	ny.Count = len(li)
 
+	meta := genMeta(`tweet`)
+	meta.Canonical = fmt.Sprintf(`/note/%04d.html`, ny.Year)
+
 	n := &Note{
+		Meta:       meta,
 		YearAll:    p.NoteYearList,
 		YearSelect: ny.Year,
 		Item:       make([]*Item, len(li)),

@@ -12,7 +12,17 @@ var articleIndexTpl = makeTpl(`article-index`)
 var ArticleIndexFile = `page/article.html`
 var articleSingleTpl = makeTpl(`article`)
 
-func articleSingleFile(id uint64) string {
+type ArticleIndex struct {
+	Meta    *Meta
+	Content *pb.RenderArticleIndex
+}
+
+type ArticleSingle struct {
+	Meta    *Meta
+	Content *Item
+}
+
+func ArticleSingleFile(id uint64) string {
 	return fmt.Sprintf(`page/item/%03d/%03d.html`, id/1000, id%1000)
 }
 
@@ -29,15 +39,27 @@ func (p *Page) articleInit() error {
 	for _, y := range index.GetList() {
 		for _, il := range y.GetList() {
 			id := il.GetId()
-			it := p.loadItem(id)
-			err = execTplToFile(articleSingleFile(id), articleSingleTpl, it)
+			d := p.loadItem(id)
+
+			meta := genMeta(`item`)
+			meta.Canonical = fmt.Sprintf(`/item/%03d.html`, id)
+			d.Meta = meta
+
+			err = execTplToFile(ArticleSingleFile(id), articleSingleTpl, d)
 			if err != nil {
 				zj.W(`write article fail:`, id, err)
 			}
 		}
 	}
 
-	err = execTplToFile(ArticleIndexFile, articleIndexTpl, index)
+	meta := genMeta(`article`)
+	meta.Canonical = `/article.html`
+	d := &ArticleIndex{
+		Meta:    meta,
+		Content: index,
+	}
+
+	err = execTplToFile(ArticleIndexFile, articleIndexTpl, d)
 	if err != nil {
 		zj.W(`write article fail:`, err)
 	}

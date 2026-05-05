@@ -15,7 +15,7 @@ func (p *public) route(path string) {
 	}
 
 	if strings.HasPrefix(path, `item`) {
-		p.home()
+		p.item(path)
 		return
 	}
 
@@ -25,7 +25,13 @@ func (p *public) route(path string) {
 	}
 
 	if strings.HasPrefix(path, `note`) || strings.HasPrefix(path, `tweet`) {
-		p.note()
+		p.note(path)
+		return
+	}
+
+	// 历史兼容
+	if strings.HasPrefix(path, `blog`) || strings.HasPrefix(path, `post`) || strings.HasPrefix(path, `archive`) {
+		p.item(path)
 		return
 	}
 }

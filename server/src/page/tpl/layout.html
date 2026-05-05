@@ -3,13 +3,14 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>Soulogic</title>
+<title>{{if .Meta.Title}}{{.Meta.Title}} - {{end}}{{.Meta.SiteName}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <base href="/public/">
+{{if .Meta.Canonical}}<meta name="canonical" content="{{.Meta.Canonical}}">{{end}}
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="style-dda251d8.css">
 </head>
-<body>
+<body{{if .Meta.BodyClass}} class="{{.Meta.BodyClass}}"{{end}}>
 
 {{template "header" .}}
 

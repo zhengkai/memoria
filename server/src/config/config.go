@@ -9,4 +9,7 @@ var (
 	MySQL     = `memoria:memoria@/memoria`
 	StaticDir = `/static`
 	ClientDir = ``
+
+	SiteBase = `https://memoria.anna.9farm.com/public`
+	SiteName = `Soulogic`
 )

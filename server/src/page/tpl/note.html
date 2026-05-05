@@ -1,4 +1,11 @@
 {{define "content"}}
+
+<aside>
+	<ul>{{range .YearAll}}
+		<li><a href="tweet-{{.Year}}.html"{{if eq .Year $.YearSelect}} class="select"{{end}}><span>{{.Year}}</span>({{.Count}})</a>{{end}}
+	</ul>
+</aside>
+
 <main>
   {{range .Item}}{{template "item-row" .}}{{end}}
 </main>{{end}}

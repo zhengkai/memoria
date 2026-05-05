@@ -2,11 +2,15 @@ package public
 
 import (
 	"project/page"
-	"project/zj"
+	"project/util"
 )
 
-func (p *public) note() {
-	zj.J(`note`)
+func (p *public) note(path string) {
 
-	p.readPage(page.NoteFile(2023))
+	id := uint32(util.FirstNum(path))
+	if id == 0 {
+		id = 2023
+	}
+
+	p.readPage(page.NoteFile(id))
 }
