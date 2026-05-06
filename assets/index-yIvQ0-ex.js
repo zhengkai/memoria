@@ -7139,6 +7139,225 @@ var pb = $root.pb = (() => {
 		};
 		return FileList;
 	})();
+	pb.PageConfig = (function() {
+		/**
+		* Properties of a PageConfig.
+		* @memberof pb
+		* @interface IPageConfig
+		* @property {string|null} [siteName] PageConfig siteName
+		* @property {string|null} [domain] PageConfig domain
+		* @property {string|null} [pathPrefix] PageConfig pathPrefix
+		*/
+		/**
+		* Constructs a new PageConfig.
+		* @memberof pb
+		* @classdesc Represents a PageConfig.
+		* @implements IPageConfig
+		* @constructor
+		* @param {pb.IPageConfig=} [properties] Properties to set
+		*/
+		function PageConfig(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* PageConfig siteName.
+		* @member {string} siteName
+		* @memberof pb.PageConfig
+		* @instance
+		*/
+		PageConfig.prototype.siteName = "";
+		/**
+		* PageConfig domain.
+		* @member {string} domain
+		* @memberof pb.PageConfig
+		* @instance
+		*/
+		PageConfig.prototype.domain = "";
+		/**
+		* PageConfig pathPrefix.
+		* @member {string} pathPrefix
+		* @memberof pb.PageConfig
+		* @instance
+		*/
+		PageConfig.prototype.pathPrefix = "";
+		/**
+		* Creates a new PageConfig instance using the specified properties.
+		* @function create
+		* @memberof pb.PageConfig
+		* @static
+		* @param {pb.IPageConfig=} [properties] Properties to set
+		* @returns {pb.PageConfig} PageConfig instance
+		*/
+		PageConfig.create = function create(properties) {
+			return new PageConfig(properties);
+		};
+		/**
+		* Encodes the specified PageConfig message. Does not implicitly {@link pb.PageConfig.verify|verify} messages.
+		* @function encode
+		* @memberof pb.PageConfig
+		* @static
+		* @param {pb.IPageConfig} message PageConfig message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		PageConfig.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.siteName != null && Object.hasOwnProperty.call(message, "siteName")) writer.uint32(10).string(message.siteName);
+			if (message.domain != null && Object.hasOwnProperty.call(message, "domain")) writer.uint32(18).string(message.domain);
+			if (message.pathPrefix != null && Object.hasOwnProperty.call(message, "pathPrefix")) writer.uint32(26).string(message.pathPrefix);
+			return writer;
+		};
+		/**
+		* Encodes the specified PageConfig message, length delimited. Does not implicitly {@link pb.PageConfig.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.PageConfig
+		* @static
+		* @param {pb.IPageConfig} message PageConfig message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		PageConfig.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes a PageConfig message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.PageConfig
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.PageConfig} PageConfig
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		PageConfig.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.PageConfig();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.siteName = reader.string();
+						break;
+					case 2:
+						message.domain = reader.string();
+						break;
+					case 3:
+						message.pathPrefix = reader.string();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes a PageConfig message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.PageConfig
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.PageConfig} PageConfig
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		PageConfig.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies a PageConfig message.
+		* @function verify
+		* @memberof pb.PageConfig
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		PageConfig.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.siteName != null && message.hasOwnProperty("siteName")) {
+				if (!$util.isString(message.siteName)) return "siteName: string expected";
+			}
+			if (message.domain != null && message.hasOwnProperty("domain")) {
+				if (!$util.isString(message.domain)) return "domain: string expected";
+			}
+			if (message.pathPrefix != null && message.hasOwnProperty("pathPrefix")) {
+				if (!$util.isString(message.pathPrefix)) return "pathPrefix: string expected";
+			}
+			return null;
+		};
+		/**
+		* Creates a PageConfig message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.PageConfig
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.PageConfig} PageConfig
+		*/
+		PageConfig.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.PageConfig) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.PageConfig();
+			if (object.siteName != null) message.siteName = String(object.siteName);
+			if (object.domain != null) message.domain = String(object.domain);
+			if (object.pathPrefix != null) message.pathPrefix = String(object.pathPrefix);
+			return message;
+		};
+		/**
+		* Creates a plain object from a PageConfig message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.PageConfig
+		* @static
+		* @param {pb.PageConfig} message PageConfig
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		PageConfig.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				object.siteName = "";
+				object.domain = "";
+				object.pathPrefix = "";
+			}
+			if (message.siteName != null && message.hasOwnProperty("siteName")) object.siteName = message.siteName;
+			if (message.domain != null && message.hasOwnProperty("domain")) object.domain = message.domain;
+			if (message.pathPrefix != null && message.hasOwnProperty("pathPrefix")) object.pathPrefix = message.pathPrefix;
+			return object;
+		};
+		/**
+		* Converts this PageConfig to JSON.
+		* @function toJSON
+		* @memberof pb.PageConfig
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		PageConfig.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for PageConfig
+		* @function getTypeUrl
+		* @memberof pb.PageConfig
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		PageConfig.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.PageConfig";
+		};
+		return PageConfig;
+	})();
 	pb.RenderNoteYear = (function() {
 		/**
 		* Properties of a RenderNoteYear.
@@ -9765,4 +9984,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-B2GXe8OC.js.map
+//# sourceMappingURL=index-yIvQ0-ex.js.map
