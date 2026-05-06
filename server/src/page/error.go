@@ -4,8 +4,6 @@ import (
 	"html/template"
 )
 
-var errorTpl = makeTpl(`error`)
-
 var Error404File = `page/error/404.html`
 var Error451File = `page/error/451.html`
 var Error500File = `page/error/500.html`
@@ -18,7 +16,7 @@ type Error struct {
 
 func (p *Page) errorInit() error {
 
-	p.errorMeta = genMeta(`error`)
+	p.errorMeta = p.genMeta(`error`)
 
 	p.genError(
 		Error404File,
@@ -52,5 +50,5 @@ func (p *Page) genError(file string, title string, content template.HTML) error 
 		Title:   title,
 		Content: content,
 	}
-	return execTplToFile(file, errorTpl, d)
+	return execTplToFile(file, p.errorTpl, d)
 }

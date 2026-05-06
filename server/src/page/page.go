@@ -3,6 +3,7 @@ package page
 
 import (
 	"embed"
+	"html/template"
 	"project/pb"
 	"project/util"
 	"project/zj"
@@ -30,9 +31,20 @@ type Page struct {
 
 	config *pb.PageConfig
 
+	tplFunc template.FuncMap
+
 	maxItemID uint64
 
+	maxNoteYear uint32
+	minNoteYear uint32
+
 	errorMeta *Meta
+
+	homeTpl          *template.Template
+	articleIndexTpl  *template.Template
+	articleSingleTpl *template.Template
+	noteTpl          *template.Template
+	errorTpl         *template.Template
 }
 
 func (p *Page) IsInitDone() bool {
@@ -42,11 +54,35 @@ func (p *Page) IsInitDone() bool {
 	return p.initDone
 }
 
+func (p *Page) initTpl() {
+	p.homeTpl = p.makeTpl(`home`)
+	p.articleIndexTpl = p.makeTpl(`article-index`)
+	p.articleSingleTpl = p.makeTpl(`article`)
+	p.noteTpl = p.makeTpl(`note`, `item`)
+	p.errorTpl = p.makeTpl(`error`)
+}
+
 func (p *Page) Init(fast bool) error {
 
 	p.fast = fast
 
+	var err error
+	p.NoteYearList, err = getNoteYearList()
+	if err != nil {
+		zj.W(`getNoteYearList fail`, err)
+	}
+
+	if len(p.NoteYearList) > 0 {
+		p.maxNoteYear = p.NoteYearList[0].Year
+		p.minNoteYear = p.NoteYearList[len(p.NoteYearList)-1].Year
+	} else {
+		p.maxNoteYear = 2020
+		p.minNoteYear = 2010
+	}
+
 	p.loadConfig()
+	p.makeTplFunc()
+	p.initTpl()
 
 	p.Item = make(map[uint64]*Item, 3000)
 

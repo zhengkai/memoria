@@ -8,9 +8,7 @@ import (
 	"project/zj"
 )
 
-var articleIndexTpl = makeTpl(`article-index`)
 var ArticleIndexFile = `page/article.html`
-var articleSingleTpl = makeTpl(`article`)
 
 type ArticleIndex struct {
 	Meta    *Meta
@@ -45,11 +43,11 @@ func (p *Page) articleInit() error {
 			if !p.checkFastPass(ArticleIndexFile) {
 				d := p.loadItem(id)
 
-				meta := genMeta(`item`)
-				meta.Canonical = fmt.Sprintf(`/item/%03d.html`, id)
+				meta := p.genMeta(`item`)
+				meta.Canonical = p.LinkItem(id)
 				d.Meta = meta
 
-				err = execTplToFile(file, articleSingleTpl, d)
+				err = execTplToFile(file, p.articleSingleTpl, d)
 				if err != nil {
 					zj.W(`write article fail:`, id, err)
 				}
@@ -59,14 +57,14 @@ func (p *Page) articleInit() error {
 
 	if !p.checkFastPass(ArticleIndexFile) {
 
-		meta := genMeta(`article`)
-		meta.Canonical = `/article.html`
+		meta := p.genMeta(`article`)
+		meta.Canonical = p.LinkArticle()
 		d := &ArticleIndex{
 			Meta:    meta,
 			Content: index,
 		}
 
-		err = execTplToFile(ArticleIndexFile, articleIndexTpl, d)
+		err = execTplToFile(ArticleIndexFile, p.articleIndexTpl, d)
 		if err != nil {
 			zj.W(`write article fail:`, err)
 		}

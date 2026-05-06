@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <title>{{if .Meta.Title}}{{.Meta.Title}} - {{end}}{{.Meta.SiteName}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<base href="/public/">
-{{if .Meta.Canonical}}<meta name="canonical" content="{{.Meta.Canonical}}">
+{{if .Meta.Canonical}}<meta name="canonical" content="https://{{.Meta.Domain}}{{.Meta.Canonical}}">
 {{end}}<link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="style-dda251d8.css">
 </head>
@@ -23,9 +22,9 @@
 	<nav>
 		<a href="/">{{.Meta.SiteName}}</a>
 		<ul>
-			<li><a href="/public/">首页</a></li>
-			<li><a href="article.html">闲言</a></li>
-			<li><a href="tweet.html">碎语</a></li>
+			<li><a href="{{linkHome}}">首页</a></li>
+			<li><a href="{{linkArticle}}">闲言</a></li>
+			<li><a href="{{linkNoteMax}}">碎语</a></li>
 		</ul>
 	</nav>
 </header>{{end}}

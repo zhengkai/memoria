@@ -10,7 +10,7 @@ import (
 	"project/zj"
 )
 
-func makeTpl(file ...string) *template.Template {
+func (p *Page) makeTpl(file ...string) *template.Template {
 
 	tplList := make([]string, 0, len(file)+len(commonTpl))
 	for _, f := range file {
@@ -19,7 +19,7 @@ func makeTpl(file ...string) *template.Template {
 	tplList = append(tplList, commonTpl...)
 
 	return template.Must(
-		template.New("layout").Funcs(tplFunc).ParseFS(tplFS,
+		template.New(`layout`).Funcs(p.tplFunc).ParseFS(tplFS,
 			tplList...,
 		),
 	)

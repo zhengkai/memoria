@@ -1,6 +1,5 @@
 package page
 
-var homeTpl = makeTpl(`home`)
 var HomeFile = `page/home.html`
 
 type Home struct {
@@ -13,12 +12,12 @@ func (p *Page) homeInit() error {
 		return nil
 	}
 
-	meta := genMeta(`home`)
+	meta := p.genMeta(`home`)
 	meta.Canonical = `/`
 
 	d := &Home{
 		Meta: meta,
 	}
 
-	return execTplToFile(HomeFile, homeTpl, d)
+	return execTplToFile(HomeFile, p.homeTpl, d)
 }

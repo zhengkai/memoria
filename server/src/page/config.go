@@ -4,6 +4,7 @@ import (
 	"project/pb"
 	"project/util"
 	"project/zj"
+	"strings"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -44,6 +45,16 @@ func (p *Page) loadConfig() {
 	if !c.HasDomain() {
 		zj.W(configFile, `missing "domain"`)
 		return
+	}
+
+	if c.HasPathPrefix() {
+		pp := c.GetPathPrefix()
+		pp = strings.Trim(pp, `/ `)
+		if pp == `` {
+			c.ClearPathPrefix()
+		} else {
+			c.SetPathPrefix(`/` + pp)
+		}
 	}
 
 	p.config = c

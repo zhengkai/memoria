@@ -1,21 +1,17 @@
 package page
 
-import (
-	"project/config"
-)
-
 type Meta struct {
 	SiteName  string
-	SiteBase  string
+	Domain    string
 	Canonical string
 	BodyClass string
 	Title     string
 }
 
-func genMeta(bodyClass string) *Meta {
+func (p *Page) genMeta(bodyClass string) *Meta {
 	return &Meta{
-		SiteName:  config.SiteName,
-		SiteBase:  config.SiteBase,
+		SiteName:  p.config.GetSiteName(),
+		Domain:    p.config.GetDomain(),
 		BodyClass: bodyClass,
 		Title:     ``,
 	}

@@ -13,8 +13,6 @@ import (
 
 var reNoteFile = regexp.MustCompile(`^\d{4}\.bin$`)
 
-var noteTpl = makeTpl(`note`, `item`)
-
 type Note struct {
 	Meta       *Meta
 	YearAll    []*NoteYear
@@ -33,12 +31,6 @@ func NoteFile(year uint32) string {
 
 func (p *Page) noteInit() error {
 
-	var err error
-	p.NoteYearList, err = getNoteYearList()
-	if err != nil {
-		return err
-	}
-
 	li := make([]*Note, len(p.NoteYearList))
 
 	for idx, row := range p.NoteYearList {
@@ -55,7 +47,7 @@ func (p *Page) noteInit() error {
 		}
 		file := NoteFile(note.YearSelect)
 		if !p.checkFastPass(file) {
-			execTplToFile(file, noteTpl, note)
+			execTplToFile(file, p.noteTpl, note)
 		}
 	}
 
@@ -77,8 +69,8 @@ func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 	li := d.GetList()
 	ny.Count = len(li)
 
-	meta := genMeta(`tweet`)
-	meta.Canonical = fmt.Sprintf(`/note/%04d.html`, ny.Year)
+	meta := p.genMeta(`tweet`)
+	meta.Canonical = p.LinkNote(ny.Year)
 
 	n := &Note{
 		Meta:       meta,
