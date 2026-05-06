@@ -8,12 +8,15 @@ import (
 )
 
 type public struct {
-	w    http.ResponseWriter
-	r    *http.Request
-	gzip bool
-	json bool
-	page *page.Page
-	path string
+	w          http.ResponseWriter
+	r          *http.Request
+	gzip       bool
+	json       bool
+	page       *page.Page
+	path       string
+	etag       string
+	headerOnly bool
+	mime       string
 }
 
 func (p *public) run() {

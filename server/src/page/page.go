@@ -40,6 +40,8 @@ type Page struct {
 
 	errorMeta *Meta
 
+	stylePath string
+
 	homeTpl          *template.Template
 	articleIndexTpl  *template.Template
 	articleSingleTpl *template.Template
@@ -83,6 +85,8 @@ func (p *Page) Init(fast bool) error {
 	p.loadConfig()
 	p.makeTplFunc()
 	p.initTpl()
+
+	p.stylePath = p.linkPath(`/style.css`)
 
 	p.Item = make(map[uint64]*Item, 3000)
 

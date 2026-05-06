@@ -17,16 +17,39 @@ type handle struct {
 
 func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	var headerOnly bool
+	if r.Method != http.MethodGet {
+		if r.Method == http.MethodHead {
+			headerOnly = true
+		} else {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+	}
+
+	etag := r.Header.Get(`If-None-Match`)
 	if !h.page.IsInitDone() {
+		if etag != "" {
+			w.WriteHeader(http.StatusNotModified)
+			return
+		}
 		w.Header().Add(`Retry-After`, `30`)
 		w.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
 
+	zj.J(`page request`, r.URL.Path, etag)
+	for k, v := range r.Header {
+		zj.IO(k, v)
+	}
+
 	p := &public{
-		w:    w,
-		r:    r,
-		page: h.page,
+		w:          w,
+		r:          r,
+		page:       h.page,
+		etag:       etag,
+		headerOnly: headerOnly,
+		mime:       `text/html; charset=utf-8`,
 	}
 	p.run()
 }
