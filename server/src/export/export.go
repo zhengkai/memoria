@@ -7,6 +7,7 @@ import (
 	"project/pb"
 	"project/util"
 	"project/zj"
+	"strings"
 	"sync"
 	"time"
 
@@ -16,23 +17,29 @@ import (
 var mux sync.Mutex
 
 func TestHandle(w http.ResponseWriter, r *http.Request) {
-	if Run() {
+
+	isFull := strings.HasSuffix(r.URL.RawQuery, `full`)
+
+	if Run(isFull) {
 		w.Write([]byte(`export start`))
 		return
 	}
 	w.Write([]byte(`export locked`))
 }
 
-func Run() bool {
+func Run(isFull bool) bool {
 
 	if !mux.TryLock() {
 		return false
 	}
 	go func() {
+		t := util.BenchStart()
 		zj.IO(`export start`)
-		g := Export{}
+		g := Export{
+			isFull: isFull,
+		}
 		g.run()
-		zj.IO(`export end`)
+		zj.IO(`export end`, t.ElapsedMS())
 		mux.Unlock()
 	}()
 	return true
@@ -44,7 +51,8 @@ type ExportFail struct {
 }
 
 type Export struct {
-	wg sync.WaitGroup
+	isFull bool
+	wg     sync.WaitGroup
 
 	item []*pb.ItemDB
 
@@ -87,8 +95,9 @@ func (g *Export) run() {
 		return
 	}
 
-	// TODO
-	// ts = 0
+	if g.isFull {
+		ts = 0
+	}
 
 	g.fetchData(ts)
 	if len(g.item) == 0 {

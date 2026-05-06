@@ -38,3 +38,9 @@ doc:
 
 status:
 	./server/build/status.sh dev
+
+dump:
+	curl 'https://memoria.anna.9farm.com/api/export'
+
+dump-full:
+	curl 'https://memoria.anna.9farm.com/api/export?full'
