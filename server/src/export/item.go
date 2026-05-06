@@ -23,7 +23,6 @@ func BinFile(id uint64) string {
 func (g *Export) exportItem() {
 
 	zj.J(`export item:`, len(g.item))
-	defer g.wg.Done()
 
 	for _, it := range g.item {
 		g.exportItemRow(it)

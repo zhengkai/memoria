@@ -17,9 +17,8 @@ var unmarshaler = protojson.UnmarshalOptions{
 }
 
 var defaultConfig = pb.PageConfig_builder{
-	SiteName:   new(`Soulogic`),
-	Domain:     new(`soulogic.com`),
-	PathPrefix: new(``),
+	SiteName: new(`Soulogic`),
+	Domain:   new(`soulogic.com`),
 }.Build()
 
 func (p *Page) loadConfig() {
@@ -28,7 +27,7 @@ func (p *Page) loadConfig() {
 
 	c := &pb.PageConfig{}
 	ab, err := util.ReadStaticBin(configFile)
-	if err != err {
+	if err != err || len(ab) < 10 {
 		return
 	}
 

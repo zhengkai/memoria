@@ -2,6 +2,7 @@ package api
 
 import (
 	"project/db"
+	"project/export"
 	"project/item"
 	"project/pb"
 	"project/util"
@@ -13,6 +14,7 @@ func itemSet(ie *pb.ItemEdit, e *util.Error) uint64 {
 		e.Fill(err)
 		return 0
 	}
+	export.Trigger()
 	return ie.GetId()
 }
 

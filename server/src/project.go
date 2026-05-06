@@ -4,6 +4,7 @@ package project
 import (
 	"os"
 	"project/build"
+	"project/config"
 	"project/db"
 	"project/public"
 	"project/util"
@@ -21,7 +22,9 @@ func run() {
 
 	util.InitDirCheck()
 
-	db.WaitConn()
+	if !config.Publish {
+		db.WaitConn()
+	}
 
 	go public.Handle.Run()
 

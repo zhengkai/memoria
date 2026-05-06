@@ -9,7 +9,6 @@ import (
 
 	"net/http"
 	"project/config"
-	"project/metrics"
 	"project/zj"
 	"time"
 )
@@ -18,18 +17,22 @@ func Server() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc(`/robots.txt`, robotsHandle)
-	mux.HandleFunc(`/api/export`, export.TestHandle)
-	mux.HandleFunc(`/api`, api.Handle)
-
-	if config.ClientDir == `` {
+	if config.Publish {
 		mux.Handle(`/`, public.Handle)
 	} else {
-		if util.DirCanRead(config.ClientDir) {
-			zj.J(`service client dist at`, config.ClientDir)
-			mux.Handle("/", http.FileServer(http.Dir(config.ClientDir)))
+		mux.HandleFunc(`/robots.txt`, robotsHandle)
+		mux.HandleFunc(`/api/export`, export.Handle)
+		mux.HandleFunc(`/api`, api.Handle)
+
+		if config.ClientDir == `` {
+			mux.Handle(`/`, public.Handle)
 		} else {
-			zj.W(`client dir can not read`, config.ClientDir)
+			if util.DirCanRead(config.ClientDir) {
+				zj.J(`service client dist at`, config.ClientDir)
+				mux.Handle("/", http.FileServer(http.Dir(config.ClientDir)))
+			} else {
+				zj.W(`client dir can not read`, config.ClientDir)
+			}
 		}
 	}
 
@@ -50,12 +53,11 @@ func Server() {
 	}
 }
 
-func failbackHandle(w http.ResponseWriter, r *http.Request) {
-	metrics.ErrorCount(http.StatusNotFound)
-	zj.J(`failback handle`, r.URL.String())
-}
-
 func robotsHandle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte("User-agent: *\nDisallow: /\n"))
+	if config.Publish {
+		w.Write([]byte("User-agent: *\nAllow: /\n"))
+	} else {
+		w.Write([]byte("User-agent: *\nDisallow: /\n"))
+	}
 }

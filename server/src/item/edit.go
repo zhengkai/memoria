@@ -22,9 +22,7 @@ func Edit(ie *pb.ItemEdit) error {
 	if ie.GetId() == 0 {
 		return newItem(ie)
 	}
-	x := editItem(ie)
-	// zj.W(`edit error`, x)
-	return x
+	return editItem(ie)
 }
 
 func editItem(ie *pb.ItemEdit) error {

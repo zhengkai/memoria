@@ -4,6 +4,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func init() {
@@ -21,5 +22,9 @@ func init() {
 		if len(s) > 1 {
 			*v = s
 		}
+	}
+
+	if strings.ToLower(os.Getenv(`MEMORIA_ROLE`)) == `publish` {
+		Publish = true
 	}
 }

@@ -2,12 +2,11 @@
 package export
 
 import (
-	"net/http"
 	"project/db"
 	"project/pb"
 	"project/util"
 	"project/zj"
-	"strings"
+	"strconv"
 	"sync"
 	"time"
 
@@ -17,17 +16,6 @@ import (
 var mux sync.Mutex
 
 const Tolerance uint64 = 600 * 1000
-
-func TestHandle(w http.ResponseWriter, r *http.Request) {
-
-	isFull := strings.HasSuffix(r.URL.RawQuery, `full`)
-
-	if Run(isFull) {
-		w.Write([]byte(`export start`))
-		return
-	}
-	w.Write([]byte(`export locked`))
-}
 
 func Run(isFull bool) bool {
 
@@ -92,6 +80,7 @@ func (g *Export) run() {
 	now := util.Now()
 
 	ts, err := db.GetExportTime()
+	zj.J(`export time`, ts)
 	if err != nil {
 		zj.W(`export fail, no time:`, err)
 		return
@@ -115,13 +104,17 @@ func (g *Export) run() {
 	}
 
 	db.SetExportTime(now)
+
+	util.WriteStaticBin(`data/export-time.txt`, []byte(strconv.Itoa(int(now))))
 }
 
 func (g *Export) fetchData(ts uint64) {
 
+	zj.J(`fetch data since`, ts)
+
 	ctx, cancel := life.CTXTimeout(10 * time.Minute)
 	defer cancel()
-	for row, err := range db.GetAllItemDB(ctx) {
+	for row, err := range db.GetAllItemDB(ctx, ts) {
 		if err != nil {
 			g.addFail(`fetch data`, err)
 			return
@@ -129,9 +122,6 @@ func (g *Export) fetchData(ts uint64) {
 
 		year := GetYear(row.Item)
 		isNote := row.Item.GetMeta().GetTitle() == ``
-		if row.TSUpdate < ts {
-			break
-		}
 		if isNote {
 			g.hasNote[year] = true
 		} else {
@@ -148,25 +138,22 @@ func (g *Export) fetchData(ts uint64) {
 
 func (g *Export) doExport() {
 
-	g.wg.Add(2 + len(g.hasNote))
-
-	go g.exportItem()
+	g.wg.Go(g.exportItem)
 
 	for year := range g.hasNote {
-		go g.exportNote(year)
+		g.wg.Go(func() {
+			g.exportNote(year)
+		})
 	}
 
 	if g.hasArticle {
-		go g.exportArticle()
+		g.wg.Go(g.exportArticle)
 	}
 }
 
 func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
 
-	g.wg.Add(2)
-
-	go func() {
-		defer g.wg.Done()
+	g.wg.Go(func() {
 		g.fetchData(ts)
 		if len(g.item) == 0 {
 			return
@@ -174,10 +161,9 @@ func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
 		zj.J(`export item`, len(g.item))
 		doItem = true
 		g.doExport()
-	}()
+	})
 
-	go func() {
-		defer g.wg.Done()
+	g.wg.Go(func() {
 		fl := g.fetchFile(ts)
 		if len(fl) == 0 {
 			return
@@ -187,7 +173,8 @@ func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
 		for _, f := range fl {
 			g.exportFile(f)
 		}
-	}()
+	})
+
 	g.wg.Wait()
 
 	return

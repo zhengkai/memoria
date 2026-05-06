@@ -12,7 +12,6 @@ const ArticleFileName = `data/article-list.bin`
 func (g *Export) exportArticle() {
 
 	zj.J(`export article`)
-	defer g.wg.Done()
 
 	var yl []uint32
 	for y, li := range g.article.year {
