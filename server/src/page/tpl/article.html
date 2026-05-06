@@ -3,6 +3,8 @@
 	<article>
 		<h1>{{.DB.GetMeta.GetTitle}}</h1>
 
+		<p><time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{ .DB.GetMeta.GetTsCreate | datetime }}</time><br>{{ if .DB.GetMeta.GetTitle }}{{ if .DB.GetMeta.GetOriginal }}作者：郑凯{{ else }}转载{{ end }}{{ end }}</p>
+
 		{{.Content}}
 	</article>
 </main>{{end}}

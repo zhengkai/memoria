@@ -39,9 +39,11 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	zj.J(`page request`, r.URL.Path, etag)
-	for k, v := range r.Header {
-		zj.IO(k, v)
-	}
+	/*
+		for k, v := range r.Header {
+			zj.IO(k, v)
+		}
+	*/
 
 	p := &public{
 		w:          w,

@@ -8,6 +8,6 @@
 
 <aside>
 	<ul>{{range .Content.GetList}}
-		<li><a href="{{linkArticle}}#year-{{.GetYear}}.html">{{.GetYear}} <span>{{len .GetList}}</span></a></li>{{end}}
+		<li><a href="{{linkArticle}}#year-{{.GetYear}}">{{.GetYear}} <span>({{len .GetList}})</span></a></li>{{end}}
 	</ul>
 </aside>{{end}}
