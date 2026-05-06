@@ -53,3 +53,12 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 
 	return pb.FileList_builder{List: li, Cursor: &cursor}.Build(), nil
 }
+
+func GetFile(id uint64) ([]byte, error) {
+	var bin []byte
+	err := d.QueryRow(`SELECT bin FROM file WHERE file_id = ?`, id).Scan(&bin)
+	if err != nil {
+		return nil, util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF(`file %d not found`, id)
+	}
+	return bin, nil
+}

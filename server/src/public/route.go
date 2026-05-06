@@ -1,6 +1,8 @@
 package public
 
-import "strings"
+import (
+	"strings"
+)
 
 func (p *public) route() {
 
@@ -9,30 +11,24 @@ func (p *public) route() {
 		return
 	}
 
-	if strings.HasPrefix(p.path, `style`) {
-		p.style()
-		return
-	}
+	li := map[string]func(){
+		`style`:   p.style,
+		`item`:    p.item,
+		`article`: p.article,
+		`note`:    p.note,
+		`tweet`:   p.note,
+		`file`:    p.file,
 
-	if strings.HasPrefix(p.path, `item`) {
-		p.item()
-		return
+		// 历史兼容
+		`archive`: p.item,
+		`blog`:    p.item,
+		`post`:    p.item,
 	}
-
-	if strings.HasPrefix(p.path, `article`) {
-		p.article()
-		return
-	}
-
-	if strings.HasPrefix(p.path, `note`) || strings.HasPrefix(p.path, `tweet`) {
-		p.note()
-		return
-	}
-
-	// 历史兼容
-	if strings.HasPrefix(p.path, `blog`) || strings.HasPrefix(p.path, `post`) || strings.HasPrefix(p.path, `archive`) {
-		p.item()
-		return
+	for prefix, fn := range li {
+		if strings.HasPrefix(p.path, prefix) {
+			fn()
+			return
+		}
 	}
 
 	p.error404()

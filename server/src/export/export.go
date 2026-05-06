@@ -16,6 +16,8 @@ import (
 
 var mux sync.Mutex
 
+const Tolerance uint64 = 600 * 1000
+
 func TestHandle(w http.ResponseWriter, r *http.Request) {
 
 	isFull := strings.HasSuffix(r.URL.RawQuery, `full`)
@@ -97,15 +99,15 @@ func (g *Export) run() {
 
 	if g.isFull {
 		ts = 0
+	} else if ts > Tolerance {
+		ts -= Tolerance
 	}
 
-	g.fetchData(ts)
-	if len(g.item) == 0 {
+	doItem, doFile := g.fetch(ts)
+
+	if !doItem && !doFile {
 		zj.J(`nothing for export, skip`)
-		return
 	}
-
-	g.doExport()
 
 	if g.fail != nil {
 		zj.W(`export fail:`, g.fail.Name, g.fail.Error)
@@ -115,37 +117,38 @@ func (g *Export) run() {
 	db.SetExportTime(now)
 }
 
-func (g *Export) fetchData(ts uint64) bool {
+func (g *Export) fetchData(ts uint64) {
 
 	ctx, cancel := life.CTXTimeout(10 * time.Minute)
 	defer cancel()
 	for row, err := range db.GetAllItemDB(ctx) {
 		if err != nil {
-			zj.W(`db.GetAllItemDB fail:`, err)
-			return false
+			g.addFail(`fetch data`, err)
+			return
 		}
 
 		year := GetYear(row.Item)
 		isNote := row.Item.GetMeta().GetTitle() == ``
-		if row.TSUpdate >= ts {
-			if isNote {
-				g.hasNote[year] = true
-			} else {
-				g.hasArticle = true
-			}
-			g.item = append(g.item, row.Item)
+		if row.TSUpdate < ts {
+			break
 		}
+		if isNote {
+			g.hasNote[year] = true
+		} else {
+			g.hasArticle = true
+		}
+		g.item = append(g.item, row.Item)
 		if isNote {
 			g.note.Add(year, row.Item)
 		} else {
 			g.article.Add(year, row.Item)
 		}
 	}
-
-	return true
 }
 
 func (g *Export) doExport() {
+
+	g.wg.Add(2 + len(g.hasNote))
 
 	go g.exportItem()
 
@@ -156,6 +159,36 @@ func (g *Export) doExport() {
 	if g.hasArticle {
 		go g.exportArticle()
 	}
+}
 
+func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
+
+	g.wg.Add(2)
+
+	go func() {
+		defer g.wg.Done()
+		g.fetchData(ts)
+		if len(g.item) == 0 {
+			return
+		}
+		zj.J(`export item`, len(g.item))
+		doItem = true
+		g.doExport()
+	}()
+
+	go func() {
+		defer g.wg.Done()
+		fl := g.fetchFile(ts)
+		if len(fl) == 0 {
+			return
+		}
+		zj.J(`export file`, len(fl))
+		doFile = true
+		for _, f := range fl {
+			g.exportFile(f)
+		}
+	}()
 	g.wg.Wait()
+
+	return
 }

@@ -15,11 +15,10 @@ func NoteFileName(year uint32) string {
 
 func (g *Export) exportNote(year uint32) {
 
-	zj.J(`export note:`, year)
-	g.wg.Add(1)
 	defer g.wg.Done()
 
 	li := g.note.year[year]
+	zj.F(`export note: %d (%d)`, year, len(li))
 
 	sortItemList(li)
 

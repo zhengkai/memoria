@@ -21,6 +21,7 @@ type public struct {
 
 func (p *public) run() {
 	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
+
 	p.route()
 }
 

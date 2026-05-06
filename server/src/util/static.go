@@ -29,7 +29,12 @@ func StaticExists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+func StaticMkdir(file string) error {
+	return os.MkdirAll(filepath.Dir(Static(file)), 0755)
+}
+
 func WriteStaticBin(file string, bin ...[]byte) error {
+	StaticMkdir(file)
 	file = Static(file)
 	return writeBin(file, bin...)
 }

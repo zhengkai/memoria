@@ -12,7 +12,6 @@ const ArticleFileName = `data/article-list.bin`
 func (g *Export) exportArticle() {
 
 	zj.J(`export article`)
-	g.wg.Add(1)
 	defer g.wg.Done()
 
 	var yl []uint32
