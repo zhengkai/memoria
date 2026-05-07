@@ -25,6 +25,9 @@ func run() {
 	if config.Publish {
 		go public.Handle.Run()
 	} else {
+		if !config.Prod {
+			go public.Handle.Run()
+		}
 		db.WaitConn()
 	}
 

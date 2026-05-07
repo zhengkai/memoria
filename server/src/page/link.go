@@ -2,6 +2,10 @@ package page
 
 import "fmt"
 
+func (p *Page) FullLink(path string) string {
+	return fmt.Sprintf(`https://%s%s`, p.config.GetDomain(), path)
+}
+
 func (p *Page) LinkItem(id uint64) string {
 	return p.link(`/item/%d.html`, id)
 }
@@ -10,8 +14,12 @@ func (p *Page) LinkNote(year uint32) string {
 	return p.link(`/note-%d.html`, year)
 }
 
+func (p *Page) LinkItemInNote(year uint32, id uint64) string {
+	return p.link(`/note/%04d.html#n%d`, year, id)
+}
+
 func (p *Page) LinkNoteMax() string {
-	return p.link(`/note-%d.html`, p.maxNoteYear)
+	return p.link(`/note-%d.html`, p.MaxNoteYear)
 }
 
 func (p *Page) LinkArticle() string {

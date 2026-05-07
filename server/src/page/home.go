@@ -13,7 +13,7 @@ func (p *Page) homeInit() error {
 	}
 
 	meta := p.genMeta(`home`)
-	meta.Canonical = `/`
+	meta.Canonical = p.LinkHome()
 
 	d := &Home{
 		Meta: meta,

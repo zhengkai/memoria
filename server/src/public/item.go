@@ -1,7 +1,6 @@
 package public
 
 import (
-	"fmt"
 	"project/page"
 	"project/util"
 )
@@ -17,10 +16,13 @@ func (p *public) item() {
 	}
 
 	if it.NoteYear > 0 {
-		path := fmt.Sprintf(`/public/note/%04d.html#n%d`, it.NoteYear, id)
-		p.redirect(path)
+		p.redirect(p.page.LinkItemInNote(it.NoteYear, id))
 		return
 	}
 
+	if !p.isSecure {
+		p.redirect(p.page.LinkItem(id))
+		return
+	}
 	p.readPage(page.ArticleSingleFile(id))
 }

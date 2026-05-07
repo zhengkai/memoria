@@ -17,6 +17,8 @@ type public struct {
 	etag       string
 	headerOnly bool
 	mime       string
+	isSecure   bool
+	finalFile  string
 }
 
 func (p *public) run() {
@@ -26,5 +28,6 @@ func (p *public) run() {
 }
 
 func (p *public) redirect(path string) {
-	http.Redirect(p.w, p.r, path, http.StatusPermanentRedirect)
+	p.w.Header().Set(`Location`, p.page.FullLink(path))
+	p.w.WriteHeader(http.StatusMovedPermanently)
 }

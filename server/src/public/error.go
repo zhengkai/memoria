@@ -3,19 +3,32 @@ package public
 import (
 	"net/http"
 	"project/page"
+	"project/zj"
 )
 
 func (p *public) error404() {
-	p.w.WriteHeader(http.StatusNotFound)
-	p.readPage(page.Error404File)
+	p.errorPage(
+		http.StatusNotFound,
+		page.Error404File,
+	)
 }
 
 func (p *public) error451() {
-	p.w.WriteHeader(http.StatusUnavailableForLegalReasons)
-	p.readPage(page.Error451File)
+	p.errorPage(
+		http.StatusUnavailableForLegalReasons,
+		page.Error451File,
+	)
 }
 
 func (p *public) error500() {
-	p.w.WriteHeader(http.StatusInternalServerError)
-	p.readPage(page.Error500File)
+	p.errorPage(
+		http.StatusInternalServerError,
+		page.Error500File,
+	)
+}
+
+func (p *public) errorPage(code int, file string) {
+	zj.W(`error page`, code, p.path, file)
+	p.w.WriteHeader(code)
+	p.readPage(file)
 }

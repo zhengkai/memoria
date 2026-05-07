@@ -2,6 +2,7 @@ package public
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"net/http"
 	"project/util"
@@ -10,17 +11,20 @@ import (
 	"strings"
 )
 
+var ErrFileTooShort = errors.New(`file content too short`)
+
 func (p *public) readPage(file string) {
+
+	p.finalFile = file
 
 	c, err := util.ReadStaticBin(file)
 	size := len(c) - sha256.Size
-	if size < 10 {
-		zj.W(`file content too short`, file)
-		return
+	if err == nil && size < 10 {
+		err = ErrFileTooShort
 	}
 	if err != nil {
 		zj.W(file, err)
-		if p.etag != "" {
+		if p.etag != `` {
 			// 死马当活马医，出现问题时，让客户端继续用已有缓存
 			p.w.WriteHeader(http.StatusNotModified)
 		}

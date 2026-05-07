@@ -30,6 +30,14 @@ func (p *public) file() {
 		return
 	}
 
+	if !p.isSecure {
+		p.redirect(fmt.Sprintf(`/file/%d`, id))
+		return
+	}
+
+	// TODO
+	// Link: <https://example.com/page>; rel="canonical"
+
 	if config.UseNginx {
 		p.sendFileHeader(f)
 		sid := fmt.Sprintf(`%04d`, id)

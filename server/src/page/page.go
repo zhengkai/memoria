@@ -4,6 +4,7 @@ package page
 import (
 	"embed"
 	"html/template"
+	"project/config"
 	"project/pb"
 	"project/util"
 	"project/zj"
@@ -35,8 +36,8 @@ type Page struct {
 
 	styleHash   string
 	maxItemID   uint64
-	maxNoteYear uint32
-	minNoteYear uint32
+	MaxNoteYear uint32
+	MinNoteYear uint32
 
 	errorMeta *Meta
 
@@ -76,11 +77,11 @@ func (p *Page) Init(fast bool) error {
 	}
 
 	if len(p.NoteYearList) > 0 {
-		p.maxNoteYear = p.NoteYearList[0].Year
-		p.minNoteYear = p.NoteYearList[len(p.NoteYearList)-1].Year
+		p.MaxNoteYear = p.NoteYearList[0].Year
+		p.MinNoteYear = p.NoteYearList[len(p.NoteYearList)-1].Year
 	} else {
-		p.maxNoteYear = 2020
-		p.minNoteYear = 2010
+		p.MaxNoteYear = config.DefaultMaxNoteYear
+		p.MinNoteYear = config.DefaultMinNoteYear
 	}
 
 	p.loadConfig()

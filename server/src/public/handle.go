@@ -19,6 +19,8 @@ type handle struct {
 
 func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Add(`Server`, `Soulogic`)
+
 	var headerOnly bool
 	if r.Method != http.MethodGet {
 		if r.Method == http.MethodHead {
@@ -31,7 +33,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	etag := r.Header.Get(`If-None-Match`)
 	if !h.page.IsInitDone() {
-		if etag != "" {
+		if etag != `` {
 			w.WriteHeader(http.StatusNotModified)
 			return
 		}
@@ -47,7 +49,9 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       `text/html; charset=utf-8`,
+		isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
 	}
+	zj.J(`isSecure`, p.isSecure, r.Header.Get(`X-Forwarded-Proto`))
 	p.run()
 }
 
