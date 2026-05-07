@@ -5,6 +5,7 @@ import (
 	"project/page"
 	"project/util"
 	"project/zj"
+	"strings"
 
 	"github.com/zhengkai/life-go"
 )
@@ -42,7 +43,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w:          w,
 		r:          r,
 		page:       h.page,
-		etag:       etag,
+		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       `text/html; charset=utf-8`,
 	}

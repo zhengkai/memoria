@@ -16,7 +16,7 @@ import (
 
 func (p *public) file() {
 
-	if p.etag != "" {
+	if p.etag != `` {
 		p.w.WriteHeader(http.StatusNotModified)
 		return
 	}
