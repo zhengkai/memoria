@@ -55,5 +55,5 @@ func execTplToFile(file string, tpl *template.Template, data any) error {
 	}
 
 	zj.IO(`write`, status, file)
-	return util.WriteStaticBin(file, hash[:], output)
+	return util.WriteStaticBinHash(file, hash, output)
 }

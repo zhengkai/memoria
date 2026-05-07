@@ -19,7 +19,7 @@ const (
 	Tolerance uint64 = 600 * 1000
 
 	TimeFile  = `data/export-time.txt`
-	StyleFile = `style.css`
+	StyleFile = `page/style.css`
 )
 
 func Run(isFull bool) bool {

@@ -28,6 +28,7 @@ func (p *public) error500() {
 }
 
 func (p *public) errorPage(code int, file string) {
+	p.disableETag = true
 	zj.W(`error page`, code, p.path, file)
 	p.w.WriteHeader(code)
 	p.readPage(file)

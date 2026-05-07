@@ -7,18 +7,21 @@ import (
 
 func (p *public) note() {
 
-	id := uint32(util.FirstNum(p.path))
-	if id == 0 {
-		id = p.page.MaxNoteYear
-	} else if id < p.page.MinNoteYear || id > p.page.MaxNoteYear {
+	year := uint32(util.FirstNum(p.path))
+	if year == 0 {
+		year = p.page.MaxNoteYear
+	} else if year < p.page.MinNoteYear || year > p.page.MaxNoteYear {
 		p.error404()
 		return
 	}
 
 	if !p.isSecure {
-		p.redirect(p.page.LinkNote(id))
+		p.redirect(p.page.LinkNote(year))
 		return
 	}
 
-	p.readPage(page.NoteFile(id))
+	if year == p.page.MaxNoteYear {
+		p.expire = ExpireShort
+	}
+	p.readPage(page.NoteFile(year))
 }

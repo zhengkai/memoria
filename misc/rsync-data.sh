@@ -24,7 +24,7 @@ if [[ "x$TS" == "$PREV" ]]; then
 fi
 
 set -x
-rsync --partial -vzrtopg --delete --exclude="$EXPORT_TIME_FILE" ./data ./file "$TARGET"
+rsync --partial -vzrtopg --delete --xattrs --exclude="$EXPORT_TIME_FILE" ./data ./file "$TARGET"
 rsync --partial -vzrtopg "$EXPORT_TIME_FILE" "${TARGET}/${EXPORT_TIME_FILE}"
 
 echo "$TS" > "$RSYNC_TIME_FILE"

@@ -2,10 +2,7 @@ package public
 
 import (
 	"fmt"
-	"io"
 	"net/http"
-	"os"
-	"project/config"
 	"project/export"
 	"project/pb"
 	"project/util"
@@ -38,21 +35,8 @@ func (p *public) file() {
 	// TODO
 	// Link: <https://example.com/page>; rel="canonical"
 
-	if config.UseNginx {
-		p.sendFileHeader(f)
-		sid := fmt.Sprintf(`%04d`, id)
-		accel := fmt.Sprintf(config.NginxAccelPath, sid[:len(sid)-2], sid[len(sid)-2:])
-		p.w.Header().Set(`X-Accel-Redirect`, accel)
-	} else {
-		fh, err := os.Open(util.Static(export.FileFileName(id)))
-		if err != nil {
-			p.error500()
-			return
-		}
-		defer fh.Close()
-		p.sendFileHeader(f)
-		io.Copy(p.w, fh)
-	}
+	p.sendFileHeader(f)
+	p.sendFile(export.FileFileName(id))
 }
 
 func (p *public) sendFileHeader(f *pb.File) {

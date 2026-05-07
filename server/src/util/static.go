@@ -1,18 +1,19 @@
 package util
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"project/config"
 	"project/zj"
 	"strings"
 
+	"golang.org/x/sys/unix"
 	"google.golang.org/protobuf/proto"
 )
+
+const xattrHashKey = `user.sha256hash`
 
 var ErrHashNotMatch = fmt.Errorf(`hash not match`)
 
@@ -39,19 +40,23 @@ func WriteStaticBin(file string, bin ...[]byte) error {
 	return writeBin(file, bin...)
 }
 
+func WriteStaticBinHash(file string, hash [sha256.Size]byte, bin ...[]byte) error {
+	StaticMkdir(file)
+	file = Static(file)
+	return writeBinHash(file, hash, bin...)
+}
+
 func ReadStaticBin(file string) ([]byte, error) {
 	return os.ReadFile(Static(file))
 }
 
 func ReadStaticHash(file string) (hash [sha256.Size]byte, err error) {
-	f, err := os.OpenFile(Static(file), os.O_RDONLY, 0644)
-	if err != nil {
-		return
-	}
 
 	buf := make([]byte, sha256.Size)
-	_, err = io.ReadFull(f, buf)
-	f.Close()
+	size, err := unix.Getxattr(Static(file), xattrHashKey, buf)
+	if size != sha256.Size {
+		err = fmt.Errorf(`invalid hash size: %d`, size)
+	}
 	if err != nil {
 		return
 	}
@@ -71,6 +76,7 @@ func WriteStaticData(file string, m proto.Message) error {
 	// 尝试读，文件存在且 hash 一致则跳过
 	prevHash, err := ReadStaticHash(file)
 	file = Static(file)
+
 	if err == nil {
 		if prevHash == hash {
 			return nil
@@ -79,7 +85,7 @@ func WriteStaticData(file string, m proto.Message) error {
 		os.MkdirAll(filepath.Dir(file), 0755)
 	}
 
-	return writeBin(file, hash[:], data)
+	return writeBinHash(file, hash, data)
 }
 
 func ReadStaticData(file string, m proto.Message) error {
@@ -90,19 +96,7 @@ func ReadStaticData(file string, m proto.Message) error {
 	if err != nil {
 		return err
 	}
-	if len(ab) <= sha256.Size {
-		err = fmt.Errorf(`invalid static file: %s`, file)
-		return err
-	}
-
-	data := ab[sha256.Size:]
-	hash := sha256.Sum256(data)
-
-	if !bytes.Equal(hash[:], ab[:sha256.Size]) {
-		return fmt.Errorf(`invalid static file, sha256 fail: %s`, file)
-	}
-
-	return proto.Unmarshal(data, m)
+	return proto.Unmarshal(ab, m)
 }
 
 func writeBin(file string, li ...[]byte) (err error) {
@@ -123,6 +117,39 @@ func writeBin(file string, li ...[]byte) (err error) {
 			return
 		}
 	}
+	f.Close()
+
+	return os.Rename(tmpName, file)
+}
+
+func writeBinHash(file string, hash [sha256.Size]byte, li ...[]byte) (err error) {
+
+	f, err := os.CreateTemp(Static(`tmp`), `tmp-go-*`)
+	if err != nil {
+		return
+	}
+
+	f.Chmod(0644)
+	tmpName := f.Name()
+
+	for _, ab := range li {
+		if _, err = f.Write(ab); err != nil {
+			zj.W(`write tmpfile fail`, tmpName, len(ab), err)
+			f.Close()
+			os.Remove(tmpName)
+			return
+		}
+	}
+
+	fd := int(f.Fd())
+	err = unix.Fsetxattr(fd, xattrHashKey, hash[:], 0)
+	if err != nil {
+		zj.W(`write tmpfile xattr fail`, tmpName, err)
+		f.Close()
+		os.Remove(tmpName)
+		return
+	}
+
 	f.Close()
 
 	return os.Rename(tmpName, file)

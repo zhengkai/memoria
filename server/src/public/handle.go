@@ -38,7 +38,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotModified)
 			return
 		}
-		w.Header().Add(`Retry-After`, `30`)
+		w.Header().Add(`Retry-After`, `10`)
 		w.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
