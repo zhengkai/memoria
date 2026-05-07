@@ -19,6 +19,7 @@ type public struct {
 	mime       string
 	isSecure   bool
 	finalFile  string
+	routeTable map[string]func(*public)
 }
 
 func (p *public) run() {

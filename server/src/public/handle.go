@@ -14,7 +14,8 @@ import (
 var Handle = &handle{}
 
 type handle struct {
-	page *page.Page
+	page       *page.Page
+	routeTable map[string]func(*public)
 }
 
 func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -50,12 +51,14 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		headerOnly: headerOnly,
 		mime:       `text/html; charset=utf-8`,
 		isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
+		routeTable: h.routeTable,
 	}
-	zj.J(`isSecure`, p.isSecure, r.Header.Get(`X-Forwarded-Proto`))
 	p.run()
 }
 
 func (h *handle) Run() {
+
+	h.routeTable = h.genRoute()
 
 	// 先快速启动，所有的文件有就先用着
 	t := util.BenchStart()
