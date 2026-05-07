@@ -35,10 +35,10 @@ func SetExportTime(ts uint64) error {
 	return err
 }
 
-func GetAllItemDB(ctx context.Context, ts uint64) func(func(*ExportRow, error) bool) {
+func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 	return func(yield func(*ExportRow, error) bool) {
 		var lastID uint64
-		lastTS := ts
+		var lastTS uint64
 		const limit = 1000
 
 		for {

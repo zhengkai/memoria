@@ -44,9 +44,10 @@ type Export struct {
 	isFull bool
 	wg     sync.WaitGroup
 
+	// 只记录要更新的 item
 	item []*pb.ItemDB
 
-	// g.article, g.note 记录对应的全部数据
+	// g.article, g.note 记录对应的全部数据（包括 pb.ItemDB 而不止 id）
 	article *ByYear
 	note    *ByYear
 
@@ -114,24 +115,31 @@ func (g *Export) fetchData(ts uint64) {
 
 	ctx, cancel := life.CTXTimeout(10 * time.Minute)
 	defer cancel()
-	for row, err := range db.GetAllItemDB(ctx, ts) {
+
+	// 扫全库，因为列表页有其他没更新的 item
+	for row, err := range db.GetAllItemDB(ctx) {
 		if err != nil {
 			g.addFail(`fetch data`, err)
 			return
 		}
-
 		year := GetYear(row.Item)
 		isNote := row.Item.GetMeta().GetTitle() == ``
-		if isNote {
-			g.hasNote[year] = true
-		} else {
-			g.hasArticle = true
-		}
-		g.item = append(g.item, row.Item)
+
+		// g.article, g.note 记录全部数据
 		if isNote {
 			g.note.Add(year, row.Item)
 		} else {
 			g.article.Add(year, row.Item)
+		}
+
+		// g.item，hasArticle, hasNote 只记录要更新的
+		if row.TSUpdate >= ts {
+			g.item = append(g.item, row.Item)
+			if isNote {
+				g.hasNote[year] = true
+			} else {
+				g.hasArticle = true
+			}
 		}
 	}
 }
