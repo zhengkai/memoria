@@ -17,6 +17,8 @@ var mux sync.Mutex
 
 const Tolerance uint64 = 600 * 1000
 
+const TimeFile = `data/export-time.txt`
+
 func Run(isFull bool) bool {
 
 	if !mux.TryLock() {
@@ -106,7 +108,7 @@ func (g *Export) run() {
 
 	db.SetExportTime(now)
 
-	util.WriteStaticBin(`data/export-time.txt`, []byte(strconv.Itoa(int(now))))
+	util.WriteStaticBin(TimeFile, []byte(strconv.Itoa(int(now))))
 }
 
 func (g *Export) fetchData(ts uint64) {

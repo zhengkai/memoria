@@ -22,11 +22,11 @@ func run() {
 
 	util.InitDirCheck()
 
-	if !config.Publish {
+	if config.Publish {
+		go public.Handle.Run()
+	} else {
 		db.WaitConn()
 	}
-
-	go public.Handle.Run()
 
 	go web.Server()
 

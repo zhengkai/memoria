@@ -2,6 +2,7 @@ package public
 
 import (
 	"net/http"
+	"project/export"
 	"project/page"
 	"project/util"
 	"project/zj"
@@ -58,12 +59,30 @@ func (h *handle) Run() {
 	h.page.Init(true)
 	zj.J(`page fast`, t.ElapsedMS())
 
-	life.Sleep(10)
+	var prevCheck string
 
-	// 尝试重新生成一遍所有文件（大部分情况下会发现文件一致，没有写操作）
-	t = util.BenchStart()
-	page := &page.Page{}
-	page.Init(false)
-	zj.J(`page normal`, t.ElapsedMS())
-	h.page = page
+	// 每 5 秒检查 export.TimeFile 文件是否变化，变化则重建
+	// export.TimeFile 的同步对应 misc/rsync-data.sh ，全部数据同步完后才变化
+	for !life.Stop {
+
+		life.Sleep(5)
+
+		ab, err := util.ReadStaticBin(export.TimeFile)
+		if err != nil {
+			continue
+		}
+		check := string(ab)
+		if prevCheck == check {
+			continue
+		}
+
+		// 尝试重新生成一遍所有文件（大部分情况下会发现文件一致，没有写操作）
+		t = util.BenchStart()
+		page := &page.Page{}
+		page.Init(false)
+		zj.J(`page normal`, t.ElapsedMS())
+		h.page = page
+
+		prevCheck = check
+	}
 }
