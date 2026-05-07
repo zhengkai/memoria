@@ -33,13 +33,16 @@ FROM alpine:latest
 
 RUN mkdir /static
 
-RUN apk add --no-cache asciidoctor cmark
+RUN apk add --no-cache asciidoctor cmark tzdata
+
+ENV TZ="Asia/Shanghai"
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone
 
 COPY --from=builder /project/server/dist/prod/memoria-server-next /memoria-server
 
 COPY client/dist-git/ /admin
-
-ENV TZ="Asia/Shanghai"
 
 ENV MEMORIA_WEB=":80"
 ENV MEMORIA_DIR="/static"
