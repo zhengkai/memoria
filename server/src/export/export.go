@@ -15,9 +15,12 @@ import (
 
 var mux sync.Mutex
 
-const Tolerance uint64 = 600 * 1000
+const (
+	Tolerance uint64 = 600 * 1000
 
-const TimeFile = `data/export-time.txt`
+	TimeFile  = `data/export-time.txt`
+	StyleFile = `style.css`
+)
 
 func Run(isFull bool) bool {
 

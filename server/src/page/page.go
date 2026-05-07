@@ -33,14 +33,15 @@ type Page struct {
 
 	tplFunc template.FuncMap
 
-	maxItemID uint64
-
+	styleHash   string
+	maxItemID   uint64
 	maxNoteYear uint32
 	minNoteYear uint32
 
 	errorMeta *Meta
 
-	stylePath string
+	styleLink   string
+	faviconLink string
 
 	homeTpl          *template.Template
 	articleIndexTpl  *template.Template
@@ -86,7 +87,8 @@ func (p *Page) Init(fast bool) error {
 	p.makeTplFunc()
 	p.initTpl()
 
-	p.stylePath = p.linkPath(`/style.css`)
+	p.styleLink = p.getStyleLink()
+	p.faviconLink = p.linkPath(`/favicon.webp`)
 
 	p.Item = make(map[uint64]*Item, 3000)
 

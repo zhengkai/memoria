@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>{{if .Meta.Title}}{{.Meta.Title}} - {{end}}{{.Meta.SiteName}}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 {{if .Meta.Canonical}}<meta name="canonical" content="https://{{.Meta.Domain}}{{.Meta.Canonical}}">
-{{end}}<link rel="icon" type="image/webp" href="https://{{.Meta.Domain}}/favicon.webp">
+{{end}}<link rel="icon" type="image/webp" href="{{.Meta.Favicon}}">
 <link rel="stylesheet" href="{{.Meta.Style}}">
 </head>
 <body{{if .Meta.BodyClass}} class="{{.Meta.BodyClass}}"{{end}}>

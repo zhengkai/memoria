@@ -40,7 +40,7 @@ func (p *public) readPage(file string) {
 		size += sha256.Size
 	}
 
-	zj.J(`readPage`, etag, p.etag, file)
+	zj.J(`readPage`, etag, p.etag, p.path, file)
 
 	p.w.Header().Add(`Cache-Control`, `max-age=31536000, immutable`)
 	p.w.Header().Add(`Content-Type`, p.mime)
