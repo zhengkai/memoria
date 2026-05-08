@@ -9702,6 +9702,10 @@ var formatDateTime = (ts) => {
 	const p = Object.fromEntries(f.formatToParts(date).map((x) => [x.type, x.value]));
 	return `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}:${p.second}`;
 };
+var escapeHtml = (str) => {
+	if (!str) return "";
+	return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+};
 //#endregion
 //#region src/component/common/nav.ts
 var nav = (key) => {
@@ -9836,7 +9840,7 @@ var tplItemRow = (it) => {
 	const datetime = formatDateTime(it.meta.tsCreate);
 	d.innerHTML = `<div>
 		<div><a href="${`?action=edit&id=${it.id}`}" target="_blank">${it.id}</a></div>
-		<div class="content">${it.content.raw}</div>
+		<div class="content">${escapeHtml(it.content.raw)}</div>
 		<div>${datetime}</div>
 	</div>`;
 	return d;
@@ -9984,4 +9988,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-yIvQ0-ex.js.map
+//# sourceMappingURL=index-CY5CksSC.js.map
