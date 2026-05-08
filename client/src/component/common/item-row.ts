@@ -16,7 +16,7 @@ export const tplItemRow = (it: pb.IItem): HTMLDivElement => {
 	const url = `?action=edit&id=${it.id}`;
 	d.innerHTML = `<div>
 		<div><a href="${url}" target="_blank">${it.id}</a></div>
-		<div class="content">${it.content!.raw}</div>
+		<div class="content">${util.escapeHtml(it.content!.raw)}</div>
 		<div>${datetime}</div>
 	</div>`;
 	return d;

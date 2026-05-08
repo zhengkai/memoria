@@ -27,9 +27,9 @@ func itemGet(id uint64, e *util.Error) *pb.Item {
 	return it
 }
 
-func itemListRecent(n uint32, e *util.Error) *pb.ItemList {
+func itemListRecent(_ uint32, e *util.Error) *pb.ItemList {
 
-	li, err := db.ListItem(0, int(n), true)
+	li, err := db.RecentItem()
 	if err != nil {
 		e.Fill(err)
 		return nil

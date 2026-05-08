@@ -88,6 +88,17 @@ func LoadItem(id uint64) (item *pb.ItemDB, err error) {
 	return
 }
 
+func RecentItem() ([]uint64, error) {
+	query := queryItemList + `ORDER BY ts_update DESC LIMIT 10`
+
+	rows, err := d.Query(query)
+	if err != nil {
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("recent item fail")
+	}
+
+	return resultItem(rows)
+}
+
 func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
 
 	var rows *sql.Rows
@@ -108,18 +119,22 @@ func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
 	if err != nil {
 		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail")
 	}
-	defer rows.Close()
+
+	return resultItem(rows)
+}
+
+func resultItem(rs *sql.Rows) ([]uint64, error) {
+
+	defer rs.Close()
 
 	var li []uint64
 
-	for rows.Next() {
+	for rs.Next() {
 		var id uint64
-
-		err = rows.Scan(&id)
+		err := rs.Scan(&id)
 		if err != nil {
 			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail (when scan list)")
 		}
-
 		li = append(li, id)
 	}
 	return li, nil
