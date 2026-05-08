@@ -24,7 +24,7 @@ func ArticleSingleFile(id uint64) string {
 	return fmt.Sprintf(`page/item/%03d/%03d.html`, id/1000, id%1000)
 }
 
-func (p *Page) articleInit() error {
+func (m *Manager) articleInit() error {
 
 	index := &pb.RenderArticleIndex{}
 
@@ -40,14 +40,14 @@ func (p *Page) articleInit() error {
 			id := il.GetId()
 			file := ArticleSingleFile(id)
 
-			if !p.checkFastPass(ArticleIndexFile) {
-				d := p.loadItem(id)
+			if !m.checkFastPass(ArticleIndexFile) {
+				d := m.loadItem(id)
 
-				meta := p.genMeta(`item`)
-				meta.Canonical = p.LinkItem(id)
+				meta := m.genMeta(`item`)
+				meta.Canonical = m.LinkItem(id)
 				d.Meta = meta
 
-				err = execTplToFile(file, p.articleSingleTpl, d)
+				err = execTplToFile(file, m.articleSingleTpl, d)
 				if err != nil {
 					zj.W(`write article fail:`, id, err)
 				}
@@ -55,16 +55,16 @@ func (p *Page) articleInit() error {
 		}
 	}
 
-	if !p.checkFastPass(ArticleIndexFile) {
+	if !m.checkFastPass(ArticleIndexFile) {
 
-		meta := p.genMeta(`article`)
-		meta.Canonical = p.LinkArticle()
+		meta := m.genMeta(`article`)
+		meta.Canonical = m.LinkArticle()
 		d := &ArticleIndex{
 			Meta:    meta,
 			Content: index,
 		}
 
-		err = execTplToFile(ArticleIndexFile, p.articleIndexTpl, d)
+		err = execTplToFile(ArticleIndexFile, m.articleIndexTpl, d)
 		if err != nil {
 			zj.W(`write article fail:`, err)
 		}

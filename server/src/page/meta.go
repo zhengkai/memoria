@@ -10,12 +10,12 @@ type Meta struct {
 	Title     string
 }
 
-func (p *Page) genMeta(bodyClass string) *Meta {
+func (m *Manager) genMeta(bodyClass string) *Meta {
 	return &Meta{
-		SiteName:  p.config.GetSiteName(),
-		Domain:    p.config.GetDomain(),
-		Style:     p.styleLink,
-		Favicon:   p.faviconLink,
+		SiteName:  m.config.GetSiteName(),
+		Domain:    m.config.GetDomain(),
+		Style:     m.styleLink,
+		Favicon:   m.faviconLink,
 		BodyClass: bodyClass,
 		Title:     ``,
 	}

@@ -9,18 +9,18 @@ func (p *public) note() {
 
 	year := uint32(util.FirstNum(p.path))
 	if year == 0 {
-		year = p.page.MaxNoteYear
-	} else if year < p.page.MinNoteYear || year > p.page.MaxNoteYear {
+		year = p.pm.MaxNoteYear
+	} else if year < p.pm.MinNoteYear || year > p.pm.MaxNoteYear {
 		p.error404()
 		return
 	}
 
 	if !p.isSecure {
-		p.redirect(p.page.LinkNote(year))
+		p.redirect(p.pm.LinkNote(year))
 		return
 	}
 
-	if year == p.page.MaxNoteYear {
+	if year == p.pm.MaxNoteYear {
 		p.expire = ExpireShort
 	}
 	p.readPage(page.NoteFile(year))

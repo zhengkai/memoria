@@ -17,7 +17,7 @@ type public struct {
 	r           *http.Request
 	gzip        bool
 	json        bool
-	page        *page.Page
+	pm          *page.Manager
 	path        string
 	etag        string
 	headerOnly  bool
@@ -36,7 +36,7 @@ func (p *public) run() {
 }
 
 func (p *public) redirect(path string) {
-	p.w.Header().Set(`Location`, p.page.FullLink(path))
+	p.w.Header().Set(`Location`, p.pm.FullLink(path))
 	p.w.WriteHeader(http.StatusMovedPermanently)
 }
 

@@ -8,7 +8,7 @@ import (
 	"project/util"
 )
 
-func (p *Page) getStyleLink() string {
+func (m *Manager) getStyleLink() string {
 
 	var h []byte
 
@@ -22,5 +22,5 @@ func (p *Page) getStyleLink() string {
 		h = b
 	}
 
-	return p.linkPath(fmt.Sprintf(`/style-%x.css`, h[:4]))
+	return m.linkPath(fmt.Sprintf(`/style-%x.css`, h[:4]))
 }

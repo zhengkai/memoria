@@ -17,24 +17,24 @@ type Item struct {
 	Meta     *Meta
 }
 
-func (p *Page) LoadItem(id uint64) (re *Item) {
-	if id == 0 || id > p.maxItemID {
+func (m *Manager) LoadItem(id uint64) (re *Item) {
+	if id == 0 || id > m.maxItemID {
 		return nil
 	}
-	return p.Item[id]
+	return m.Item[id]
 }
 
-func (p *Page) loadItem(id uint64) (re *Item) {
+func (m *Manager) loadItem(id uint64) (re *Item) {
 
-	re = p.Item[id]
+	re = m.Item[id]
 	if re != nil {
 		return re
 	}
 	re = &Item{
 		ID: id,
 	}
-	if p.maxItemID < id {
-		p.maxItemID = id
+	if m.maxItemID < id {
+		m.maxItemID = id
 	}
 
 	re.Error = util.ReadStaticData(export.ItemFile(id), &re.DB)
@@ -51,6 +51,6 @@ func (p *Page) loadItem(id uint64) (re *Item) {
 
 	// TODO og
 
-	p.Item[id] = re
+	m.Item[id] = re
 	return
 }

@@ -29,12 +29,12 @@ func NoteFile(year uint32) string {
 	return fmt.Sprintf(`page/note/%04d.html`, year)
 }
 
-func (p *Page) noteInit() error {
+func (m *Manager) noteInit() error {
 
-	li := make([]*Note, len(p.NoteYearList))
+	li := make([]*Note, len(m.noteYearList))
 
-	for idx, row := range p.NoteYearList {
-		note, err := p.loadNote(row)
+	for idx, row := range m.noteYearList {
+		note, err := m.loadNote(row)
 		if err != nil {
 			continue
 		}
@@ -46,8 +46,8 @@ func (p *Page) noteInit() error {
 			continue
 		}
 		file := NoteFile(note.YearSelect)
-		if !p.checkFastPass(file) {
-			execTplToFile(file, p.noteTpl, note)
+		if !m.checkFastPass(file) {
+			execTplToFile(file, m.noteTpl, note)
 		}
 	}
 
@@ -55,7 +55,7 @@ func (p *Page) noteInit() error {
 }
 
 // 准备用于生成页面的数据
-func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
+func (m *Manager) loadNote(ny *NoteYear) (*Note, error) {
 
 	file := export.NoteFileName(ny.Year)
 
@@ -69,17 +69,17 @@ func (p *Page) loadNote(ny *NoteYear) (*Note, error) {
 	li := d.GetList()
 	ny.Count = len(li)
 
-	meta := p.genMeta(`tweet`)
-	meta.Canonical = p.LinkNote(ny.Year)
+	meta := m.genMeta(`tweet`)
+	meta.Canonical = m.LinkNote(ny.Year)
 
 	n := &Note{
 		Meta:       meta,
-		YearAll:    p.NoteYearList,
+		YearAll:    m.noteYearList,
 		YearSelect: ny.Year,
 		Item:       make([]*Item, len(li)),
 	}
 	for idx, id := range li {
-		it := p.loadItem(id)
+		it := m.loadItem(id)
 		it.NoteYear = ny.Year
 		n.Item[idx] = it
 	}

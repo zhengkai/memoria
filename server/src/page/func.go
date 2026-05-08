@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-func (p *Page) makeTplFunc() {
-	p.tplFunc = template.FuncMap{
+func (m *Manager) makeTplFunc() {
+	m.tplFunc = template.FuncMap{
 		"date": func(ts uint64) string {
 			t := time.Unix(int64(ts/1000), 0)
 			return t.Format(time.DateOnly)
@@ -19,10 +19,10 @@ func (p *Page) makeTplFunc() {
 			t := time.Unix(int64(ts/1000), 0)
 			return t.Format(time.RFC3339)
 		},
-		"linkItem":    p.LinkItem,
-		"linkNote":    p.LinkNote,
-		"linkNoteMax": p.LinkNoteMax,
-		"linkArticle": p.LinkArticle,
-		"linkHome":    p.LinkHome,
+		"linkItem":    m.LinkItem,
+		"linkNote":    m.LinkNote,
+		"linkNoteMax": m.LinkNoteMax,
+		"linkArticle": m.LinkArticle,
+		"linkHome":    m.LinkHome,
 	}
 }

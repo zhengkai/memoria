@@ -14,7 +14,7 @@ import (
 var Handle = &handle{}
 
 type handle struct {
-	page       *page.Page
+	pm         *page.Manager
 	routeTable map[string]func(*public)
 }
 
@@ -33,7 +33,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	etag := r.Header.Get(`If-None-Match`)
-	if !h.page.IsInitDone() {
+	if !h.pm.IsInitDone() {
 		if etag != `` {
 			w.WriteHeader(http.StatusNotModified)
 			return
@@ -46,7 +46,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := &public{
 		w:          w,
 		r:          r,
-		page:       h.page,
+		pm:         h.pm,
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       `text/html; charset=utf-8`,
@@ -62,8 +62,8 @@ func (h *handle) Run() {
 
 	// 先快速启动，所有的文件有就先用着
 	t := util.BenchStart()
-	h.page = &page.Page{}
-	h.page.Init(true)
+	h.pm = &page.Manager{}
+	h.pm.Init(true)
 	zj.J(`page fast`, t.ElapsedMS())
 
 	var prevCheck string
@@ -85,10 +85,10 @@ func (h *handle) Run() {
 
 		// 尝试重新生成一遍所有文件（大部分情况下会发现文件一致，没有写操作）
 		t = util.BenchStart()
-		page := &page.Page{}
+		page := &page.Manager{}
 		page.Init(false)
 		zj.J(`page normal`, t.ElapsedMS())
-		h.page = page
+		h.pm = page
 
 		prevCheck = check
 	}

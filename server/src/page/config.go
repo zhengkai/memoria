@@ -21,9 +21,9 @@ var defaultConfig = pb.PageConfig_builder{
 	Domain:   new(`soulogic.com`),
 }.Build()
 
-func (p *Page) loadConfig() {
+func (m *Manager) loadConfig() {
 
-	p.config = defaultConfig
+	m.config = defaultConfig
 
 	c := &pb.PageConfig{}
 	ab, err := util.ReadStaticBin(configFile)
@@ -56,5 +56,5 @@ func (p *Page) loadConfig() {
 		}
 	}
 
-	p.config = c
+	m.config = c
 }

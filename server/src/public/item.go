@@ -9,19 +9,19 @@ func (p *public) item() {
 
 	id := util.FirstNum(p.path)
 
-	it := p.page.LoadItem(id)
+	it := p.pm.LoadItem(id)
 	if it == nil {
 		p.error404()
 		return
 	}
 
 	if it.NoteYear > 0 {
-		p.redirect(p.page.LinkItemInNote(it.NoteYear, id))
+		p.redirect(p.pm.LinkItemInNote(it.NoteYear, id))
 		return
 	}
 
 	if !p.isSecure {
-		p.redirect(p.page.LinkItem(id))
+		p.redirect(p.pm.LinkItem(id))
 		return
 	}
 	p.readPage(page.ArticleSingleFile(id))

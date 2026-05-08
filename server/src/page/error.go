@@ -14,23 +14,23 @@ type Error struct {
 	Content template.HTML
 }
 
-func (p *Page) errorInit() error {
+func (m *Manager) errorInit() error {
 
-	p.errorMeta = p.genMeta(`error`)
+	m.errorMeta = m.genMeta(`error`)
 
-	p.genError(
+	m.genError(
 		Error404File,
 		`HTTP Error 404: Not Found`,
 		`您访问的页面不存在，可以点击上方导航条访问其他页面。`,
 	)
 
-	p.genError(
+	m.genError(
 		Error451File,
 		`HTTP Error 451: Unavailable For Legal Reasons`,
 		`尽管没有关部门要求，<br>也不知道要根据何种相关法律、法规，<br>基于对未知风险的评估，<br>本网页决定不予显示。`,
 	)
 
-	p.genError(
+	m.genError(
 		Error500File,
 		`HTTP Error 500: Internal Server Error`,
 		`服务器挂了，请稍后再试。`,
@@ -39,16 +39,16 @@ func (p *Page) errorInit() error {
 	return nil
 }
 
-func (p *Page) genError(file string, title string, content template.HTML) error {
+func (m *Manager) genError(file string, title string, content template.HTML) error {
 
-	if p.checkFastPass(Error404File) {
+	if m.checkFastPass(Error404File) {
 		return nil
 	}
 
 	d := &Error{
-		Meta:    p.errorMeta,
+		Meta:    m.errorMeta,
 		Title:   title,
 		Content: content,
 	}
-	return execTplToFile(file, p.errorTpl, d)
+	return execTplToFile(file, m.errorTpl, d)
 }
