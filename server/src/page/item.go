@@ -17,11 +17,32 @@ type Item struct {
 	Meta     *Meta
 }
 
+func (it *Item) directRead() error {
+	it.Error = util.ReadStaticData(export.ItemFile(it.ID), &it.DB)
+	return it.Error
+}
+
 func (m *Manager) LoadItem(id uint64) (re *Item) {
+
+	if m.fast {
+		return m.loadItemFast(id)
+	}
+
 	if id == 0 || id > m.maxItemID {
 		return nil
 	}
 	return m.Item[id]
+}
+
+// 给 public 使用，无缓存，也不计入缓存
+func (m *Manager) loadItemFast(id uint64) *Item {
+	re := &Item{
+		ID: id,
+	}
+	if re.directRead() != nil {
+		return nil
+	}
+	return re
 }
 
 func (m *Manager) loadItem(id uint64) (re *Item) {
