@@ -1,6 +1,9 @@
 {{define "item-row"}}
 <article id="n{{.ID}}">
-	<time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{.DB.GetMeta.GetTsCreate | datetime}}</time>
+	<header>
+		<time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{.DB.GetMeta.GetTsCreate | datetime}}</time>
+		<a href="#n{{.ID}}">#{{.ID}}</a>
+	</header>
 
 	{{.Content}}
 </article>
