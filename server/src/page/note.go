@@ -1,7 +1,6 @@
 package page
 
 import (
-	"fmt"
 	"os"
 	"project/export"
 	"project/pb"
@@ -23,10 +22,6 @@ type Note struct {
 type NoteYear struct {
 	Year  uint32
 	Count int
-}
-
-func NoteFile(year uint32) string {
-	return fmt.Sprintf(`page/note/%04d.html`, year)
 }
 
 func (m *Manager) noteInit() error {

@@ -24,5 +24,5 @@ func (p *public) item() {
 		p.redirect(p.pm.LinkItem(id))
 		return
 	}
-	p.readPage(page.ArticleSingleFile(id))
+	p.readPage(page.ItemFile(id))
 }

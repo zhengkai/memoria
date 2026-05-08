@@ -16,5 +16,5 @@ func (p *public) article() {
 		p.redirect(p.pm.LinkArticle())
 		return
 	}
-	p.readPage(page.ArticleIndexFile)
+	p.readPage(page.ArticleFile)
 }

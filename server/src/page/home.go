@@ -1,7 +1,5 @@
 package page
 
-var HomeFile = `page/home.html`
-
 type Home struct {
 	Meta *Meta
 }

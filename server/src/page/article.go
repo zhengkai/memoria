@@ -1,14 +1,11 @@
 package page
 
 import (
-	"fmt"
 	"project/export"
 	"project/pb"
 	"project/util"
 	"project/zj"
 )
-
-var ArticleIndexFile = `page/article.html`
 
 type ArticleIndex struct {
 	Meta    *Meta
@@ -18,10 +15,6 @@ type ArticleIndex struct {
 type ArticleSingle struct {
 	Meta    *Meta
 	Content *Item
-}
-
-func ArticleSingleFile(id uint64) string {
-	return fmt.Sprintf(`page/item/%03d/%03d.html`, id/1000, id%1000)
 }
 
 func (m *Manager) articleInit() error {
@@ -38,9 +31,9 @@ func (m *Manager) articleInit() error {
 		for _, il := range y.GetList() {
 
 			id := il.GetId()
-			file := ArticleSingleFile(id)
+			file := ItemFile(id)
 
-			if !m.checkFastPass(ArticleIndexFile) {
+			if !m.checkFastPass(ArticleFile) {
 				d := m.loadItem(id)
 
 				meta := m.genMeta(`item`)
@@ -55,7 +48,7 @@ func (m *Manager) articleInit() error {
 		}
 	}
 
-	if !m.checkFastPass(ArticleIndexFile) {
+	if !m.checkFastPass(ArticleFile) {
 
 		meta := m.genMeta(`article`)
 		meta.Canonical = m.LinkArticle()
@@ -64,7 +57,7 @@ func (m *Manager) articleInit() error {
 			Content: index,
 		}
 
-		err = execTplToFile(ArticleIndexFile, m.articleIndexTpl, d)
+		err = execTplToFile(ArticleFile, m.articleIndexTpl, d)
 		if err != nil {
 			zj.W(`write article fail:`, err)
 		}
