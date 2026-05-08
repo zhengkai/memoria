@@ -38,14 +38,13 @@ func SetExportTime(ts uint64) error {
 func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 	return func(yield func(*ExportRow, error) bool) {
 		var lastID uint64
-		var lastTS uint64
 		const limit = 1000
 
 		for {
 			re := &ExportRow{}
 			rows, err := d.QueryContext(ctx,
-				`SELECT item_id, ts_update, bin FROM item WHERE ts_update >= ? AND item_id  > ? ORDER BY ts_update, item_id ASC LIMIT ?`,
-				lastTS, lastID, limit,
+				`SELECT item_id, ts_update, bin FROM item WHERE item_id  > ? ORDER BY item_id ASC LIMIT ?`,
+				lastID, limit,
 			)
 			if err != nil {
 				yield(nil, err)
@@ -53,8 +52,9 @@ func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 			}
 
 			count := 0
+
+			var id uint64
 			for rows.Next() {
-				var id uint64
 				var bin []byte
 				if err := rows.Scan(&id, &re.TSUpdate, &bin); err != nil {
 					rows.Close()
@@ -69,9 +69,6 @@ func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 					return
 				}
 
-				lastID = id
-				lastTS = re.TSUpdate
-
 				count++
 
 				if re.Item.GetMeta().GetTsHide() > 0 {
@@ -84,6 +81,7 @@ func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 					return
 				}
 			}
+			lastID = id
 
 			rows.Close()
 

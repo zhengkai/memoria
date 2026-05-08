@@ -58,8 +58,7 @@ func (m *Manager) loadItem(id uint64) (re *Item) {
 		m.maxItemID = id
 	}
 
-	re.Error = util.ReadStaticData(export.ItemFile(id), &re.DB)
-	if re.Error != nil {
+	if re.directRead() != nil {
 		return
 	}
 
