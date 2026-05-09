@@ -42,9 +42,9 @@ func (p *public) litePage(pr page.Provider) {
 
 	zj.J(`lite hit`, file)
 
-	mime := MimeHTML
+	mime := page.MimeHTML
 	if strings.HasSuffix(file, `.css`) {
-		mime = MimeCSS
+		mime = page.MimeCSS
 	}
 	p.header(`Content-Type`, mime)
 	p.header(`Cache-Control`, ExpireShort)

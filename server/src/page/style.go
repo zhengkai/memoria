@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"project/export"
 	"project/util"
+	"project/zj"
 )
 
 func (m *Manager) getStyleLink() string {
@@ -17,10 +18,20 @@ func (m *Manager) getStyleLink() string {
 		hash := sha256.Sum256(ab)
 		h = hash[:4]
 	} else {
+		zj.W(`style fault:`, export.StyleFile, err)
 		b := make([]byte, 8)
 		binary.LittleEndian.PutUint64(b, util.Now()/1000)
 		h = b
 	}
 
-	return m.linkPath(fmt.Sprintf(`/style-%x.css`, h[:4]))
+	link := fmt.Sprintf(`/style-%x.css`, h[:4])
+
+	m.PageCache[link] = &Page{
+		File: export.StyleFile,
+		Mime: MimeCSS,
+
+		Raw: ab,
+	}
+
+	return link
 }

@@ -1,17 +1,14 @@
 package page
 
 type Home struct {
-	Meta *Meta
+	Meta
 }
 
-func (m *Manager) homeInit() error {
+func (m *Manager) homeInit() {
 
-	meta := m.genMeta(`home`)
-	meta.Canonical = m.LinkHome()
+	d := &Home{}
+	m.setMeta(`home`, &d.Meta)
+	d.Canonical = LinkHome
 
-	d := &Home{
-		Meta: meta,
-	}
-
-	return execTplToFile(FileHome, m.homeTpl, d)
+	m.genPage(FileHome, d, m.homeTpl)
 }

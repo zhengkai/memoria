@@ -20,12 +20,12 @@ func (p *public) item() {
 	}
 
 	if it.NoteYear > 0 {
-		p.redirect(p.pm.LinkItemInNote(it.NoteYear, id))
+		p.redirect(page.LinkItemInNote(it.NoteYear, id))
 		return
 	}
 
 	if !p.isSecure {
-		p.redirect(p.pm.LinkItem(id))
+		p.redirect(page.LinkItem(id))
 		return
 	}
 	p.readPage(page.FileItem(id))

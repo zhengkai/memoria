@@ -32,13 +32,18 @@ func execTpl(tpl *template.Template, data any) ([]byte, error) {
 	err := tpl.Execute(&buf, data)
 	if err != nil {
 		zj.W(`execTpl fail:`, err)
+		return nil, err
 	}
-	return buf.Bytes(), err
+	return buf.Bytes(), nil
 }
 
-func execTplToFile(file string, tpl *template.Template, data any) error {
+func execTplToFile(file string, tpl *template.Template, data IMeta) (output []byte, err error) {
 
-	output, _ := execTpl(tpl, data)
+	output, err = execTpl(tpl, data)
+	if err != nil {
+		return nil, err
+	}
+
 	hash := sha256.Sum256(output)
 
 	prev, err := util.ReadStaticHash(file)
@@ -47,7 +52,7 @@ func execTplToFile(file string, tpl *template.Template, data any) error {
 	if err == nil {
 		if prev == hash {
 			// zj.IO(`hash match, skip`, file)
-			return nil
+			return
 		}
 	} else {
 		status = "new"
@@ -55,5 +60,6 @@ func execTplToFile(file string, tpl *template.Template, data any) error {
 	}
 
 	zj.IO(`write`, status, file)
-	return util.WriteStaticBinHash(file, hash, output)
+	err = util.WriteStaticBinHash(file, hash, output)
+	return
 }

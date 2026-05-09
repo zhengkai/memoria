@@ -13,7 +13,7 @@ import (
 var reNoteFile = regexp.MustCompile(`^\d{4}\.bin$`)
 
 type Note struct {
-	Meta       *Meta
+	Meta
 	YearAll    []*NoteYear
 	YearSelect uint32
 	Item       []*Item
@@ -36,12 +36,13 @@ func (m *Manager) noteInit() error {
 		li[idx] = note
 	}
 
+	// 循环两次，不然 aside 的每年计数会不正确
 	for _, note := range li {
 		if note == nil {
 			continue
 		}
 		file := FileNote(note.YearSelect)
-		execTplToFile(file, m.noteTpl, note)
+		m.genPage(file, note, m.noteTpl)
 	}
 
 	return nil
@@ -62,15 +63,15 @@ func (m *Manager) loadNote(ny *NoteYear) (*Note, error) {
 	li := d.GetList()
 	ny.Count = len(li)
 
-	meta := m.genMeta(`tweet`)
-	meta.Canonical = m.LinkNote(ny.Year)
-
 	n := &Note{
-		Meta:       meta,
 		YearAll:    m.noteYearList,
 		YearSelect: ny.Year,
 		Item:       make([]*Item, len(li)),
 	}
+
+	m.setMeta(`tweet`, &n.Meta)
+	n.Canonical = LinkNote(ny.Year)
+
 	for idx, id := range li {
 		it := m.loadItem(id)
 		it.NoteYear = ny.Year

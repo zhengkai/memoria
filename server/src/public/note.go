@@ -21,7 +21,7 @@ func (p *public) note() {
 	}
 
 	if !p.isSecure {
-		p.redirect(p.pm.LinkNote(year))
+		p.redirect(page.LinkNote(year))
 		return
 	}
 

@@ -7,14 +7,12 @@ import (
 )
 
 type Error struct {
-	Meta    *Meta
+	Meta
 	Title   string
 	Content template.HTML
 }
 
 func (m *Manager) errorInit() error {
-
-	m.errorMeta = m.genMeta(`error`)
 
 	m.genError(
 		http.StatusNotFound,
@@ -34,15 +32,16 @@ func (m *Manager) errorInit() error {
 	return nil
 }
 
-func (m *Manager) genError(code int, content template.HTML) error {
+func (m *Manager) genError(code int, content template.HTML) {
 
 	file := FileError(code)
 	title := fmt.Sprintf(`HTTP Error %d: %s`, code, http.StatusText(code))
 
 	d := &Error{
-		Meta:    m.errorMeta,
 		Title:   title,
 		Content: content,
 	}
-	return execTplToFile(file, m.errorTpl, d)
+	m.setMeta(`error`, &d.Meta)
+
+	m.genPage(file, d, m.errorTpl)
 }

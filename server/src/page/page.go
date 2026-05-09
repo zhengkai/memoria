@@ -1,11 +1,15 @@
 package page
 
+const (
+	MimeHTML = `text/html; charset=utf-8`
+	MimeCSS  = `text/css; charset=utf-8`
+)
+
 type Page struct {
 	File string
-	Link string
 	Mime string
 
-	raw    []byte
-	gzip   []byte
-	brotli []byte
+	Raw    []byte
+	Gzip   []byte
+	Brotli []byte
 }

@@ -32,6 +32,12 @@ type public struct {
 func (p *public) run() {
 	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
 
+	pc, ok := p.pm.PageCache[`/`+p.path]
+	if ok {
+		p.cache(pc)
+		return
+	}
+
 	p.route()
 }
 

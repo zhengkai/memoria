@@ -18,7 +18,7 @@ func (p *public) article() {
 	}
 
 	if !p.isSecure {
-		p.redirect(p.pm.LinkArticle())
+		p.redirect(page.LinkArticle)
 		return
 	}
 	p.readPage(page.FileArticle)

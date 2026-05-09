@@ -3,6 +3,7 @@ package public
 import (
 	"net/http"
 	"project/export"
+	"project/page"
 )
 
 func (p *public) style() {
@@ -12,7 +13,7 @@ func (p *public) style() {
 		return
 	}
 
-	p.mime = MimeCSS
+	p.mime = page.MimeCSS
 	p.expire = ExpireLong
 
 	if p.etag != `` {
@@ -21,7 +22,7 @@ func (p *public) style() {
 	}
 
 	p.header(`Cache-Control`, ExpireLong)
-	p.header(`Content-Type`, MimeCSS)
+	p.header(`Content-Type`, page.MimeCSS)
 	p.header(`ETag`, `"forever"`)
 
 	if p.headerOnly {

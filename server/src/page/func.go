@@ -19,10 +19,20 @@ func (m *Manager) makeTplFunc() {
 			t := time.Unix(int64(ts/1000), 0)
 			return t.Format(time.RFC3339)
 		},
-		"linkItem":    m.LinkItem,
-		"linkNote":    m.LinkNote,
-		"linkNoteMax": m.LinkNoteMax,
-		"linkArticle": m.LinkArticle,
-		"linkHome":    m.LinkHome,
+		"linkItem": func(id uint64) string {
+			return m.config.GetPathPrefix() + LinkItem(id)
+		},
+		"linkNote": func(year uint32) string {
+			return m.config.GetPathPrefix() + LinkNote(year)
+		},
+		"linkNoteMax": func() string {
+			return m.config.GetPathPrefix() + LinkNote(m.MaxNoteYear)
+		},
+		"linkArticle": func() string {
+			return m.config.GetPathPrefix() + LinkArticle
+		},
+		"linkHome": func() string {
+			return m.config.GetPathPrefix() + LinkHome
+		},
 	}
 }

@@ -17,14 +17,6 @@ type Item struct {
 	NoteYear uint32
 }
 
-type ItemV2 struct {
-	ID       uint64
-	DB       pb.ItemDB
-	Content  template.HTML
-	Error    error
-	NoteYear uint32
-}
-
 func (it *Item) directRead() error {
 	it.Error = util.ReadStaticData(export.ItemFile(it.ID), &it.DB)
 	return it.Error

@@ -18,11 +18,10 @@ type handle struct {
 	routeTable map[string]func(*public)
 }
 
-func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *handle) preflightCheck(w http.ResponseWriter, r *http.Request) (headerOnly bool, etag string, ok bool) {
 
 	w.Header().Add(`Server`, `Soulogic`)
 
-	var headerOnly bool
 	if r.Method != http.MethodGet {
 		if r.Method == http.MethodHead {
 			headerOnly = true
@@ -32,12 +31,20 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	etag := r.Header.Get(`If-None-Match`)
-	if !h.pm.IsInitDone() {
-		if etag != `` {
-			w.WriteHeader(http.StatusNotModified)
-			return
-		}
+	etag = r.Header.Get(`If-None-Match`)
+	if h.pm == nil && etag != `` {
+		w.WriteHeader(http.StatusNotModified)
+		return
+	}
+	ok = true
+	return
+}
+
+func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	headerOnly, etag, ok := h.preflightCheck(w, r)
+	if !ok {
+		return
 	}
 
 	p := &public{
@@ -63,7 +70,9 @@ func (h *handle) Run() {
 	// export.TimeFile 的同步对应 misc/rsync-data.sh ，全部数据同步完后才变化
 	for !life.Stop {
 
-		life.Sleep(5)
+		if prevCheck != `` {
+			life.Sleep(5)
+		}
 
 		ab, err := util.ReadStaticBin(export.TimeFile)
 		if err != nil {

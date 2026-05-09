@@ -8,23 +8,23 @@ import (
 )
 
 type ArticleIndex struct {
-	Meta    *Meta
+	Meta
 	Content *pb.RenderArticleIndex
 }
 
 type ArticleSingle struct {
-	Meta    *Meta
+	Meta
 	Content *Item
 }
 
-func (m *Manager) articleInit() error {
+func (m *Manager) articleInit() {
 
 	index := &pb.RenderArticleIndex{}
 
 	err := util.ReadStaticData(export.ArticleFileName, index)
 	if err != nil {
 		zj.W(err)
-		return err
+		return
 	}
 
 	for _, y := range index.GetList() {
@@ -34,28 +34,18 @@ func (m *Manager) articleInit() error {
 			file := FileItem(id)
 
 			d := m.loadItem(id)
+			m.setMeta(`item`, &d.Meta)
+			d.Canonical = LinkItem(id)
 
-			meta := m.genMeta(`item`)
-			meta.Canonical = m.LinkItem(id)
-			d.Meta = meta
-
-			err = execTplToFile(file, m.articleSingleTpl, d)
-			if err != nil {
-				zj.W(`write article fail:`, id, err)
-			}
+			m.genPage(file, d, m.articleSingleTpl)
 		}
 	}
 
-	meta := m.genMeta(`article`)
-	meta.Canonical = m.LinkArticle()
 	d := &ArticleIndex{
-		Meta:    meta,
 		Content: index,
 	}
+	m.setMeta(`article`, &d.Meta)
+	d.Canonical = LinkArticle
 
-	err = execTplToFile(FileArticle, m.articleIndexTpl, d)
-	if err != nil {
-		zj.W(`write article fail:`, err)
-	}
-	return err
+	m.genPage(FileArticle, d, m.articleIndexTpl)
 }

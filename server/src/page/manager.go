@@ -24,18 +24,17 @@ type Manager struct {
 
 	Item map[uint64]*Item
 
-	initDone bool
-
-	config *pb.PageConfig
+	config   *pb.PageConfig
+	siteBase string
 
 	tplFunc template.FuncMap
+
+	PageCache map[string]*Page
 
 	styleHash   string
 	maxItemID   uint64
 	MaxNoteYear uint32
 	MinNoteYear uint32
-
-	errorMeta *Meta
 
 	styleLink   string
 	faviconLink string
@@ -47,13 +46,6 @@ type Manager struct {
 	errorTpl         *template.Template
 }
 
-func (m *Manager) IsInitDone() bool {
-	if m == nil {
-		return false
-	}
-	return m.initDone
-}
-
 func (m *Manager) initTpl() {
 	m.homeTpl = m.makeTpl(`home`)
 	m.articleIndexTpl = m.makeTpl(`article-index`)
@@ -63,6 +55,8 @@ func (m *Manager) initTpl() {
 }
 
 func (m *Manager) Init() error {
+
+	m.PageCache = make(map[string]*Page, 1000)
 
 	var err error
 	m.noteYearList, err = getNoteYearList()
@@ -79,30 +73,20 @@ func (m *Manager) Init() error {
 	}
 
 	m.loadConfig()
+	m.siteBase = `https://` + m.config.GetDomain() + m.config.GetPathPrefix()
+
 	m.makeTplFunc()
 	m.initTpl()
 
 	m.styleLink = m.getStyleLink()
-	m.faviconLink = m.linkPath(`/favicon.webp`)
+	m.faviconLink = m.FullLink(`/favicon.webp`)
 
 	m.Item = make(map[uint64]*Item, 3000)
 
-	if err := m.noteInit(); err != nil {
-		zj.W(`noteInit fail`, err)
-	}
+	m.noteInit()
+	m.articleInit()
+	m.homeInit()
+	m.errorInit()
 
-	if err := m.articleInit(); err != nil {
-		zj.W(`article fail`, err)
-	}
-
-	if err := m.homeInit(); err != nil {
-		zj.W(`homeInit fail`, err)
-	}
-
-	if err := m.errorInit(); err != nil {
-		zj.W(`errorInit fail`, err)
-	}
-
-	m.initDone = true
 	return nil
 }
