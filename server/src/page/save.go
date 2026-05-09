@@ -1,6 +1,7 @@
 package page
 
 import (
+	"fmt"
 	"html/template"
 	"project/util"
 	"project/zj"
@@ -22,6 +23,10 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 		Mime:       MimeHTML,
 	}
 	pc.Hash = &output.hash
+
+	if !data.IsInternal() {
+		pc.ETag = fmt.Sprintf(`"%x"`, pc.Hash[:7])
+	}
 
 	m.PageCache[data.GetCanonical()] = pc
 

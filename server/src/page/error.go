@@ -34,7 +34,6 @@ func (m *Manager) errorInit() error {
 
 func (m *Manager) genError(code int, content template.HTML) {
 
-	file := FileError(code)
 	title := fmt.Sprintf(`HTTP Error %d: %s`, code, http.StatusText(code))
 
 	d := &Error{
@@ -42,6 +41,8 @@ func (m *Manager) genError(code int, content template.HTML) {
 		Content: content,
 	}
 	m.setMeta(`error`, &d.Meta)
+	d.Meta.Internal = true
+	d.Canonical = fmt.Sprintf(`/error/%d.html`, code)
 
-	m.genPage(file, d, m.errorTpl)
+	m.genPage(FileError(code), d, m.errorTpl)
 }

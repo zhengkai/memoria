@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>{{if .Meta.Title}}{{.Meta.Title}} - {{end}}{{.Meta.SiteName}}</title>
-{{if .Meta.Canonical}}<meta name="canonical" content="{{.Meta.SiteBaseLink}}{{.Meta.Canonical}}">
+{{if and .Meta.Canonical (not .Meta.Internal)}}<meta name="canonical" content="{{.Meta.SiteBaseLink}}{{.Meta.Canonical}}">
 {{end}}<link rel="icon" type="image/webp" href="{{.Meta.Favicon}}">
 <link rel="stylesheet" href="{{.Meta.SiteBaseLink}}{{.Meta.Style}}">
 </head>

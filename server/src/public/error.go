@@ -1,9 +1,9 @@
 package public
 
 import (
+	"fmt"
 	"net/http"
 	"project/page"
-	"project/zj"
 )
 
 func (p *public) error404() {
@@ -21,10 +21,16 @@ func (p *public) error500() {
 func (p *public) errorPage(code int) {
 	p.disableETag = true
 
+	if p.pm != nil {
+		pc, ok := p.pm.PageCache[fmt.Sprintf(`/error/%d.html`, code)]
+		if ok {
+			p.cache(pc)
+			return
+		}
+	}
+
 	file := page.FileError(code)
 
-	zj.W(`error page`, code, p.path, file)
 	p.w.WriteHeader(code)
-
-	p.sendFile(file)
+	sendFile(p.w, file)
 }

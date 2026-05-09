@@ -2,13 +2,8 @@
 package public
 
 import (
-	"io"
 	"net/http"
-	"os"
-	"project/config"
 	"project/page"
-	"project/util"
-	"project/zj"
 	"strings"
 )
 
@@ -32,14 +27,12 @@ type public struct {
 func (p *public) run() {
 	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
 
-	pc, ok := p.pm.PageCache[`/`+p.path]
-	// for k := range p.pm.PageCache {
-	// 	zj.W(k)
-	// }
-	// zj.J(`pc`, p.path, ok)
-	if ok {
-		p.cache(pc)
-		return
+	if p.pm != nil {
+		pc, ok := p.pm.PageCache[`/`+p.path]
+		if ok {
+			p.cache(pc)
+			return
+		}
 	}
 
 	p.route()
@@ -48,22 +41,6 @@ func (p *public) run() {
 func (p *public) redirect(path string) {
 	p.w.Header().Set(`Location`, p.pm.FullLink(path))
 	p.w.WriteHeader(http.StatusMovedPermanently)
-}
-
-func (p *public) sendFile(file string) {
-
-	if config.UseNginx {
-		p.w.Header().Set(`X-Accel-Redirect`, `/inter-`+file)
-		return
-	}
-
-	fh, err := os.Open(util.Static(file))
-	if err != nil {
-		zj.W(`open file fail:`, file, err)
-		return
-	}
-	defer fh.Close()
-	io.Copy(p.w, fh)
 }
 
 func (p *public) header(k, v string) {
