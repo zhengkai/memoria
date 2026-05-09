@@ -9,12 +9,20 @@ import (
 )
 
 type Item struct {
+	Meta
 	ID       uint64
 	DB       pb.ItemDB
 	Content  template.HTML
 	Error    error
 	NoteYear uint32
-	Meta     *Meta
+}
+
+type ItemV2 struct {
+	ID       uint64
+	DB       pb.ItemDB
+	Content  template.HTML
+	Error    error
+	NoteYear uint32
 }
 
 func (it *Item) directRead() error {
@@ -24,25 +32,10 @@ func (it *Item) directRead() error {
 
 func (m *Manager) LoadItem(id uint64) (re *Item) {
 
-	if m.fast {
-		return m.loadItemFast(id)
-	}
-
 	if id == 0 || id > m.maxItemID {
 		return nil
 	}
 	return m.Item[id]
-}
-
-// 给 public 使用，无缓存，也不计入缓存
-func (m *Manager) loadItemFast(id uint64) *Item {
-	re := &Item{
-		ID: id,
-	}
-	if re.directRead() != nil {
-		return nil
-	}
-	return re
 }
 
 func (m *Manager) loadItem(id uint64) (re *Item) {

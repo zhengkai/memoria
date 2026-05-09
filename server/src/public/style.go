@@ -20,9 +20,9 @@ func (p *public) style() {
 		return
 	}
 
-	p.w.Header().Add(`Cache-Control`, ExpireLong)
-	p.w.Header().Add(`Content-Type`, MimeCSS)
-	p.w.Header().Add(`ETag`, `"forever"`)
+	p.header(`Cache-Control`, ExpireLong)
+	p.header(`Content-Type`, MimeCSS)
+	p.header(`ETag`, `"forever"`)
 
 	if p.headerOnly {
 		return

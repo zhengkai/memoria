@@ -2,6 +2,19 @@ package page
 
 import "fmt"
 
+const (
+	LinkArticle = `/article.html`
+	LinkHome    = `/`
+)
+
+func LinkItem[T PItem | uint64](id T) string {
+	return fmt.Sprintf(`/item/%d.html`, id)
+}
+
+func LinkNote[T PNote | uint32](year T) string {
+	return fmt.Sprintf(`/note-%d.html`, year)
+}
+
 func (m *Manager) FullLink(path string) string {
 	return fmt.Sprintf(`https://%s%s`, m.config.GetDomain(), path)
 }
@@ -23,11 +36,11 @@ func (m *Manager) LinkNoteMax() string {
 }
 
 func (m *Manager) LinkArticle() string {
-	return m.linkPath(`/article.html`)
+	return m.linkPath(LinkArticle)
 }
 
 func (m *Manager) LinkHome() string {
-	return m.linkPath(`/`)
+	return m.linkPath(LinkHome)
 }
 
 func (m *Manager) linkPath(path string) string {

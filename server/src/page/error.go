@@ -36,7 +36,7 @@ func (m *Manager) errorInit() error {
 
 func (m *Manager) genError(code int, content template.HTML) error {
 
-	file := ErrorFile(code)
+	file := FileError(code)
 	title := fmt.Sprintf(`HTTP Error %d: %s`, code, http.StatusText(code))
 
 	d := &Error{

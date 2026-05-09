@@ -5,5 +5,11 @@ import (
 )
 
 func (p *public) home() {
-	p.readPage(page.HomeFile)
+
+	if p.pm == nil {
+		p.litePage(page.PHome{})
+		return
+	}
+
+	p.readPage(page.FileHome)
 }

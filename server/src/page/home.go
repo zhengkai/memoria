@@ -6,10 +6,6 @@ type Home struct {
 
 func (m *Manager) homeInit() error {
 
-	if m.checkFastPass(HomeFile) {
-		return nil
-	}
-
 	meta := m.genMeta(`home`)
 	meta.Canonical = m.LinkHome()
 
@@ -17,5 +13,5 @@ func (m *Manager) homeInit() error {
 		Meta: meta,
 	}
 
-	return execTplToFile(HomeFile, m.homeTpl, d)
+	return execTplToFile(FileHome, m.homeTpl, d)
 }

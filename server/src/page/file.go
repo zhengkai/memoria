@@ -3,18 +3,19 @@ package page
 import "fmt"
 
 const (
-	ArticleFile = `page/article.html`
-	HomeFile    = `page/home.html`
+	FileArticle = `page/article.html`
+	FileHome    = `page/home.html`
+	FileStyle   = `page/style.css`
 )
 
-func ItemFile(id uint64) string {
+func FileItem[T PItem | uint64](id T) string {
 	return fmt.Sprintf(`page/item/%03d/%03d.html`, id/1000, id%1000)
 }
 
-func NoteFile(year uint32) string {
+func FileNote[T PNote | uint32](year T) string {
 	return fmt.Sprintf(`page/note/%04d.html`, year)
 }
 
-func ErrorFile(code int) string {
+func FileError(code int) string {
 	return fmt.Sprintf(`page/error/%d.html`, code)
 }

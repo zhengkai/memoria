@@ -31,36 +31,31 @@ func (m *Manager) articleInit() error {
 		for _, il := range y.GetList() {
 
 			id := il.GetId()
-			file := ItemFile(id)
+			file := FileItem(id)
 
-			if !m.checkFastPass(ArticleFile) {
-				d := m.loadItem(id)
+			d := m.loadItem(id)
 
-				meta := m.genMeta(`item`)
-				meta.Canonical = m.LinkItem(id)
-				d.Meta = meta
+			meta := m.genMeta(`item`)
+			meta.Canonical = m.LinkItem(id)
+			d.Meta = meta
 
-				err = execTplToFile(file, m.articleSingleTpl, d)
-				if err != nil {
-					zj.W(`write article fail:`, id, err)
-				}
+			err = execTplToFile(file, m.articleSingleTpl, d)
+			if err != nil {
+				zj.W(`write article fail:`, id, err)
 			}
 		}
 	}
 
-	if !m.checkFastPass(ArticleFile) {
+	meta := m.genMeta(`article`)
+	meta.Canonical = m.LinkArticle()
+	d := &ArticleIndex{
+		Meta:    meta,
+		Content: index,
+	}
 
-		meta := m.genMeta(`article`)
-		meta.Canonical = m.LinkArticle()
-		d := &ArticleIndex{
-			Meta:    meta,
-			Content: index,
-		}
-
-		err = execTplToFile(ArticleFile, m.articleIndexTpl, d)
-		if err != nil {
-			zj.W(`write article fail:`, err)
-		}
+	err = execTplToFile(FileArticle, m.articleIndexTpl, d)
+	if err != nil {
+		zj.W(`write article fail:`, err)
 	}
 	return err
 }

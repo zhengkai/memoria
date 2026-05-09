@@ -8,15 +8,14 @@ type Meta struct {
 	Canonical string
 	BodyClass string
 	Title     string
+	File      string
 }
 
-func (m *Manager) genMeta(bodyClass string) *Meta {
-	return &Meta{
-		SiteName:  m.config.GetSiteName(),
-		Domain:    m.config.GetDomain(),
-		Style:     m.styleLink,
-		Favicon:   m.faviconLink,
-		BodyClass: bodyClass,
-		Title:     ``,
-	}
+func (m *Manager) setMeta(bodyClass string, meta *Meta) {
+	meta.SiteName = m.config.GetSiteName()
+	meta.Domain = m.config.GetDomain()
+	meta.Style = m.styleLink
+	meta.Favicon = m.faviconLink
+	meta.BodyClass = bodyClass
+	meta.Title = ``
 }

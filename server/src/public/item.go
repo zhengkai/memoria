@@ -8,6 +8,10 @@ import (
 func (p *public) item() {
 
 	id := util.FirstNum(p.path)
+	if p.pm == nil {
+		p.litePage(page.PItem(id))
+		return
+	}
 
 	it := p.pm.LoadItem(id)
 	if it == nil {
@@ -24,5 +28,5 @@ func (p *public) item() {
 		p.redirect(p.pm.LinkItem(id))
 		return
 	}
-	p.readPage(page.ItemFile(id))
+	p.readPage(page.FileItem(id))
 }

@@ -8,6 +8,11 @@ import (
 func (p *public) note() {
 
 	year := uint32(util.FirstNum(p.path))
+	if p.pm == nil {
+		p.litePage(page.PNote(year))
+		return
+	}
+
 	if year == 0 {
 		year = p.pm.MaxNoteYear
 	} else if year < p.pm.MinNoteYear || year > p.pm.MaxNoteYear {
@@ -23,5 +28,5 @@ func (p *public) note() {
 	if year == p.pm.MaxNoteYear {
 		p.expire = ExpireShort
 	}
-	p.readPage(page.NoteFile(year))
+	p.readPage(page.FileNote(year))
 }

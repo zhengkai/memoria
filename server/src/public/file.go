@@ -53,10 +53,10 @@ func (p *public) sendFileHeader(f *pb.File) {
 		he.Set(`Content-Disposition`, displayName)
 	}
 
-	p.w.Header().Set(`Content-Length`, strconv.Itoa(int(f.GetSize())))
+	he.Set(`Content-Length`, strconv.Itoa(int(f.GetSize())))
 	if f.GetTsCreate() > 0 {
 		t := time.Unix(int64(f.GetTsCreate()/1000), 0)
 		he.Set(`Last-Modified`, t.Format(http.TimeFormat))
 	}
-	p.w.Header().Add(`Cache-Control`, `max-age=31536000, immutable`)
+	he.Set(`Cache-Control`, `max-age=31536000, immutable`)
 }

@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"project/config"
 	"project/pb"
-	"project/util"
 	"project/zj"
 )
 
@@ -24,8 +23,6 @@ type Manager struct {
 	noteYearList []*NoteYear
 
 	Item map[uint64]*Item
-
-	fast bool
 
 	initDone bool
 
@@ -65,9 +62,7 @@ func (m *Manager) initTpl() {
 	m.errorTpl = m.makeTpl(`error`)
 }
 
-func (m *Manager) Init(fast bool) error {
-
-	m.fast = fast
+func (m *Manager) Init() error {
 
 	var err error
 	m.noteYearList, err = getNoteYearList()
@@ -110,12 +105,4 @@ func (m *Manager) Init(fast bool) error {
 
 	m.initDone = true
 	return nil
-}
-
-// 快速启动时，有文件就先用着
-func (m *Manager) checkFastPass(file string) bool {
-	if !m.fast {
-		return false
-	}
-	return util.StaticExists(file)
 }

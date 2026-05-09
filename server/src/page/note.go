@@ -40,10 +40,8 @@ func (m *Manager) noteInit() error {
 		if note == nil {
 			continue
 		}
-		file := NoteFile(note.YearSelect)
-		if !m.checkFastPass(file) {
-			execTplToFile(file, m.noteTpl, note)
-		}
+		file := FileNote(note.YearSelect)
+		execTplToFile(file, m.noteTpl, note)
 	}
 
 	return nil

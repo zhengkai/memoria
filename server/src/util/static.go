@@ -15,10 +15,12 @@ import (
 
 const xattrHashKey = `user.sha256hash`
 
+var StaticDirTail = config.StaticDir + `/`
+
 var ErrHashNotMatch = fmt.Errorf(`hash not match`)
 
 func Static(file string) string {
-	file = strings.TrimPrefix(file, config.StaticDir+`/`)
+	file = strings.TrimPrefix(file, StaticDirTail)
 	return fmt.Sprintf(`%s/%s`, config.StaticDir, file)
 }
 

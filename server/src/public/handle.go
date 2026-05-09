@@ -38,9 +38,6 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotModified)
 			return
 		}
-		w.Header().Add(`Retry-After`, `10`)
-		w.WriteHeader(http.StatusServiceUnavailable)
-		return
 	}
 
 	p := &public{
@@ -60,12 +57,6 @@ func (h *handle) Run() {
 
 	h.routeTable = h.genRoute()
 
-	// 先快速启动，所有的文件有就先用着
-	t := util.BenchStart()
-	h.pm = &page.Manager{}
-	h.pm.Init(true)
-	zj.J(`page fast`, t.ElapsedMS())
-
 	var prevCheck string
 
 	// 每 5 秒检查 export.TimeFile 文件是否变化，变化则重建
@@ -84,12 +75,13 @@ func (h *handle) Run() {
 		}
 
 		// 尝试重新生成一遍所有文件（大部分情况下会发现文件一致，没有写操作）
-		t = util.BenchStart()
+		t := util.BenchStart()
 		page := &page.Manager{}
-		page.Init(false)
+		page.Init()
 		zj.J(`page normal`, t.ElapsedMS())
 		h.pm = page
 
 		prevCheck = check
+
 	}
 }

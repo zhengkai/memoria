@@ -37,11 +37,11 @@ func (p *public) readPage(file string) {
 	if p.expire == `` {
 		p.expire = ExpireMiddle
 	}
-	p.w.Header().Add(`Cache-Control`, p.expire)
-	p.w.Header().Add(`Content-Type`, p.mime)
+	p.header(`Cache-Control`, p.expire)
+	p.header(`Content-Type`, p.mime)
 
 	if !p.disableETag {
-		p.w.Header().Add(`ETag`, etag)
+		p.header(`ETag`, etag)
 	}
 
 	if p.headerOnly {
