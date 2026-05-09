@@ -31,7 +31,7 @@ func (p *public) readPage(file string) {
 			p.w.WriteHeader(http.StatusNotModified)
 			return
 		}
-		zj.J(`readPage`, etag, p.etag, p.path, file)
+		// zj.J(`readPage`, etag, p.etag, p.path, file)
 	}
 
 	if p.expire == `` {

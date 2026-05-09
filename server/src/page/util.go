@@ -10,6 +10,15 @@ import (
 	"project/zj"
 )
 
+type tplOutput struct {
+	file    string
+	raw     []byte
+	hash    [sha256.Size]byte
+	ok      bool
+	writeOK bool // 指写入成功，或者有 hash 一致的文件存在
+	err     error
+}
+
 func (m *Manager) makeTpl(file ...string) *template.Template {
 
 	tplList := make([]string, 0, len(file)+len(commonTpl))
@@ -37,22 +46,29 @@ func execTpl(tpl *template.Template, data any) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func execTplToFile(file string, tpl *template.Template, data IMeta) (output []byte, err error) {
+func execTplToFile(file string, tpl *template.Template, data IMeta) (*tplOutput, error) {
 
-	output, err = execTpl(tpl, data)
+	output, err := execTpl(tpl, data)
 	if err != nil {
 		return nil, err
 	}
 
-	hash := sha256.Sum256(output)
+	o := &tplOutput{
+		file: file,
+		raw:  output,
+		hash: sha256.Sum256(output),
+		ok:   true,
+		err:  nil,
+	}
 
 	prev, err := util.ReadStaticHash(file)
 
 	status := "replace"
 	if err == nil {
-		if prev == hash {
+		if prev == o.hash {
 			// zj.IO(`hash match, skip`, file)
-			return
+			o.writeOK = true
+			return o, nil
 		}
 	} else {
 		status = "new"
@@ -60,6 +76,9 @@ func execTplToFile(file string, tpl *template.Template, data IMeta) (output []by
 	}
 
 	zj.IO(`write`, status, file)
-	err = util.WriteStaticBinHash(file, hash, output)
-	return
+	err = util.WriteStaticBinHash(file, o.hash, output)
+	if err == nil {
+		o.writeOK = true
+	}
+	return o, nil
 }

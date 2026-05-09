@@ -2,27 +2,39 @@ package page
 
 import (
 	"html/template"
+	"project/util"
 	"project/zj"
+	"strconv"
 )
 
 func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 
-	ab, err := execTplToFile(file, tpl, data)
+	output, err := execTplToFile(file, tpl, data)
 	if err != nil {
 		zj.J(`execTplToFile fail`, err)
 	}
-	if ab == nil {
+	if !output.ok {
 		return
 	}
 
-	m.PageCache[data.GetCanonical()] = &Page{
-		File: file,
-		Mime: MimeHTML,
+	pc := &Page{
+		StaticFile: util.NewStaticFile(file),
+		Mime:       MimeHTML,
+	}
+	pc.Hash = &output.hash
 
-		Raw: ab,
+	m.PageCache[data.GetCanonical()] = pc
+
+	size := len(output.raw)
+	pc.FileSize = strconv.Itoa(size)
+
+	if size < memoryFileSizeLimit || !output.writeOK {
+		pc.Raw = output.raw
 	}
 
-	// zj.J(file, len(ab), err)
+	if size > memoryCompressLimit && output.writeOK {
+		pc.compress()
+	}
 
-	// zj.J(`meta`, m)
+	m.cacheSize += len(pc.Raw) + len(pc.Gzip.Data) + len(pc.Brotli.Data)
 }

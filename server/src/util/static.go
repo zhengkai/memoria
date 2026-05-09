@@ -3,6 +3,7 @@ package util
 import (
 	"crypto/sha256"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"project/config"
@@ -16,6 +17,82 @@ import (
 const xattrHashKey = `user.sha256hash`
 
 var StaticDirTail = config.StaticDir + `/`
+
+type StaticFile struct {
+	Path string
+	Hash *[sha256.Size]byte
+	File string
+}
+
+func (s *StaticFile) String() string {
+	return s.Path
+}
+
+func NewStaticFile(path string) StaticFile {
+	return StaticFile{
+		Path: path,
+		File: fmt.Sprintf(`%s/%s`, config.StaticDir, path),
+	}
+}
+
+func (s *StaticFile) Ext(ext string) *StaticFile {
+	return &StaticFile{
+		Path: s.Path + ext,
+		File: s.File + ext,
+	}
+}
+
+func (s *StaticFile) GetHash() (*[sha256.Size]byte, error) {
+	if s.Hash != nil {
+		return s.Hash, nil
+	}
+
+	buf := make([]byte, sha256.Size)
+	size, err := unix.Getxattr(s.File, xattrHashKey, buf)
+	if size != sha256.Size {
+		err = fmt.Errorf(`invalid hash size: %d`, size)
+	}
+	if err != nil {
+		return nil, err
+	}
+	hash := [sha256.Size]byte{}
+	copy(hash[:], buf)
+	s.Hash = &hash
+	return s.Hash, nil
+}
+
+func (s *StaticFile) WriteBin(hash [sha256.Size]byte, bin ...[]byte) error {
+	err := writeBinHashForce(s.File, hash, bin...)
+	if err == nil {
+		s.Hash = &hash
+	}
+	return err
+}
+
+func (s *StaticFile) Size() (int64, error) {
+	fi, err := os.Stat(s.File)
+	if err != nil {
+		return 0, err
+	}
+	return fi.Size(), nil
+}
+
+func (s *StaticFile) ReadBin() ([]byte, error) {
+	return os.ReadFile(s.File)
+}
+
+func (s *StaticFile) ReadBinLimit(limit int) ([]byte, error) {
+
+	buf := make([]byte, limit)
+	f, err := os.Open(s.File)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	n, err := io.ReadFull(f, buf)
+	return buf[:n], err
+}
 
 var ErrHashNotMatch = fmt.Errorf(`hash not match`)
 
@@ -42,6 +119,14 @@ func WriteStaticBin(file string, bin ...[]byte) error {
 	return writeBin(file, bin...)
 }
 
+// WriteStaticBinHashForce 不经 hash 检查直接写，用于已经提前检查过 hash 的场景
+func WriteStaticBinHashForce(file string, hash [sha256.Size]byte, bin ...[]byte) error {
+	StaticMkdir(file)
+	file = Static(file)
+	return writeBinHashForce(file, hash, bin...)
+}
+
+// WriteStaticBinHash 比对 hash，不匹配才写入
 func WriteStaticBinHash(file string, hash [sha256.Size]byte, bin ...[]byte) error {
 	StaticMkdir(file)
 	file = Static(file)
@@ -74,18 +159,6 @@ func WriteStaticData(file string, m proto.Message) error {
 	}
 
 	hash := sha256.Sum256(data)
-
-	// 尝试读，文件存在且 hash 一致则跳过
-	prevHash, err := ReadStaticHash(file)
-	file = Static(file)
-
-	if err == nil {
-		if prevHash == hash {
-			return nil
-		}
-	} else {
-		os.MkdirAll(filepath.Dir(file), 0755)
-	}
 
 	return writeBinHash(file, hash, data)
 }
@@ -126,6 +199,23 @@ func writeBin(file string, li ...[]byte) (err error) {
 
 func writeBinHash(file string, hash [sha256.Size]byte, li ...[]byte) (err error) {
 
+	// 尝试读，文件存在且 hash 一致则跳过
+	prevHash, err := ReadStaticHash(file)
+	file = Static(file)
+	if err == nil {
+		if prevHash == hash {
+			return nil
+		}
+	} else {
+		os.MkdirAll(filepath.Dir(file), 0755)
+	}
+
+	return writeBinHashForce(file, hash, li...)
+}
+
+func writeBinHashForce(file string, hash [sha256.Size]byte, li ...[]byte) (err error) {
+
+	// 写临时文件，全部成功才会 rename
 	f, err := os.CreateTemp(Static(`tmp`), `tmp-go-*`)
 	if err != nil {
 		return

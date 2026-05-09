@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"project/config"
 	"project/pb"
+	"project/util"
 	"project/zj"
 )
 
@@ -30,6 +31,7 @@ type Manager struct {
 	tplFunc template.FuncMap
 
 	PageCache map[string]*Page
+	cacheSize int
 
 	styleHash   string
 	maxItemID   uint64
@@ -87,6 +89,8 @@ func (m *Manager) Init() error {
 	m.articleInit()
 	m.homeInit()
 	m.errorInit()
+
+	zj.IO(`page memory cache size`, util.FormatBytes(m.cacheSize))
 
 	return nil
 }
