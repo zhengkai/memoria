@@ -15,16 +15,15 @@ func (p *public) cache(pc *page.Page) {
 	}
 
 	p.header(`Expires`, pc.HeaderExpires)
+	p.header(`Content-Type`, pc.Mime)
 
 	accept := p.r.Header.Get(`Accept-Encoding`)
 	if accept != `` {
-		mime := pc.Mime
-		if p.compressFile(accept, pc.Brotli, `br`, mime) || p.compressFile(accept, pc.Gzip, `gzip`, mime) {
+		if p.compressFile(accept, pc.Brotli, `br`) || p.compressFile(accept, pc.Gzip, `gzip`) {
 			return
 		}
 	}
 
-	p.header(`Content-Type`, pc.Mime)
 	p.header(`Content-Length`, pc.FileSize)
 	if pc.Raw == nil {
 		zj.J(`raw gzip file`, pc.Path, pc.FileSize)
@@ -56,7 +55,7 @@ func (p *public) cacheETag(pc *page.Page) (hit bool) {
 	return false
 }
 
-func (p *public) compressFile(accept string, cd page.PageCompress, name string, mime string) bool {
+func (p *public) compressFile(accept string, cd page.PageCompress, name string) bool {
 	if !cd.Available {
 		return false
 	}
@@ -64,7 +63,6 @@ func (p *public) compressFile(accept string, cd page.PageCompress, name string, 
 		return false
 	}
 
-	p.header(`Content-Type`, mime)
 	p.header(`Content-Encoding`, name)
 	p.header(`Content-Length`, cd.Size)
 	if cd.Data == nil {
