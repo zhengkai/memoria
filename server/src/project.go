@@ -33,8 +33,7 @@ func run() {
 
 	go web.Server()
 
-	// render.Test()
-	// page.NewPage()
+	// go test()
 }
 
 func afterRun() {

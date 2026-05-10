@@ -3,6 +3,7 @@ package public
 
 import (
 	"net/http"
+	"project/ipset"
 	"project/page"
 	"strings"
 )
@@ -13,6 +14,7 @@ type public struct {
 	gzip        bool
 	json        bool
 	pm          *page.Manager
+	ip          string
 	path        string
 	etag        string
 	headerOnly  bool
@@ -24,6 +26,12 @@ type public struct {
 }
 
 func (p *public) run() {
+
+	if ipset.Contains(p.ip) && !strings.HasSuffix(p.r.URL.Path, `.css`) {
+		p.error451()
+		return
+	}
+
 	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
 
 	if p.pm != nil {

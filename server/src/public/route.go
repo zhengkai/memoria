@@ -4,6 +4,7 @@ var routeTable = map[string]func(*public){
 	"article": (*public).article,
 	"blog":    (*public).item,
 	"file":    (*public).file,
+	"upload":  (*public).file,
 	"item":    (*public).item,
 	"note":    (*public).note,
 	"post":    (*public).item,
