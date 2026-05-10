@@ -14,14 +14,13 @@ func (p *public) style() {
 	}
 
 	p.mime = page.MimeCSS
-	p.expire = ExpireLong
 
 	if p.etag != `` {
 		p.w.WriteHeader(http.StatusNotModified)
 		return
 	}
 
-	p.header(`Cache-Control`, ExpireLong)
+	p.header(`Cache-Control`, page.ExpireLong)
 	p.header(`Content-Type`, page.MimeCSS)
 	p.header(`ETag`, `"forever"`)
 

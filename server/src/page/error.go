@@ -40,8 +40,8 @@ func (m *Manager) genError(code int, content template.HTML) {
 		Title:   title,
 		Content: content,
 	}
-	m.setMeta(`error`, &d.Meta)
-	d.Meta.Internal = true
+	m.setMeta(`error`, d)
+	d.Internal = true
 	d.Canonical = fmt.Sprintf(`/error/%d.html`, code)
 
 	m.genPage(FileError(code), d, m.errorTpl)

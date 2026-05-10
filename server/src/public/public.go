@@ -17,7 +17,6 @@ type public struct {
 	etag        string
 	headerOnly  bool
 	mime        string
-	expire      string
 	isSecure    bool
 	finalFile   string
 	routeTable  map[string]func(*public)

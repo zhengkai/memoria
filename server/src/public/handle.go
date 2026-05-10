@@ -20,7 +20,7 @@ type handle struct {
 
 func (h *handle) preflightCheck(w http.ResponseWriter, r *http.Request) (headerOnly bool, etag string, ok bool) {
 
-	w.Header().Add(`Server`, `Soulogic`)
+	w.Header().Add(`Server`, `soulogic`)
 
 	if r.Method != http.MethodGet {
 		if r.Method == http.MethodHead {
@@ -54,7 +54,8 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       `text/html; charset=utf-8`,
-		isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
+		// isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
+		isSecure:   true,
 		routeTable: h.routeTable,
 	}
 	p.run()

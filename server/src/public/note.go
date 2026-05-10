@@ -25,8 +25,5 @@ func (p *public) note() {
 		return
 	}
 
-	if year == p.pm.MaxNoteYear {
-		p.expire = ExpireShort
-	}
 	p.readPage(page.FileNote(year))
 }

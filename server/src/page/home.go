@@ -7,7 +7,7 @@ type Home struct {
 func (m *Manager) homeInit() {
 
 	d := &Home{}
-	m.setMeta(`home`, &d.Meta)
+	m.setMeta(`home`, d)
 	d.Canonical = LinkHome
 
 	m.genPage(FileHome, d, m.homeTpl)

@@ -3,6 +3,7 @@ package public
 import (
 	"fmt"
 	"net/http"
+	"project/page"
 	"project/util"
 	"project/zj"
 )
@@ -34,10 +35,7 @@ func (p *public) readPage(file string) {
 		// zj.J(`readPage`, etag, p.etag, p.path, file)
 	}
 
-	if p.expire == `` {
-		p.expire = ExpireMiddle
-	}
-	p.header(`Cache-Control`, p.expire)
+	p.header(`Cache-Control`, page.ExpireMiddle)
 	p.header(`Content-Type`, p.mime)
 
 	if !p.disableETag {

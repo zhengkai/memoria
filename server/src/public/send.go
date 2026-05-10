@@ -11,8 +11,9 @@ import (
 func (p *public) sendFile(file string) {
 
 	if config.UseNginx {
-		// zj.J(`send file`, `/inter-`+file)
-		p.w.Header().Set(`X-Accel-Redirect`, `/inter-`+file)
+		path := `/inter-` + file
+		// zj.IO(`send file`, path)
+		p.w.Header().Set(`X-Accel-Redirect`, path)
 		return
 	}
 

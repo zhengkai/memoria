@@ -1,4 +1,4 @@
-package public
+package page
 
 const (
 	ExpireLong   = `max-age=31536000, immutable`

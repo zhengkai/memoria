@@ -20,7 +20,8 @@ type Page struct {
 	ETag string
 	Mime string
 
-	Forever bool
+	Forever       bool // 指只要有 etag 就永远 304
+	HeaderExpires string
 
 	Raw []byte
 

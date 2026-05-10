@@ -69,8 +69,11 @@ func (m *Manager) loadNote(ny *NoteYear) (*Note, error) {
 		Item:       make([]*Item, len(li)),
 	}
 
-	m.setMeta(`tweet`, &n.Meta)
+	m.setMeta(`tweet`, n)
 	n.Canonical = LinkNote(ny.Year)
+	if n.YearSelect == m.MaxNoteYear {
+		n.HeaderExpires = ExpireShort
+	}
 
 	for idx, id := range li {
 		it := m.loadItem(id)
@@ -92,7 +95,6 @@ func getNoteYearList() ([]*NoteYear, error) {
 		if e.IsDir() {
 			continue
 		}
-
 		s := e.Name()
 		if !reNoteFile.MatchString(e.Name()) {
 			continue

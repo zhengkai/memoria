@@ -34,7 +34,7 @@ func (m *Manager) articleInit() {
 			file := FileItem(id)
 
 			d := m.loadItem(id)
-			m.setMeta(`item`, &d.Meta)
+			m.setMeta(`item`, d)
 			d.Canonical = LinkItem(id)
 
 			m.genPage(file, d, m.articleSingleTpl)
@@ -44,7 +44,7 @@ func (m *Manager) articleInit() {
 	d := &ArticleIndex{
 		Content: index,
 	}
-	m.setMeta(`article`, &d.Meta)
+	m.setMeta(`article`, d)
 	d.Canonical = LinkArticle
 
 	m.genPage(FileArticle, d, m.articleIndexTpl)

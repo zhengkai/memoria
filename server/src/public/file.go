@@ -6,7 +6,6 @@ import (
 	"project/export"
 	"project/pb"
 	"project/util"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -42,7 +41,7 @@ func (p *public) file() {
 func (p *public) sendFileHeader(f *pb.File) {
 
 	he := p.w.Header()
-	he.Set(`ETag`, fmt.Sprintf(`"file-%d"`, f.GetId()))
+	he.Set(`ETag`, `"forever"`)
 	he.Set(`Content-Type`, f.GetMime())
 	if f.GetName() != `` {
 		mode := `attachment`
@@ -53,7 +52,7 @@ func (p *public) sendFileHeader(f *pb.File) {
 		he.Set(`Content-Disposition`, displayName)
 	}
 
-	he.Set(`Content-Length`, strconv.Itoa(int(f.GetSize())))
+	// he.Set(`Content-Length`, strconv.Itoa(int(f.GetSize())))
 	if f.GetTsCreate() > 0 {
 		t := time.Unix(int64(f.GetTsCreate()/1000), 0)
 		he.Set(`Last-Modified`, t.Format(http.TimeFormat))

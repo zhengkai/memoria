@@ -12,7 +12,7 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 
 	output, err := execTplToFile(file, tpl, data)
 	if err != nil {
-		zj.J(`execTplToFile fail`, err)
+		zj.W(`execTplToFile fail`, err)
 	}
 	if !output.ok {
 		return
@@ -24,11 +24,14 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 	}
 	pc.Hash = &output.hash
 
-	if !data.IsInternal() {
+	meta := data.GetMeta()
+	pc.HeaderExpires = meta.HeaderExpires
+
+	if !meta.Internal {
 		pc.ETag = fmt.Sprintf(`"%x"`, pc.Hash[:7])
 	}
 
-	m.PageCache[data.GetCanonical()] = pc
+	m.PageCache[meta.Canonical] = pc
 
 	size := len(output.raw)
 	pc.FileSize = strconv.Itoa(size)
