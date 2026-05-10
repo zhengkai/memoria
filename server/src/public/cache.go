@@ -16,19 +16,10 @@ func (p *public) cache(pc *page.Page) {
 
 	p.header(`Expires`, pc.HeaderExpires)
 
-	if pc.Gzip.Available || pc.Brotli.Available {
-		accept := p.r.Header.Get(`Accept-Encoding`)
-		if pc.Gzip.Size != `` && strings.Contains(accept, `gzip`) {
-			p.header(`Content-Type`, pc.Mime)
-			p.header(`Content-Encoding`, `gzip`)
-			p.header(`Content-Length`, pc.Gzip.Size)
-			if pc.Gzip.Data == nil {
-				zj.J(`cache gzip file`, pc.Gzip.Path, pc.Gzip.Size)
-				p.sendFile(pc.Gzip.Path)
-			} else {
-				zj.J(`cache gzip memory`, pc.Gzip.Path, pc.Gzip.Size)
-				p.w.Write(pc.Gzip.Data)
-			}
+	accept := p.r.Header.Get(`Accept-Encoding`)
+	if accept != `` {
+		mime := pc.Mime
+		if p.compressFile(accept, pc.Brotli, `br`, mime) || p.compressFile(accept, pc.Gzip, `gzip`, mime) {
 			return
 		}
 	}
@@ -63,4 +54,26 @@ func (p *public) cacheETag(pc *page.Page) (hit bool) {
 		p.header(`ETag`, etag)
 	}
 	return false
+}
+
+func (p *public) compressFile(accept string, cd page.PageCompress, name string, mime string) bool {
+	if !cd.Available {
+		return false
+	}
+	if !strings.Contains(accept, name) {
+		return false
+	}
+
+	p.header(`Content-Type`, mime)
+	p.header(`Content-Encoding`, name)
+	p.header(`Content-Length`, cd.Size)
+	if cd.Data == nil {
+		zj.J(`cache`, name, `file`, cd.Path, cd.Size)
+		p.sendFile(cd.Path)
+	} else {
+		zj.J(`cache`, name, `memory`, cd.Path, cd.Size)
+		p.w.Write(cd.Data)
+	}
+
+	return true
 }
