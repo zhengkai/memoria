@@ -21,12 +21,12 @@ func (p *public) cache(pc *page.Page) {
 		if pc.Gzip.Size != `` && strings.Contains(accept, `gzip`) {
 			p.header(`Content-Type`, pc.Mime)
 			p.header(`Content-Encoding`, `gzip`)
+			p.header(`Content-Length`, pc.Gzip.Size)
 			if pc.Gzip.Data == nil {
 				zj.J(`cache gzip file`, pc.Gzip.Path, pc.Gzip.Size)
 				p.sendFile(pc.Gzip.Path)
 			} else {
 				zj.J(`cache gzip memory`, pc.Gzip.Path, pc.Gzip.Size)
-				p.header(`Content-Length`, pc.Gzip.Size)
 				p.w.Write(pc.Gzip.Data)
 			}
 			return
@@ -34,12 +34,12 @@ func (p *public) cache(pc *page.Page) {
 	}
 
 	p.header(`Content-Type`, pc.Mime)
+	p.header(`Content-Length`, pc.FileSize)
 	if pc.Raw == nil {
 		zj.J(`raw gzip file`, pc.Path, pc.FileSize)
 		p.sendFile(pc.Path)
 	} else {
 		zj.J(`raw gzip memory`, pc.Path, pc.FileSize)
-		p.header(`Content-Length`, pc.FileSize)
 		p.w.Write(pc.Raw)
 	}
 }
@@ -62,6 +62,5 @@ func (p *public) cacheETag(pc *page.Page) (hit bool) {
 		}
 		p.header(`ETag`, etag)
 	}
-
 	return false
 }

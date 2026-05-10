@@ -36,6 +36,10 @@ func (h *handle) preflightCheck(w http.ResponseWriter, r *http.Request) (headerO
 		w.WriteHeader(http.StatusNotModified)
 		return
 	}
+
+	if r.Header.Get(`Range`) != `` {
+		w.Header().Set(`Accept-Ranges`, `none`)
+	}
 	ok = true
 	return
 }
@@ -67,11 +71,15 @@ func (h *handle) Run() {
 
 	var prevCheck string
 
+	firstCheck := true
+
 	// 每 5 秒检查 export.TimeFile 文件是否变化，变化则重建
 	// export.TimeFile 的同步对应 misc/rsync-data.sh ，全部数据同步完后才变化
 	for !life.Stop {
 
-		if prevCheck != `` {
+		if firstCheck {
+			firstCheck = false
+		} else {
 			life.Sleep(5)
 		}
 

@@ -7,8 +7,6 @@ var (
 )
 
 const (
-	UseNginx = true
-
 	DefaultMaxNoteYear uint32 = 2020
 	DefaultMinNoteYear uint32 = 2010
 )

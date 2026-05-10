@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	memoryFileSizeLimit = 8192 // 少于此字节放内存，否则大概率走 nginx x-accel
+	memoryFileSizeLimit = 8192 // 少于此字节放内存，否则 io.Copy
 	memoryCompressLimit = 1200 // 少于此字节不压缩，加头大概率少于 MTU
 
 	MimeHTML = `text/html; charset=utf-8`
