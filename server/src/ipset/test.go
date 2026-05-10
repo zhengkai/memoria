@@ -1,8 +1,13 @@
 package ipset
 
-import "project/zj"
+import (
+	"project/util"
+	"project/zj"
+)
 
 func Test() {
+
+	t := util.BenchStart()
 
 	list := []string{
 		`192.168.50.1`,
@@ -13,4 +18,6 @@ func Test() {
 	for _, ip := range list {
 		zj.J(`ip test`, ip, Contains(ip))
 	}
+
+	zj.J(`ip test`, t)
 }

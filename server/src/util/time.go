@@ -17,3 +17,7 @@ func (t BenchTime) ElapsedMS() time.Duration {
 	dur -= dur % time.Millisecond
 	return dur
 }
+
+func (t BenchTime) String() string {
+	return time.Since(time.Time(t)).String()
+}
