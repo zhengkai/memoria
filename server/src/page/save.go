@@ -3,6 +3,7 @@ package page
 import (
 	"fmt"
 	"html/template"
+	"project/config"
 	"project/util"
 	"project/zj"
 )
@@ -34,7 +35,10 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 
 	m.PageCache[meta.Canonical] = pc
 
-	if size < memoryFileSizeLimit || !output.writeOK {
+	if config.MemoryFileSizeLimit < 1 ||
+		size < config.MemoryFileSizeLimit ||
+		!output.writeOK { // 写失败的文件也全放内存
+
 		pc.Data = output.raw
 	}
 

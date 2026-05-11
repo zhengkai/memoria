@@ -1,13 +1,13 @@
 package page
 
 import (
+	"project/config"
 	"project/util"
 	"project/zj"
 	"strconv"
 )
 
 const (
-	memoryFileSizeLimit = 8192 // 少于此字节放内存，否则 io.Copy
 	memoryCompressLimit = 1200 // 少于此字节不压缩，加头大概率少于 MTU
 
 	MimeHTML = `text/html; charset=utf-8`
@@ -53,7 +53,7 @@ func (p *Page) _compress(ext string, fn util.FnCompress, c *PageCompress) error 
 			}
 			c.Available = true
 			c.Import(sf, size)
-			if size < memoryFileSizeLimit {
+			if config.MemoryFileSizeLimit < 1 || size < config.MemoryFileSizeLimit {
 				ab, err := sf.ReadBin()
 				if err != nil {
 					// 如果有错误，说明文件读写有问题，放弃压缩
@@ -72,11 +72,12 @@ func (p *Page) _compress(ext string, fn util.FnCompress, c *PageCompress) error 
 		return err
 	}
 
-	if len(ab) < memoryFileSizeLimit {
+	size := len(ab)
+	if config.MemoryFileSizeLimit < 1 || size < config.MemoryFileSizeLimit {
 		c.Data = ab
 		c.Available = true
 	}
-	c.Size = strconv.Itoa(len(ab))
+	c.Size = strconv.Itoa(size)
 	err = sf.WriteBin(*p.Hash, ab)
 	if err == nil {
 		c.Path = sf.Path
