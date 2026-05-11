@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"project/util"
 	"project/zj"
-	"strconv"
 )
 
 func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
@@ -18,10 +17,12 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 		return
 	}
 
+	size := len(output.raw)
+
 	pc := &Page{
-		StaticFile: util.NewStaticFile(file),
-		Mime:       MimeHTML,
+		Mime: MimeHTML,
 	}
+	pc.Import(util.NewStaticFile(file), int64(size))
 	pc.Hash = &output.hash
 
 	meta := data.GetMeta()
@@ -33,16 +34,13 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 
 	m.PageCache[meta.Canonical] = pc
 
-	size := len(output.raw)
-	pc.FileSize = strconv.Itoa(size)
-
 	if size < memoryFileSizeLimit || !output.writeOK {
-		pc.Raw = output.raw
+		pc.Data = output.raw
 	}
 
 	if size > memoryCompressLimit && output.writeOK {
 		pc.compress()
 	}
 
-	m.cacheSize += len(pc.Raw) + len(pc.Gzip.Data) + len(pc.Brotli.Data)
+	m.cacheSize += len(pc.Data) + len(pc.Gzip.Data) + len(pc.Brotli.Data)
 }

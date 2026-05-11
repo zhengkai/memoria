@@ -5,27 +5,24 @@ import (
 	"fmt"
 	"project/export"
 	"project/util"
-	"strconv"
 )
 
 func (m *Manager) getStyleLink() string {
 
-	ab, _ := util.ReadStaticBin(export.StyleFile)
-	hash := sha256.Sum256(ab)
+	f := util.NewStaticFile(export.StyleFile)
 
-	link := fmt.Sprintf(`/style-%x.css`, hash[:6])
+	ab, _ := f.ReadBin()
+	f.Hash = new(sha256.Sum256(ab))
+
+	link := fmt.Sprintf(`/style-%x.css`, f.Hash[:6])
 
 	pc := &Page{
-		StaticFile: util.NewStaticFile(export.StyleFile),
-		Mime:       MimeCSS,
-		Forever:    true,
+		Mime:    MimeCSS,
+		Forever: true,
 	}
+	pc.Import(f, int64(len(ab)))
 	m.PageCache[link] = pc
 
-	pc.Hash = &hash
-	if len(ab) > 1000 {
-		pc.FileSize = strconv.Itoa(len(ab))
-	}
 	pc.compress()
 
 	return link

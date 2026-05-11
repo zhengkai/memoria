@@ -31,8 +31,8 @@ func (s *StaticFile) String() string {
 	return s.Path
 }
 
-func NewStaticFile(path string) StaticFile {
-	return StaticFile{
+func NewStaticFile(path string) *StaticFile {
+	return &StaticFile{
 		Path: path,
 		File: fmt.Sprintf(`%s/%s`, config.StaticDir, path),
 	}

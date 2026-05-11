@@ -24,14 +24,7 @@ func (p *public) cache(pc *page.Page) {
 		}
 	}
 
-	p.header(`Content-Length`, pc.FileSize)
-	if pc.Raw == nil {
-		zj.J(`raw gzip file`, pc.Path, pc.FileSize)
-		p.sendFile(pc.Path)
-	} else {
-		zj.J(`raw gzip memory`, pc.Path, pc.FileSize)
-		p.w.Write(pc.Raw)
-	}
+	p.sendPage(`raw`, pc)
 }
 
 // 处理是否发 etag，是否 304 直接结束
@@ -64,14 +57,23 @@ func (p *public) compressFile(accept string, cd page.PageCompress, name string) 
 	}
 
 	p.header(`Content-Encoding`, name)
-	p.header(`Content-Length`, cd.Size)
-	if cd.Data == nil {
-		zj.J(`cache`, name, `file`, cd.Path, cd.Size)
-		p.sendFile(cd.Path)
-	} else {
-		zj.J(`cache`, name, `memory`, cd.Path, cd.Size)
-		p.w.Write(cd.Data)
-	}
 
+	p.sendPage(name, &cd)
 	return true
+}
+
+func (p *public) sendPage(name string, ip page.IContent) {
+
+	pc := ip.GetContent()
+
+	p.header(`Content-Length`, pc.Size)
+
+	t := `memory`
+	if pc.Data == nil {
+		t = `file`
+		p.sendFile(pc.Path)
+	} else {
+		p.w.Write(pc.Data)
+	}
+	zj.F(`cache %s %s %s %s`, name, t, pc.Path, pc.Size)
 }

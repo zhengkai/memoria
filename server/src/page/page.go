@@ -14,8 +14,7 @@ const (
 )
 
 type Page struct {
-	util.StaticFile
-	FileSize string
+	Content
 
 	ETag string
 	Mime string
@@ -23,26 +22,24 @@ type Page struct {
 	Forever       bool // 指只要有 etag 就永远 304
 	HeaderExpires string
 
-	Raw []byte
-
 	Gzip   PageCompress
 	Brotli PageCompress
 }
 
 type PageCompress struct {
+	Content
 	Available bool
-	Size      string
-	Data      []byte
-	Path      string
 }
 
 // 对于已经有 raw（可用下限）的 page，继续尝试 gzip / brotli 压缩
 func (p *Page) compress() {
-	p._compress(p.Ext(`.gz`), util.GzipFile, &p.Gzip)
-	p._compress(p.Ext(`.br`), util.BrotliFile, &p.Brotli)
+	p._compress(`.gzip`, util.GzipFile, &p.Gzip)
+	p._compress(`.br`, util.BrotliFile, &p.Brotli)
 }
 
-func (p *Page) _compress(sf *util.StaticFile, fn util.FnCompress, c *PageCompress) error {
+func (p *Page) _compress(ext string, fn util.FnCompress, c *PageCompress) error {
+
+	sf := p.Ext(ext)
 
 	p.GetHash()
 	if p.Hash != nil {
@@ -54,8 +51,7 @@ func (p *Page) _compress(sf *util.StaticFile, fn util.FnCompress, c *PageCompres
 				return err
 			}
 			c.Available = true
-			c.Size = strconv.FormatInt(size, 10)
-			c.Path = sf.Path
+			c.Import(sf, size)
 			if size < memoryFileSizeLimit {
 				ab, err := sf.ReadBin()
 				if err != nil {
