@@ -33,7 +33,7 @@ type PageCompress struct {
 
 // 对于已经有 raw（可用下限）的 page，继续尝试 gzip / brotli 压缩
 func (p *Page) compress() {
-	p._compress(`.gzip`, util.GzipFile, &p.Gzip)
+	p._compress(`.gz`, util.GzipFile, &p.Gzip)
 	p._compress(`.br`, util.BrotliFile, &p.Brotli)
 }
 
