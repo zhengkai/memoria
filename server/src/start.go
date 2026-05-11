@@ -4,9 +4,6 @@ import (
 	"project/config"
 
 	"github.com/zhengkai/life-go"
-
-	// for docker
-	_ "go.uber.org/automaxprocs"
 )
 
 // Start ...

@@ -8,7 +8,6 @@ require (
 	github.com/zhengkai/coral/v2 v2.0.5
 	github.com/zhengkai/life-go v1.0.3
 	github.com/zhengkai/zog v1.0.3
-	go.uber.org/automaxprocs v1.6.0
 	golang.org/x/sys v0.44.0
 	google.golang.org/protobuf v1.36.11
 )
