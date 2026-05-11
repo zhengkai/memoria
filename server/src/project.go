@@ -16,7 +16,7 @@ func run() {
 
 	build.DumpBuildInfo()
 
-	os.MkdirAll(util.Static(`tmp`), 0755)
+	os.MkdirAll(util.Static(`tmp`), config.DirFileMode)
 
 	zj.Init()
 

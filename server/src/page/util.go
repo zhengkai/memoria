@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"project/config"
 	"project/util"
 	"project/zj"
 )
@@ -72,7 +73,7 @@ func execTplToFile(file string, tpl *template.Template, data IMeta) (*tplOutput,
 		}
 	} else {
 		status = "new"
-		os.MkdirAll(filepath.Dir(util.Static(file)), 0755)
+		os.MkdirAll(filepath.Dir(util.Static(file)), config.DirFileMode)
 	}
 
 	zj.IO(`write`, status, file)

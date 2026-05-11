@@ -11,4 +11,7 @@ const (
 	DefaultMinNoteYear uint32 = 2010
 
 	BeyondProxy = true
+
+	DirFileMode = 0775
+	FileMode    = 0664
 )

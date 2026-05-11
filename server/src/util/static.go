@@ -166,7 +166,7 @@ func StaticExists(path string) bool {
 }
 
 func StaticMkdir(file string) error {
-	return os.MkdirAll(filepath.Dir(Static(file)), 0755)
+	return os.MkdirAll(filepath.Dir(Static(file)), config.DirFileMode)
 }
 
 func WriteStaticBin(file string, bin ...[]byte) error {
@@ -237,7 +237,7 @@ func writeBin(file string, li ...[]byte) (err error) {
 		return
 	}
 
-	f.Chmod(0644)
+	f.Chmod(config.FileMode)
 	tmpName := f.Name()
 
 	for _, ab := range li {
@@ -263,7 +263,7 @@ func writeBinHash(file string, hash [sha256.Size]byte, li ...[]byte) (err error)
 			return nil
 		}
 	} else {
-		os.MkdirAll(filepath.Dir(file), 0755)
+		os.MkdirAll(filepath.Dir(file), config.DirFileMode)
 	}
 
 	return writeBinHashForce(file, hash, li...)
@@ -277,7 +277,7 @@ func writeBinHashForce(file string, hash [sha256.Size]byte, li ...[]byte) (err e
 		return
 	}
 
-	f.Chmod(0644)
+	f.Chmod(config.FileMode)
 	tmpName := f.Name()
 
 	for _, ab := range li {
