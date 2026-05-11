@@ -72,10 +72,15 @@ func (p *Page) _compress(ext string, fn util.FnCompress, c *PageCompress) error 
 		return err
 	}
 
+	if len(ab) < memoryFileSizeLimit {
+		c.Data = ab
+		c.Available = true
+	}
 	c.Size = strconv.Itoa(len(ab))
 	err = sf.WriteBin(*p.Hash, ab)
-	if err != nil || len(ab) < memoryFileSizeLimit {
-		c.Data = ab
+	if err == nil {
+		c.Path = sf.Path
+		c.Available = true
 	}
 
 	return nil
