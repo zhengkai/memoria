@@ -2,6 +2,32 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Inter'),
+    local('InterVariable'),
+    url("/font/InterVariable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Inter Italic'),
+    local('InterVariable Italic'),
+    url("/font/InterVariable-Italic.woff2") format("woff2");
+}
+
+:root {
+  font-family: "Inter", Source Han Sans SC, sans-serif;
+  font-optical-sizing: auto;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+}
+
 a {
   text-underline-offset: 3px;
   color: rgb(30.8, 92.4, 156.2);
@@ -46,7 +72,6 @@ h4, h5, h6 {
 html, body {
   margin: 0;
   padding: 0;
-  font-family:  Source Han Sans SC, sans-serif;
 }
 
 body {
@@ -87,40 +112,49 @@ body > header a:hover, body > footer a:hover {
 
 body > header {
   user-select: none;
-  height: 40px;
+  height: 42px;
+  padding-top: 2px;
   background: rgb(30.8, 92.4, 156.2);
   color: #fff;
   margin-bottom: 0;
 }
-header nav > a {
+
+body > header nav > a {
   height: 40px;
   line-height: 40px;
-  font-size: 28px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 400;
   text-decoration: none;
 }
-header nav > a::first-letter {
+
+body > header nav > a::first-letter {
   color: red;
 }
-header > * {
+
+body > header > * {
   margin: 0 auto;
   width: 640px;
   display: block;
 }
-header ul {
-  padding-top: 8px;
+
+body > header ul {
   float: right;
+  margin-right: -12px;
 }
-header ul li {
+
+body > header ul li {
   display: inline-block;
 }
-header ul li a {
+
+body > header ul li a {
   display: inline-block;
-  padding: 0 8px;
-  height: 32px;
-  line-height: 32px;
+  padding: 0 12px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
 }
-header ul li:last-child a {
+
+body > header ul li:last-child a {
   padding-right: 0;
 }
 
@@ -179,6 +213,17 @@ body.home > section > * {
 body.home > section h1 {
   font-size: 64px;
   padding-bottom: 16px;
+  span:nth-of-type(1) {
+	font-weight: 900;
+  }
+  span:nth-of-type(2) {
+	font-weight: 900;
+	color: #cef;
+  }
+  span:nth-of-type(3) {
+	font-weight: 400;
+	color: #cef;
+  }
 }
 body.home > section p {
   color: #ddd;
@@ -217,6 +262,7 @@ body.article main > p {
   padding: 20px 24px 8px;
   font-size: 24px;
   user-select: none;
+  font-variant-numeric: tabular-nums;
 }
 body.article main ul {
   padding-right: 16px;
@@ -253,7 +299,7 @@ body.article main ul li a time {
   font-size: 12px;
   margin: 0 0 0 4px;
   padding: 0 8px 0 4px;
-  font-family: "JetBrains Mono NL", monospace;
+  font-variant-numeric: tabular-nums;
   color: #999;
   user-select: none;
 }
@@ -274,7 +320,7 @@ body.article aside {
 body.article aside a {
   padding: 4px 0 4px 16px;
   display: block;
-  font-family: "JetBrains Mono NL", monospace;
+  font-variant-numeric: tabular-nums;
   text-decoration: none;
   color: #000;
   font-size: 16px;
@@ -329,7 +375,7 @@ body.tweet main > article > header {
   display: block;
   line-height: 12px;
   font-size: 12px;
-  font-family: "JetBrains Mono NL", monospace;
+  font-variant-numeric: tabular-nums;
   color: #777;
 }
 
@@ -359,7 +405,7 @@ body.tweet aside {
 body.tweet aside a {
   padding: 4px 0;
   display: block;
-  font-family: "JetBrains Mono NL", monospace;
+  font-variant-numeric: tabular-nums;
   text-decoration: none;
   font-size: 12px;
   vertical-align: 4px;
