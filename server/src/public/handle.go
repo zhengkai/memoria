@@ -63,6 +63,7 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		isSecure:   true,
 		routeTable: h.routeTable,
 	}
+	zj.IO(`req`, p.ip, r.Method, r.URL.Path)
 	p.run()
 }
 
