@@ -9,4 +9,6 @@ var (
 const (
 	DefaultMaxNoteYear uint32 = 2020
 	DefaultMinNoteYear uint32 = 2010
+
+	BeyondProxy = true
 )

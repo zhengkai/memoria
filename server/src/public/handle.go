@@ -2,6 +2,7 @@ package public
 
 import (
 	"net/http"
+	"project/config"
 	"project/export"
 	"project/metrics"
 	"project/page"
@@ -59,7 +60,6 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w:          w,
 		r:          r,
 		pm:         h.pm,
-		ip:         strings.SplitN(r.RemoteAddr, `:`, 2)[0],
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       page.MimeHTML,
@@ -67,6 +67,13 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		isSecure:   true,
 		routeTable: h.routeTable,
 	}
+	if config.BeyondProxy {
+		p.ip = strings.TrimPrefix(r.Header.Get(`X-Real-IP`), `::ffff:`)
+	} else {
+		p.ip = strings.SplitN(r.RemoteAddr, `:`, 2)[0]
+
+	}
+
 	zj.IO(`req`, p.ip, r.Method, r.URL.Path)
 	p.run()
 }
