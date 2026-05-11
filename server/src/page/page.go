@@ -2,6 +2,7 @@ package page
 
 import (
 	"project/util"
+	"project/zj"
 	"strconv"
 )
 
@@ -67,6 +68,7 @@ func (p *Page) _compress(ext string, fn util.FnCompress, c *PageCompress) error 
 
 	ab, err := fn(p.File)
 	if err != nil {
+		zj.WF(`compress %s%s error: %v`, p.File, ext, err)
 		return err
 	}
 

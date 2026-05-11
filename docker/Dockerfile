@@ -33,7 +33,7 @@ FROM alpine:latest
 
 RUN mkdir /static
 
-RUN apk add --no-cache asciidoctor cmark tzdata
+RUN apk add --no-cache asciidoctor cmark tzdata brotli
 
 ENV TZ="Asia/Shanghai"
 
