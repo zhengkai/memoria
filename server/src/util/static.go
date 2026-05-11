@@ -1,14 +1,17 @@
 package util
 
 import (
+	"bufio"
 	"crypto/sha256"
 	"fmt"
 	"io"
+	"iter"
 	"os"
 	"path/filepath"
 	"project/config"
 	"project/zj"
 	"strings"
+	"time"
 
 	"golang.org/x/sys/unix"
 	"google.golang.org/protobuf/proto"
@@ -77,8 +80,61 @@ func (s *StaticFile) Size() (int64, error) {
 	return fi.Size(), nil
 }
 
+func (s *StaticFile) Stat() (os.FileInfo, error) {
+	return os.Stat(s.File)
+}
+
 func (s *StaticFile) ReadBin() ([]byte, error) {
 	return os.ReadFile(s.File)
+}
+
+func (s *StaticFile) Monitor(interval time.Duration, fn func(time.Time)) {
+
+	first := true
+
+	var prevTime time.Time
+
+	for {
+
+		if first {
+			first = false
+		} else {
+			time.Sleep(interval)
+		}
+
+		info, err := s.Stat()
+		if err != nil {
+			continue
+		}
+		modTime := info.ModTime()
+		if prevTime.Equal(modTime) {
+			continue
+		}
+		prevTime = modTime
+
+		fn(modTime)
+	}
+}
+
+func (s *StaticFile) ReadLine() iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		file, err := os.Open(s.File)
+		if err != nil {
+			yield(``, err)
+			return
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			if !yield(scanner.Text(), nil) {
+				return
+			}
+		}
+		if err := scanner.Err(); err != nil {
+			yield(``, err)
+		}
+	}
 }
 
 func (s *StaticFile) ReadBinLimit(limit int) ([]byte, error) {

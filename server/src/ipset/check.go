@@ -2,7 +2,7 @@ package ipset
 
 import "net/netip"
 
-var theTrie = New()
+var theTrie *Trie
 
 func Contains(ipStr string) bool {
 

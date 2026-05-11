@@ -22,10 +22,6 @@ type Trie struct {
 	table [fastSize]*node
 }
 
-func New() *Trie {
-	return &Trie{}
-}
-
 func (t *Trie) InsertCIDR(cidr string) error {
 	prefix, err := netip.ParsePrefix(cidr)
 	if err != nil {
@@ -102,7 +98,7 @@ func (t *Trie) InsertCIDR(cidr string) error {
 
 func (t *Trie) Contains(ip netip.Addr) bool {
 
-	if !ip.Is4() {
+	if t == nil || !ip.Is4() {
 		return false
 	}
 
