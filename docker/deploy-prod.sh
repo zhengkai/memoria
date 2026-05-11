@@ -2,6 +2,10 @@
 
 DOCKER_NAME="memoria-prod"
 
+if [ "${HOSTNAME,,}" == "doll" ]; then
+	exit
+fi
+
 cd "$(dirname "$(readlink -f "$0")")" || exit 1
 
 sudo docker pull zhengkai/memoria:latest
@@ -20,6 +24,7 @@ sudo docker rm "$DOCKER_NAME" || :
 set -x
 sudo docker run -d --name "$DOCKER_NAME" \
 	--env "MEMORIA_MYSQL=${MEMORIA_MYSQL}" \
+	--env "MEMORIA_KEY=${MEMORIA_KEY}" \
 	-p "${MEMORIA_WEB}:80" \
 	--mount "type=bind,source=${MEMORIA_DIR},target=/static" \
 	--restart always \

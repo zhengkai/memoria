@@ -11,8 +11,9 @@ type IContent interface {
 
 type Content struct {
 	util.StaticFile
-	Size string
-	Data []byte
+	Size  string
+	FSize float64 // for metrics
+	Data  []byte
 }
 
 func (p *Content) Import(sf *util.StaticFile, size int64) {

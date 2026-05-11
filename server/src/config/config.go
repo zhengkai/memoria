@@ -11,4 +11,6 @@ var (
 	MySQL     = `memoria:memoria@/memoria`
 	StaticDir = `/static`
 	ClientDir = ``
+
+	Key = ``
 )

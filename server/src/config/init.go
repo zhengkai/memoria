@@ -16,6 +16,7 @@ func init() {
 		`MEMORIA_MYSQL`:  &MySQL,
 		`MEMORIA_DIR`:    &StaticDir,
 		`MEMORIA_CLIENT`: &ClientDir,
+		`MEMORIA_KEY`:    &Key,
 	}
 	for k, v := range list {
 		s := os.Getenv(k)

@@ -19,6 +19,7 @@ func ReqFailCount() {
 
 // ReqConcurrentInc ...
 func ReqConcurrentInc() {
+	reqCount.Inc()
 	reqConcurrent.Inc()
 }
 

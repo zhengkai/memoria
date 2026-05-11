@@ -3,6 +3,7 @@ package public
 import (
 	"net/http"
 	"project/export"
+	"project/metrics"
 	"project/page"
 	"project/util"
 	"project/zj"
@@ -45,6 +46,9 @@ func (h *handle) preflightCheck(w http.ResponseWriter, r *http.Request) (headerO
 }
 
 func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	metrics.ReqConcurrentInc()
+	defer metrics.ReqConcurrentDec()
 
 	headerOnly, etag, ok := h.preflightCheck(w, r)
 	if !ok {

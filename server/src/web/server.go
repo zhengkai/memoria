@@ -17,8 +17,16 @@ func Server() {
 
 	mux := http.NewServeMux()
 
+	if len(config.Key) > 20 {
+		mux.HandleFunc(`/metrics/`, metricsHandle)
+	} else {
+		zj.W(`config key invalid, metrics disabled`)
+	}
+
 	if config.Publish {
+
 		mux.Handle(`/`, public.Handle)
+
 	} else {
 		mux.HandleFunc(`/robots.txt`, robotsHandle)
 		mux.HandleFunc(`/api/export`, export.Handle)
