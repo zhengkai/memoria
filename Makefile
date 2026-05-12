@@ -44,3 +44,7 @@ dump:
 
 dump-full:
 	curl 'https://memoria.anna.9farm.com/api/export?full'
+
+css:
+	scp public/style.css tanya:/www/memoria/static/page
+	scp public/style.css doll:/www/memoria/static/page

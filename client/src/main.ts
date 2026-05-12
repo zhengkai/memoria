@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import './style/index.scss'
 import { Edit } from './component/edit/edit'
 import { List } from './component/list/list'

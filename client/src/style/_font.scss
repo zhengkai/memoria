@@ -1,0 +1,26 @@
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Inter'),
+    local('InterVariable'),
+    url("/font/InterVariable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Inter;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Inter Italic'),
+    local('InterVariable Italic'),
+    url("/font/InterVariable-Italic.woff2") format("woff2");
+}
+
+:root, body {
+	font-family: "Inter", Roboto, "Source Han Sans SC", system-ui, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+	font-optical-sizing: auto;
+	font-variant-ligatures: common-ligatures discretionary-ligatures;
+	font-feature-settings: 'ss03' 1, 'calt' 1, 'cv01' 1, 'cv09' 1;
+}
