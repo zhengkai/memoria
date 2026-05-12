@@ -41,6 +41,7 @@ func (m *Manager) genError(code int, content template.HTML) {
 		Content: content,
 	}
 	m.setMeta(`error`, d)
+	d.Meta.Title = fmt.Sprintf(`错误 %d`, code)
 	d.Internal = true
 	d.Canonical = fmt.Sprintf(`/error/%d.html`, code)
 

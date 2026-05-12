@@ -1,6 +1,7 @@
 package page
 
 import (
+	"fmt"
 	"os"
 	"project/export"
 	"project/pb"
@@ -70,6 +71,7 @@ func (m *Manager) loadNote(ny *NoteYear) (*Note, error) {
 	}
 
 	m.setMeta(`tweet`, n)
+	n.Title = fmt.Sprintf(`碎语 %d`, ny.Year)
 	n.Canonical = LinkNote(ny.Year)
 	if n.YearSelect == m.MaxNoteYear {
 		n.HeaderExpires = ExpireShort
