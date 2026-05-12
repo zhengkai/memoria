@@ -44,5 +44,8 @@ func (m *Manager) genError(code int, content template.HTML) {
 	d.Internal = true
 	d.Canonical = fmt.Sprintf(`/error/%d.html`, code)
 
-	m.genPage(FileError(code), d, m.errorTpl)
+	pc := m.genPage(FileError(code), d, m.errorTpl)
+	if pc != nil {
+		pc.Code = code
+	}
 }

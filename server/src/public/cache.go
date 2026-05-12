@@ -24,6 +24,10 @@ func (p *public) cache(pc *page.Page) {
 		}
 	}
 
+	if pc.Code > 200 {
+		p.WriteHeader(pc.Code)
+	}
+
 	p.sendPage(`raw`, pc)
 }
 

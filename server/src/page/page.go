@@ -17,6 +17,8 @@ const (
 type Page struct {
 	Content
 
+	Code int
+
 	ETag string
 	Mime string
 

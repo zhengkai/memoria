@@ -8,14 +8,14 @@ import (
 	"project/zj"
 )
 
-func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
+func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) *Page {
 
 	output, err := execTplToFile(file, tpl, data)
 	if err != nil {
 		zj.W(`execTplToFile fail`, err)
 	}
 	if !output.ok {
-		return
+		return nil
 	}
 
 	size := len(output.raw)
@@ -47,4 +47,6 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) {
 	}
 
 	m.cacheSize += len(pc.Data) + len(pc.Gzip.Data) + len(pc.Brotli.Data)
+
+	return pc
 }
