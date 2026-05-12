@@ -19,6 +19,10 @@ func Check(h *util.HTTP) bool {
 
 func check(h *util.HTTP) bool {
 
+	if strings.HasPrefix(h.R.Header.Get(`referer`), `http`) {
+		return false
+	}
+
 	path := h.R.URL.Path
 
 	if strings.HasPrefix(path, `/.`) {
