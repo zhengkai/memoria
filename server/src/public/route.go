@@ -1,9 +1,14 @@
 package public
 
-import "project/tarpit"
+import (
+	"project/tarpit"
+)
+
+const routeMatchLen = 4
 
 var routeTable = map[string]func(*public){
 	"article": (*public).article,
+	"archive": (*public).item,
 	"blog":    (*public).item,
 	"file":    (*public).file,
 	"upload":  (*public).file,
@@ -17,7 +22,7 @@ var routeTable = map[string]func(*public){
 func (h *handle) genRoute() map[string]func(*public) {
 	m := make(map[string]func(*public))
 	for prefix, fn := range routeTable {
-		m[prefix[:1]] = fn
+		m[prefix[:routeMatchLen]] = fn
 	}
 	return m
 }
@@ -29,9 +34,11 @@ func (p *public) route() {
 		return
 	}
 
-	if fn, ok := p.routeTable[p.path[:1]]; ok {
-		fn(p)
-		return
+	if len(p.path) > routeMatchLen {
+		if fn, ok := p.routeTable[p.path[:routeMatchLen]]; ok {
+			fn(p)
+			return
+		}
 	}
 
 	if tarpit.Check(&p.HTTP) {
