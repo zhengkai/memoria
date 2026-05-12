@@ -15,5 +15,5 @@ func (p *public) sendFile(file string) {
 		return
 	}
 	defer fh.Close()
-	io.Copy(p.w, fh)
+	io.Copy(p.W, fh)
 }

@@ -57,8 +57,6 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := &public{
-		w:          w,
-		r:          r,
 		pm:         h.pm,
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
@@ -67,6 +65,8 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		isSecure:   true,
 		routeTable: h.routeTable,
 	}
+	p.W = w
+	p.R = r
 	if config.BeyondProxy {
 		p.ip = strings.TrimPrefix(r.Header.Get(`X-Real-IP`), `::ffff:`)
 	} else {
@@ -113,6 +113,5 @@ func (h *handle) Run() {
 		h.pm = page
 
 		prevCheck = check
-
 	}
 }

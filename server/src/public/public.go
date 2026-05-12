@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"project/ipset"
 	"project/page"
+	"project/util"
 	"strings"
 )
 
 type public struct {
-	w           http.ResponseWriter
-	r           *http.Request
+	util.HTTP
 	gzip        bool
 	json        bool
 	pm          *page.Manager
@@ -27,12 +27,12 @@ type public struct {
 
 func (p *public) run() {
 
-	if ipset.Contains(p.ip) && !strings.HasSuffix(p.r.URL.Path, `.css`) {
+	if ipset.Contains(p.ip) && !strings.HasSuffix(p.R.URL.Path, `.css`) {
 		p.error451()
 		return
 	}
 
-	p.path = strings.TrimPrefix(p.r.URL.Path, p.r.Pattern)
+	p.path = strings.TrimPrefix(p.R.URL.Path, p.R.Pattern)
 
 	if p.pm != nil {
 		pc, ok := p.pm.PageCache[`/`+p.path]
@@ -46,10 +46,6 @@ func (p *public) run() {
 }
 
 func (p *public) redirect(path string) {
-	p.w.Header().Set(`Location`, p.pm.FullLink(path))
-	p.w.WriteHeader(http.StatusMovedPermanently)
-}
-
-func (p *public) header(k, v string) {
-	p.w.Header().Set(k, v)
+	p.Header(`Location`, p.pm.FullLink(path))
+	p.WriteHeader(http.StatusMovedPermanently)
 }

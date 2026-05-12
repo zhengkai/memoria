@@ -34,6 +34,6 @@ func (p *public) errorPage(code int) {
 
 	file := page.FileError(code)
 
-	p.w.WriteHeader(code)
+	p.WriteHeader(code)
 	p.sendFile(file)
 }

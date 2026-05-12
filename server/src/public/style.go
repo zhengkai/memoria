@@ -16,13 +16,13 @@ func (p *public) style() {
 	p.mime = page.MimeCSS
 
 	if p.etag != `` {
-		p.w.WriteHeader(http.StatusNotModified)
+		p.WriteHeader(http.StatusNotModified)
 		return
 	}
 
-	p.header(`Cache-Control`, page.ExpireLong)
-	p.header(`Content-Type`, page.MimeCSS)
-	p.header(`ETag`, `"forever"`)
+	p.Header(`Cache-Control`, page.ExpireLong)
+	p.Header(`Content-Type`, page.MimeCSS)
+	p.Header(`ETag`, `"forever"`)
 
 	if p.headerOnly {
 		return

@@ -1,5 +1,7 @@
 package public
 
+import "project/tarpit"
+
 var routeTable = map[string]func(*public){
 	"article": (*public).article,
 	"blog":    (*public).item,
@@ -29,6 +31,10 @@ func (p *public) route() {
 
 	if fn, ok := p.routeTable[p.path[:1]]; ok {
 		fn(p)
+		return
+	}
+
+	if tarpit.Check(&p.HTTP) {
 		return
 	}
 

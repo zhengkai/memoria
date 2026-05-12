@@ -46,8 +46,8 @@ func (p *public) litePage(pr page.Provider) {
 	if strings.HasSuffix(file, `.css`) {
 		mime = page.MimeCSS
 	}
-	p.header(`Content-Type`, mime)
-	p.header(`Cache-Control`, page.ExpireShort)
-	p.header(`ETag`, `"temp"`)
+	p.Header(`Content-Type`, mime)
+	p.Header(`Cache-Control`, page.ExpireShort)
+	p.Header(`ETag`, `"temp"`)
 	p.sendFile(file)
 }

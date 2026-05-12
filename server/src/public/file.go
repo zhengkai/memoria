@@ -13,7 +13,7 @@ import (
 func (p *public) file() {
 
 	if p.etag != `` {
-		p.w.WriteHeader(http.StatusNotModified)
+		p.WriteHeader(http.StatusNotModified)
 		return
 	}
 
@@ -40,7 +40,7 @@ func (p *public) file() {
 
 func (p *public) sendFileHeader(f *pb.File) {
 
-	he := p.w.Header()
+	he := p.W.Header()
 	he.Set(`ETag`, `"forever"`)
 	he.Set(`Content-Type`, f.GetMime())
 	if f.GetName() != `` {
