@@ -18,8 +18,8 @@
 
 {{define "header"}}
 <header>
-	<nav>
-		<a href="{{linkHome}}">{{.Meta.SiteName}}</a>
+	<nav>{{if ne .Meta.BodyClass "home"}}
+		<a href="{{linkHome}}"><span>Sou</span><span>l</span><span>ogic</span></a>{{end}}
 		<ul>
 			<li><a href="{{linkHome}}">首页</a></li>
 			<li><a href="{{linkArticle}}">闲言</a></li>
