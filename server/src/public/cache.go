@@ -14,7 +14,7 @@ func (p *public) cache(pc *page.Page) {
 		return
 	}
 
-	p.Header(`Expires`, pc.HeaderExpires)
+	p.Expire(pc.HeaderExpires)
 	p.Header(`Content-Type`, pc.Mime)
 
 	accept := p.R.Header.Get(`Accept-Encoding`)

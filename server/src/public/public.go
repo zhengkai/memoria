@@ -49,3 +49,7 @@ func (p *public) redirect(path string) {
 	p.Header(`Location`, p.pm.FullLink(path))
 	p.WriteHeader(http.StatusMovedPermanently)
 }
+
+func (p *public) Expire(e page.Expire) {
+	p.Header(`Cache-Control`, string(e))
+}

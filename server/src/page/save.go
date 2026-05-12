@@ -27,9 +27,11 @@ func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) *Page
 	pc.Hash = &output.hash
 
 	meta := data.GetMeta()
-	pc.HeaderExpires = meta.HeaderExpires
 
-	if !meta.Internal {
+	if meta.Internal {
+		pc.HeaderExpires = meta.HeaderExpires
+	} else {
+		pc.HeaderExpires = `public, ` + meta.HeaderExpires
 		pc.ETag = fmt.Sprintf(`"%x"`, pc.Hash[:7])
 	}
 

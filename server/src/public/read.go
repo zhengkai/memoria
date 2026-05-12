@@ -35,7 +35,7 @@ func (p *public) readPage(file string) {
 		// zj.J(`readPage`, etag, p.etag, p.path, file)
 	}
 
-	p.Header(`Cache-Control`, page.ExpireMiddle)
+	p.Expire(page.ExpireMiddle)
 	p.Header(`Content-Type`, p.mime)
 
 	if !p.disableETag {

@@ -23,7 +23,7 @@ type Page struct {
 	Mime string
 
 	Forever       bool // 指只要有 etag 就永远 304
-	HeaderExpires string
+	HeaderExpires Expire
 
 	Gzip   PageCompress
 	Brotli PageCompress

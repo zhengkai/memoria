@@ -9,7 +9,7 @@ type Meta struct {
 	BodyClass     string
 	Title         string
 	File          string
-	HeaderExpires string
+	HeaderExpires Expire
 
 	Internal bool
 }

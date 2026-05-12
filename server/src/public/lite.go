@@ -47,7 +47,7 @@ func (p *public) litePage(pr page.Provider) {
 		mime = page.MimeCSS
 	}
 	p.Header(`Content-Type`, mime)
-	p.Header(`Cache-Control`, page.ExpireShort)
+	p.Expire(page.ExpireShort)
 	p.Header(`ETag`, `"temp"`)
 	p.sendFile(file)
 }

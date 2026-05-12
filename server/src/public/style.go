@@ -20,7 +20,7 @@ func (p *public) style() {
 		return
 	}
 
-	p.Header(`Cache-Control`, page.ExpireLong)
+	p.Expire(page.ExpireLong)
 	p.Header(`Content-Type`, page.MimeCSS)
 	p.Header(`ETag`, `"forever"`)
 
