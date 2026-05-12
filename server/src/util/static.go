@@ -45,6 +45,22 @@ func (s *StaticFile) Ext(ext string) *StaticFile {
 	}
 }
 
+func (s *StaticFile) ReadDir() (li []*StaticFile, err error) {
+
+	entries, err := os.ReadDir(s.File)
+	if err != nil {
+		return
+	}
+
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		li = append(li, NewStaticFile(strings.TrimRight(s.Path, `/`)+`/`+e.Name()))
+	}
+	return li, nil
+}
+
 func (s *StaticFile) GetHash() (*[sha256.Size]byte, error) {
 	if s.Hash != nil {
 		return s.Hash, nil

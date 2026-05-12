@@ -33,6 +33,7 @@ func run() {
 
 	go web.Server()
 
+	// go fix.Run()
 	// go test()
 }
 
