@@ -70,7 +70,7 @@ func highlight(match []byte) []byte {
 func transCSS(formatter *chromahtml.Formatter, style *chroma.Style) {
 
 	if util.StaticExists(cssFile) {
-		// return
+		return
 	}
 	var cssBuf bytes.Buffer
 	formatter.WriteCSS(&cssBuf, style)
@@ -87,5 +87,4 @@ func transCSS(formatter *chromahtml.Formatter, style *chroma.Style) {
 		[]byte("}"),
 	)
 	zj.J(`write css file:`, cssFile, err)
-
 }

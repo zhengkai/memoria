@@ -368,6 +368,26 @@ body.tweet main > article {
   margin-bottom: 8px;
   max-width: 648px;
 }
+
+body.tweet main > article.quote {
+  background-color: #FDF5E6;
+  position: relative;
+  overflow: hidden;
+}
+
+body.tweet main > article.quote::before {
+  content: "\201C"; /* 左双引号 " */
+  position: absolute;
+  top: -16px;
+  right: 12px;
+  font-size: 150px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.08);
+  font-family: Georgia, serif;
+  pointer-events: none;
+  z-index: 0;
+}
+
 body.tweet main > article:target {
 	background-color: #def;
 }
@@ -395,6 +415,11 @@ body.tweet main > article > header > a {
 
 body.tweet main > article > header > a:hover {
   text-decoration: underline;
+}
+
+body.tweet main > article.quote > header > span {
+	display: inline-block;
+	float: right;
 }
 
 body.tweet aside {

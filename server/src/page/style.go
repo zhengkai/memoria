@@ -3,6 +3,7 @@ package page
 import (
 	"crypto/sha256"
 	"fmt"
+	"project/config"
 	"project/export"
 	"project/util"
 )
@@ -15,6 +16,9 @@ func (m *Manager) getStyleLink() string {
 	f.Hash = new(sha256.Sum256(ab))
 
 	link := fmt.Sprintf(`/style-%x.css`, f.Hash[:6])
+	if !config.Prod { // 开发环境下固定名字，便于 devtools 里 local overrides
+		link = `/style.css`
+	}
 
 	pc := &Page{
 		Mime:          MimeCSS,
