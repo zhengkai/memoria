@@ -48,6 +48,7 @@ ul, ol {
 
 blockquote {
   margin-top: 0;
+  margin-bottom: 0;
   margin-inline-end: 0;
 }
 
@@ -456,4 +457,98 @@ body.tweet aside a:hover span, body.tweet aside a.select span {
     padding-left: 16px;
     padding-right: 16px;
   }
+}
+
+body.item main article pre:has(> code) {
+	margin: 4px -16px;
+	padding: 8px 16px;
+	background-color: rgba(0, 0, 0, 0.03);
+}
+
+body.tweet main article pre:has(> code) {
+	margin: 4px -8px;
+	padding: 8px;
+	background-color: rgba(0, 0, 0, 0.03);
+}
+
+p > code {
+	background: #def;
+	display: inline-block;
+	margin: 0 -2px;
+	padding: 0 4px;
+	border-radius: 3px;
+}
+
+pre > code {
+.err { color: #f6f8fa; background-color: #82071e }
+.lnlinks { outline: none; text-decoration: none; color: inherit }
+.lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+.lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+.hl { background-color: #dedede }
+.lnt { white-space: pre; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f7f7f }
+.ln { white-space: pre; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;color: #7f7f7f }
+.line { display: flex; }
+.k { color: #cf222e }
+.kc { color: #cf222e }
+.kd { color: #cf222e }
+.kn { color: #cf222e }
+.kp { color: #cf222e }
+.kr { color: #cf222e }
+.kt { color: #cf222e }
+.na { color: #1f2328 }
+.nc { color: #1f2328 }
+.no { color: #0550ae }
+.nd { color: #0550ae }
+.ni { color: #6639ba }
+.nl { color: #990000; font-weight: bold }
+.nn { color: #24292e }
+.nx { color: #1f2328 }
+.nt { color: #0550ae }
+.nb { color: #6639ba }
+.bp { color: #6a737d }
+.nv { color: #953800 }
+.vc { color: #953800 }
+.vg { color: #953800 }
+.vi { color: #953800 }
+.vm { color: #953800 }
+.nf { color: #6639ba }
+.fm { color: #6639ba }
+.s { color: #0a3069 }
+.sa { color: #0a3069 }
+.sb { color: #0a3069 }
+.sc { color: #0a3069 }
+.dl { color: #0a3069 }
+.sd { color: #0a3069 }
+.s2 { color: #0a3069 }
+.se { color: #0a3069 }
+.sh { color: #0a3069 }
+.si { color: #0a3069 }
+.sx { color: #0a3069 }
+.sr { color: #0a3069 }
+.s1 { color: #0a3069 }
+.ss { color: #032f62 }
+.m { color: #0550ae }
+.mb { color: #0550ae }
+.mf { color: #0550ae }
+.mh { color: #0550ae }
+.mi { color: #0550ae }
+.il { color: #0550ae }
+.mo { color: #0550ae }
+.o { color: #0550ae }
+.ow { color: #0550ae }
+.or { color: #0550ae }
+.p { color: #1f2328 }
+.c { color: #57606a }
+.ch { color: #57606a }
+.cm { color: #57606a }
+.c1 { color: #57606a }
+.cs { color: #57606a }
+.cp { color: #57606a }
+.cpf { color: #57606a }
+.gd { color: #82071e; background-color: #ffebe9 }
+.ge { color: #1f2328 }
+.gi { color: #116329; background-color: #dafbe1 }
+.go { color: #1f2328 }
+.gl { text-decoration: underline }
+.w { color: #ffffff }
 }

@@ -2,6 +2,7 @@
 package render
 
 import (
+	"bytes"
 	"fmt"
 	"project/export"
 	"project/pb"
@@ -42,6 +43,10 @@ func Render(it *pb.ItemDB) ([]byte, error) {
 	ab, err = fn(rev.GetRaw())
 	if err != nil {
 		return nil, err
+	}
+
+	if bytes.Contains(ab, []byte(`<pre>`)) {
+		ab = Highlight(ab)
 	}
 
 	go util.WriteStaticBin(file, ab)
