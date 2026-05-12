@@ -17,8 +17,9 @@ func (m *Manager) getStyleLink() string {
 	link := fmt.Sprintf(`/style-%x.css`, f.Hash[:6])
 
 	pc := &Page{
-		Mime:    MimeCSS,
-		Forever: true,
+		Mime:          MimeCSS,
+		Forever:       true,
+		HeaderExpires: ExpireLong,
 	}
 	pc.Import(f, int64(len(ab)))
 	m.PageCache[link] = pc
