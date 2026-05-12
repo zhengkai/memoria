@@ -8,20 +8,19 @@ import (
 
 func Check(h *util.HTTP) bool {
 
-	return false
-
 	hit := check(h)
-	if !hit {
-		// TODO
-		return false
+	if hit {
+		t := &tarpit{*h}
+		t.Attack()
 	}
 
-	return true
+	return hit
 }
 
 func check(h *util.HTTP) bool {
 
 	path := h.R.URL.Path
+
 	if strings.HasPrefix(path, `/.`) {
 		return true
 	}

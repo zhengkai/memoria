@@ -23,7 +23,7 @@
 }
 
 :root {
-  font-family: "Inter", Source Han Sans SC, sans-serif;
+  font-family: "Inter", Roboto, "Source Han Sans SC", system-ui, "Noto Sans SC", "Microsoft YaHei", sans-serif;
   font-optical-sizing: auto;
   font-variant-ligatures: common-ligatures discretionary-ligatures;
 }
