@@ -67,14 +67,11 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	p.W = w
 	p.R = r
-	if config.BeyondProxy {
-		p.ip = strings.TrimPrefix(r.Header.Get(`X-Real-IP`), `::ffff:`)
-	} else {
-		p.ip = strings.SplitN(r.RemoteAddr, `:`, 2)[0]
+	p.GetIP()
 
+	if !config.Prod {
+		zj.IO(`req`, p.IP, r.Method, r.URL.Path)
 	}
-
-	zj.IO(`req`, p.ip, r.Method, r.URL.Path)
 	p.run()
 }
 

@@ -3,9 +3,11 @@ package public
 
 import (
 	"net/http"
+	"project/config"
 	"project/ipset"
 	"project/page"
 	"project/util"
+	"project/zj"
 	"strings"
 )
 
@@ -14,7 +16,6 @@ type public struct {
 	gzip        bool
 	json        bool
 	pm          *page.Manager
-	ip          string
 	path        string
 	etag        string
 	headerOnly  bool
@@ -27,7 +28,7 @@ type public struct {
 
 func (p *public) run() {
 
-	if ipset.Contains(p.ip) && !strings.HasSuffix(p.R.URL.Path, `.css`) {
+	if ipset.Contains(p.IP) && !strings.HasSuffix(p.R.URL.Path, `.css`) {
 		p.error451()
 		return
 	}
@@ -42,6 +43,9 @@ func (p *public) run() {
 		}
 	}
 
+	if !config.Prod {
+		zj.J(`failback route`, `/`+p.path)
+	}
 	p.route()
 }
 

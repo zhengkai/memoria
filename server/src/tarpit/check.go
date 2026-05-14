@@ -10,7 +10,7 @@ func Check(h *util.HTTP) bool {
 
 	hit := check(h)
 	if hit {
-		t := &tarpit{*h}
+		t := &tarpit{*h, 0, util.BenchStart()}
 		t.Attack()
 	}
 

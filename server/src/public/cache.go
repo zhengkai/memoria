@@ -2,6 +2,7 @@ package public
 
 import (
 	"net/http"
+	"project/config"
 	"project/page"
 	"project/zj"
 	"strings"
@@ -79,5 +80,7 @@ func (p *public) sendPage(name string, ip page.IContent) {
 	} else {
 		p.W.Write(pc.Data)
 	}
-	zj.F(`cache %s %s %s %s`, name, t, pc.Path, pc.Size)
+	if !config.Prod {
+		zj.F(`cache %s %s %s %s`, name, t, pc.Path, pc.Size)
+	}
 }
