@@ -19,5 +19,5 @@ func (t BenchTime) ElapsedMS() time.Duration {
 }
 
 func (t BenchTime) String() string {
-	return time.Since(time.Time(t)).String()
+	return t.ElapsedMS().String()
 }

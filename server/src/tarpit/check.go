@@ -10,8 +10,7 @@ func Check(h *util.HTTP) bool {
 
 	hit := check(h)
 	if hit {
-		t := &tarpit{*h, 0, util.BenchStart()}
-		t.Attack()
+		Attack(h)
 	}
 
 	return hit
@@ -26,7 +25,7 @@ func check(h *util.HTTP) bool {
 	path := h.R.URL.Path
 
 	if strings.HasPrefix(path, `/.`) {
-		return true
+		return !strings.HasPrefix(path, `/.well-known/`)
 	}
 	if strings.HasPrefix(path, `/wp-`) {
 		return true

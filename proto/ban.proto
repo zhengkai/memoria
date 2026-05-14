@@ -1,0 +1,15 @@
+edition = "2024";
+
+option go_package = "/pb";
+package pb;
+
+message Ban {
+	string host = 1; // 防止错误同步导致错误使用
+	repeated BanRow list = 2;
+}
+
+message BanRow {
+	string ip = 1;
+	uint64 ts = 2;
+	uint64 cnt = 3;
+}

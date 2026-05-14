@@ -21,6 +21,7 @@ set -x
 sudo docker run -d --name "$DOCKER_NAME" \
 	--env "MEMORIA_ROLE=publish" \
 	--env "MEMORIA_KEY=${MEMORIA_KEY}" \
+	--env "MEMORIA_HOST=${HOSTNAME,,}" \
 	-p "${MEMORIA_WEB}:80" \
 	--mount "type=bind,source=${MEMORIA_DIR},target=/static" \
 	--restart always \

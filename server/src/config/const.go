@@ -1,9 +1,26 @@
 package config
 
-import "time"
+import (
+	"time"
+
+	"google.golang.org/protobuf/encoding/protojson"
+)
 
 var (
 	StartTime = time.Now()
+
+	JSONUnmarshaler = protojson.UnmarshalOptions{
+		DiscardUnknown: true,
+	}
+
+	JSONMarshaler = protojson.MarshalOptions{
+		Multiline:         true,
+		Indent:            `  `,
+		UseProtoNames:     true,
+		UseEnumNumbers:    true,
+		EmitUnpopulated:   true,
+		EmitDefaultValues: true,
+	}
 )
 
 const (

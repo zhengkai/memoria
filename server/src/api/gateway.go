@@ -4,11 +4,11 @@ package api
 import (
 	"io"
 	"net/http"
+	"project/config"
 	"project/pb"
 	"strconv"
 	"strings"
 
-	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -17,19 +17,6 @@ type Gateway struct {
 	r    *http.Request
 	gzip bool
 	json bool
-}
-
-var jsonUnmarshaler = protojson.UnmarshalOptions{
-	DiscardUnknown: true,
-}
-
-var jsonMarshaler = protojson.MarshalOptions{
-	Multiline:         true,
-	Indent:            `  `,
-	UseProtoNames:     true,
-	UseEnumNumbers:    true,
-	EmitUnpopulated:   true,
-	EmitDefaultValues: true,
 }
 
 const postMaxSize = int64(1e6)
@@ -67,7 +54,7 @@ func (gw *Gateway) unmarshalReq(body []byte) (*pb.APIReq, error) {
 	req := &pb.APIReq{}
 	var err error
 	if gw.json {
-		err = jsonUnmarshaler.Unmarshal(body, req)
+		err = config.JSONUnmarshaler.Unmarshal(body, req)
 	} else {
 		err = proto.Unmarshal(body, req)
 	}
@@ -84,7 +71,7 @@ func (gw *Gateway) marshalRsp(rsp *pb.APIRsp) {
 
 	var ab []byte
 	if gw.json {
-		ab, err = jsonMarshaler.Marshal(rsp)
+		ab, err = config.JSONMarshaler.Marshal(rsp)
 	} else {
 		ab, err = proto.Marshal(rsp)
 	}

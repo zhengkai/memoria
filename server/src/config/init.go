@@ -17,6 +17,7 @@ func init() {
 		`MEMORIA_DIR`:    &StaticDir,
 		`MEMORIA_CLIENT`: &ClientDir,
 		`MEMORIA_KEY`:    &Key,
+		`MEMORIA_HOST`:   &HostName,
 	}
 	for k, v := range list {
 		s := os.Getenv(k)

@@ -1,6 +1,9 @@
 package build
 
-import "fmt"
+import (
+	"fmt"
+	"project/config"
+)
 
 // BuildGoVersion ...
 var BuildGoVersion string
@@ -23,7 +26,12 @@ func DumpBuildInfo() {
 	fmt.Println(BuildGoVersion)
 	fmt.Println(BuildTime)
 	fmt.Println(BuildType)
-	fmt.Println(BuildHost)
+
+	host := BuildHost
+	if config.HostName != `unknown` && config.HostName != host {
+		host += ` (` + config.HostName + `)`
+	}
+	fmt.Println(host)
 	fmt.Println(BuildGit)
 	fmt.Println()
 }

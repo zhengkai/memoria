@@ -18,7 +18,8 @@ func (t *tarpit) Attack() {
 	t.Header(`Content-Type`, page.MimeHTML)
 	t.W.WriteHeader(http.StatusOK)
 
-	zj.J(`tarpit start`, t.IP)
+	zj.J(`tarpit start`, t.IP, t.R.URL)
+	zj.J(`Accept-Encoding`, t.R.Header.Get(`Accept-Encoding`))
 
 	t.Flood()
 	// if rand.Intn(2) == 0 {
@@ -27,7 +28,7 @@ func (t *tarpit) Attack() {
 	// 	t.Flood()
 	// }
 
-	zj.J(`tarpit end`, t.IP, t.bs)
+	zj.J(`tarpit end`, t.IP, util.FormatBytes(t.sum), t.bs)
 }
 
 func (t *tarpit) Write(ab []byte) (int, error) {

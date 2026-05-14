@@ -12,5 +12,7 @@ var (
 	StaticDir = `/static`
 	ClientDir = ``
 
+	HostName = `unknown`
+
 	Key = ``
 )

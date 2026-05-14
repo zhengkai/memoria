@@ -22,9 +22,10 @@ const xattrHashKey = `user.sha256hash`
 var StaticDirTail = config.StaticDir + `/`
 
 type StaticFile struct {
-	Path string
-	Hash *[sha256.Size]byte
-	File string
+	Path   string
+	Hash   *[sha256.Size]byte
+	File   string
+	hasDir bool
 }
 
 func (s *StaticFile) String() string {
@@ -43,6 +44,14 @@ func (s *StaticFile) Ext(ext string) *StaticFile {
 		Path: s.Path + ext,
 		File: s.File + ext,
 	}
+}
+
+func (s *StaticFile) mkdir() error {
+	err := os.MkdirAll(filepath.Dir(s.File), config.DirFileMode)
+	if err == nil {
+		s.hasDir = true
+	}
+	return err
 }
 
 func (s *StaticFile) ReadDir() (li []*StaticFile, err error) {
@@ -74,6 +83,7 @@ func (s *StaticFile) GetHash() (*[sha256.Size]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	s.hasDir = true
 	hash := [sha256.Size]byte{}
 	copy(hash[:], buf)
 	s.Hash = &hash
@@ -164,6 +174,64 @@ func (s *StaticFile) ReadBinLimit(limit int) ([]byte, error) {
 
 	n, err := io.ReadFull(f, buf)
 	return buf[:n], err
+}
+
+func (s *StaticFile) WriteProto(m proto.Message) error {
+
+	data, err := proto.Marshal(m)
+	if err != nil {
+		return err
+	}
+	hash := sha256.Sum256(data)
+	return s.writeDataHash(hash, data)
+}
+
+func (s *StaticFile) WriteJSON(m proto.Message) error {
+
+	data, err := config.JSONMarshaler.Marshal(m)
+	if err != nil {
+		return err
+	}
+	hash := sha256.Sum256(data)
+	return s.writeDataHash(hash, data)
+}
+
+func (s *StaticFile) writeDataHash(hash [sha256.Size]byte, li ...[]byte) error {
+	prevHash, err := s.GetHash()
+	if err == nil && *prevHash == hash {
+		return nil
+	}
+	return writeBinHashForce(s.File, hash, li...)
+}
+
+func (s *StaticFile) readStaticHash(file string) (hash [sha256.Size]byte, err error) {
+
+	buf := make([]byte, sha256.Size)
+	size, err := unix.Getxattr(Static(file), xattrHashKey, buf)
+	if size != sha256.Size {
+		err = fmt.Errorf(`invalid hash size: %d`, size)
+	}
+	if err != nil {
+		return
+	}
+	copy(hash[:], buf)
+	return
+}
+
+func (s *StaticFile) ReadProto(m proto.Message) error {
+	ab, err := os.ReadFile(s.File)
+	if err != nil {
+		return err
+	}
+	return proto.Unmarshal(ab, m)
+}
+
+func (s *StaticFile) ReadJSON(m proto.Message) error {
+	ab, err := os.ReadFile(s.File)
+	if err != nil {
+		return err
+	}
+	return config.JSONUnmarshaler.Unmarshal(ab, m)
 }
 
 var ErrHashNotMatch = fmt.Errorf(`hash not match`)

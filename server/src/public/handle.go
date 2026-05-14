@@ -2,10 +2,12 @@ package public
 
 import (
 	"net/http"
+	"project/ban"
 	"project/config"
 	"project/export"
 	"project/metrics"
 	"project/page"
+	"project/tarpit"
 	"project/util"
 	"project/zj"
 	"strings"
@@ -56,7 +58,18 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	hp := util.HTTP{
+		W: w,
+		R: r,
+	}
+	hp.GetIP()
+	if ban.Check(hp.IP) {
+		tarpit.Attack(&hp)
+		return
+	}
+
 	p := &public{
+		HTTP:       hp,
 		pm:         h.pm,
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
@@ -65,9 +78,6 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		isSecure:   true,
 		routeTable: h.routeTable,
 	}
-	p.W = w
-	p.R = r
-	p.GetIP()
 
 	if !config.Prod {
 		zj.IO(`req`, p.IP, r.Method, r.URL.Path)
