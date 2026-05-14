@@ -16,7 +16,7 @@ func LinkNote[T PNote | uint32](year T) string {
 }
 
 func LinkItemInNote[T PNote | uint32, T2 PItem | uint64](year T, id T2) string {
-	return fmt.Sprintf(`/note/%04d.html#n%d`, year, id)
+	return fmt.Sprintf(`%s#n%d`, LinkNote(year), id)
 }
 
 func (m *Manager) FullLink(path string) string {
