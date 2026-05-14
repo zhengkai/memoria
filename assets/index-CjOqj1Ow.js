@@ -7139,6 +7139,458 @@ var pb = $root.pb = (() => {
 		};
 		return FileList;
 	})();
+	pb.Ban = (function() {
+		/**
+		* Properties of a Ban.
+		* @memberof pb
+		* @interface IBan
+		* @property {string|null} [host] Ban host
+		* @property {Array.<pb.IBanRow>|null} [list] Ban list
+		*/
+		/**
+		* Constructs a new Ban.
+		* @memberof pb
+		* @classdesc Represents a Ban.
+		* @implements IBan
+		* @constructor
+		* @param {pb.IBan=} [properties] Properties to set
+		*/
+		function Ban(properties) {
+			this.list = [];
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* Ban host.
+		* @member {string} host
+		* @memberof pb.Ban
+		* @instance
+		*/
+		Ban.prototype.host = "";
+		/**
+		* Ban list.
+		* @member {Array.<pb.IBanRow>} list
+		* @memberof pb.Ban
+		* @instance
+		*/
+		Ban.prototype.list = $util.emptyArray;
+		/**
+		* Creates a new Ban instance using the specified properties.
+		* @function create
+		* @memberof pb.Ban
+		* @static
+		* @param {pb.IBan=} [properties] Properties to set
+		* @returns {pb.Ban} Ban instance
+		*/
+		Ban.create = function create(properties) {
+			return new Ban(properties);
+		};
+		/**
+		* Encodes the specified Ban message. Does not implicitly {@link pb.Ban.verify|verify} messages.
+		* @function encode
+		* @memberof pb.Ban
+		* @static
+		* @param {pb.IBan} message Ban message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Ban.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.host != null && Object.hasOwnProperty.call(message, "host")) writer.uint32(10).string(message.host);
+			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.BanRow.encode(message.list[i], writer.uint32(18).fork()).ldelim();
+			return writer;
+		};
+		/**
+		* Encodes the specified Ban message, length delimited. Does not implicitly {@link pb.Ban.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.Ban
+		* @static
+		* @param {pb.IBan} message Ban message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Ban.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes a Ban message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.Ban
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.Ban} Ban
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Ban.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.Ban();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.host = reader.string();
+						break;
+					case 2:
+						if (!(message.list && message.list.length)) message.list = [];
+						message.list.push($root.pb.BanRow.decode(reader, reader.uint32(), void 0, long + 1));
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes a Ban message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.Ban
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.Ban} Ban
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Ban.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies a Ban message.
+		* @function verify
+		* @memberof pb.Ban
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		Ban.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.host != null && message.hasOwnProperty("host")) {
+				if (!$util.isString(message.host)) return "host: string expected";
+			}
+			if (message.list != null && message.hasOwnProperty("list")) {
+				if (!Array.isArray(message.list)) return "list: array expected";
+				for (let i = 0; i < message.list.length; ++i) {
+					let error = $root.pb.BanRow.verify(message.list[i], long + 1);
+					if (error) return "list." + error;
+				}
+			}
+			return null;
+		};
+		/**
+		* Creates a Ban message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.Ban
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.Ban} Ban
+		*/
+		Ban.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.Ban) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.Ban();
+			if (object.host != null) message.host = String(object.host);
+			if (object.list) {
+				if (!Array.isArray(object.list)) throw TypeError(".pb.Ban.list: array expected");
+				message.list = [];
+				for (let i = 0; i < object.list.length; ++i) {
+					if (typeof object.list[i] !== "object") throw TypeError(".pb.Ban.list: object expected");
+					message.list[i] = $root.pb.BanRow.fromObject(object.list[i], long + 1);
+				}
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from a Ban message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.Ban
+		* @static
+		* @param {pb.Ban} message Ban
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		Ban.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.arrays || options.defaults) object.list = [];
+			if (options.defaults) object.host = "";
+			if (message.host != null && message.hasOwnProperty("host")) object.host = message.host;
+			if (message.list && message.list.length) {
+				object.list = [];
+				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.BanRow.toObject(message.list[j], options);
+			}
+			return object;
+		};
+		/**
+		* Converts this Ban to JSON.
+		* @function toJSON
+		* @memberof pb.Ban
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		Ban.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for Ban
+		* @function getTypeUrl
+		* @memberof pb.Ban
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		Ban.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.Ban";
+		};
+		return Ban;
+	})();
+	pb.BanRow = (function() {
+		/**
+		* Properties of a BanRow.
+		* @memberof pb
+		* @interface IBanRow
+		* @property {string|null} [ip] BanRow ip
+		* @property {number|null} [ts] BanRow ts
+		* @property {number|null} [cnt] BanRow cnt
+		*/
+		/**
+		* Constructs a new BanRow.
+		* @memberof pb
+		* @classdesc Represents a BanRow.
+		* @implements IBanRow
+		* @constructor
+		* @param {pb.IBanRow=} [properties] Properties to set
+		*/
+		function BanRow(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* BanRow ip.
+		* @member {string} ip
+		* @memberof pb.BanRow
+		* @instance
+		*/
+		BanRow.prototype.ip = "";
+		/**
+		* BanRow ts.
+		* @member {number} ts
+		* @memberof pb.BanRow
+		* @instance
+		*/
+		BanRow.prototype.ts = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* BanRow cnt.
+		* @member {number} cnt
+		* @memberof pb.BanRow
+		* @instance
+		*/
+		BanRow.prototype.cnt = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* Creates a new BanRow instance using the specified properties.
+		* @function create
+		* @memberof pb.BanRow
+		* @static
+		* @param {pb.IBanRow=} [properties] Properties to set
+		* @returns {pb.BanRow} BanRow instance
+		*/
+		BanRow.create = function create(properties) {
+			return new BanRow(properties);
+		};
+		/**
+		* Encodes the specified BanRow message. Does not implicitly {@link pb.BanRow.verify|verify} messages.
+		* @function encode
+		* @memberof pb.BanRow
+		* @static
+		* @param {pb.IBanRow} message BanRow message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		BanRow.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.ip != null && Object.hasOwnProperty.call(message, "ip")) writer.uint32(10).string(message.ip);
+			if (message.ts != null && Object.hasOwnProperty.call(message, "ts")) writer.uint32(16).uint64(message.ts);
+			if (message.cnt != null && Object.hasOwnProperty.call(message, "cnt")) writer.uint32(24).uint64(message.cnt);
+			return writer;
+		};
+		/**
+		* Encodes the specified BanRow message, length delimited. Does not implicitly {@link pb.BanRow.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.BanRow
+		* @static
+		* @param {pb.IBanRow} message BanRow message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		BanRow.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes a BanRow message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.BanRow
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.BanRow} BanRow
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		BanRow.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.BanRow();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.ip = reader.string();
+						break;
+					case 2:
+						message.ts = reader.uint64();
+						break;
+					case 3:
+						message.cnt = reader.uint64();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes a BanRow message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.BanRow
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.BanRow} BanRow
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		BanRow.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies a BanRow message.
+		* @function verify
+		* @memberof pb.BanRow
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		BanRow.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.ip != null && message.hasOwnProperty("ip")) {
+				if (!$util.isString(message.ip)) return "ip: string expected";
+			}
+			if (message.ts != null && message.hasOwnProperty("ts")) {
+				if (!$util.isInteger(message.ts) && !(message.ts && $util.isInteger(message.ts.low) && $util.isInteger(message.ts.high))) return "ts: integer|Long expected";
+			}
+			if (message.cnt != null && message.hasOwnProperty("cnt")) {
+				if (!$util.isInteger(message.cnt) && !(message.cnt && $util.isInteger(message.cnt.low) && $util.isInteger(message.cnt.high))) return "cnt: integer|Long expected";
+			}
+			return null;
+		};
+		/**
+		* Creates a BanRow message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.BanRow
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.BanRow} BanRow
+		*/
+		BanRow.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.BanRow) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.BanRow();
+			if (object.ip != null) message.ip = String(object.ip);
+			if (object.ts != null) {
+				if ($util.Long) (message.ts = $util.Long.fromValue(object.ts)).unsigned = true;
+				else if (typeof object.ts === "string") message.ts = parseInt(object.ts, 10);
+				else if (typeof object.ts === "number") message.ts = object.ts;
+				else if (typeof object.ts === "object") message.ts = new $util.LongBits(object.ts.low >>> 0, object.ts.high >>> 0).toNumber(true);
+			}
+			if (object.cnt != null) {
+				if ($util.Long) (message.cnt = $util.Long.fromValue(object.cnt)).unsigned = true;
+				else if (typeof object.cnt === "string") message.cnt = parseInt(object.cnt, 10);
+				else if (typeof object.cnt === "number") message.cnt = object.cnt;
+				else if (typeof object.cnt === "object") message.cnt = new $util.LongBits(object.cnt.low >>> 0, object.cnt.high >>> 0).toNumber(true);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from a BanRow message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.BanRow
+		* @static
+		* @param {pb.BanRow} message BanRow
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		BanRow.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				object.ip = "";
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.ts = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.ts = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.cnt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.cnt = options.longs === String ? "0" : 0;
+			}
+			if (message.ip != null && message.hasOwnProperty("ip")) object.ip = message.ip;
+			if (message.ts != null && message.hasOwnProperty("ts")) if (typeof message.ts === "number") object.ts = options.longs === String ? String(message.ts) : message.ts;
+			else object.ts = options.longs === String ? $util.Long.prototype.toString.call(message.ts) : options.longs === Number ? new $util.LongBits(message.ts.low >>> 0, message.ts.high >>> 0).toNumber(true) : message.ts;
+			if (message.cnt != null && message.hasOwnProperty("cnt")) if (typeof message.cnt === "number") object.cnt = options.longs === String ? String(message.cnt) : message.cnt;
+			else object.cnt = options.longs === String ? $util.Long.prototype.toString.call(message.cnt) : options.longs === Number ? new $util.LongBits(message.cnt.low >>> 0, message.cnt.high >>> 0).toNumber(true) : message.cnt;
+			return object;
+		};
+		/**
+		* Converts this BanRow to JSON.
+		* @function toJSON
+		* @memberof pb.BanRow
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		BanRow.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for BanRow
+		* @function getTypeUrl
+		* @memberof pb.BanRow
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		BanRow.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.BanRow";
+		};
+		return BanRow;
+	})();
 	pb.PageConfig = (function() {
 		/**
 		* Properties of a PageConfig.
@@ -9988,4 +10440,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-CY5CksSC.js.map
+//# sourceMappingURL=index-CjOqj1Ow.js.map
