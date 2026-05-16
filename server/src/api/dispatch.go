@@ -11,7 +11,7 @@ import (
 func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 	rsp := new(pb.APIRsp)
 	e := &util.Error{Message: `ok`}
-	zj.IO("api req:", getReqOneName(req))
+	// zj.IO(`api req:`, getReqOneName(req))
 
 	// 注意：switch { } 里的内容由 /proto/codegen/gen.go 生成
 	switch req.WhichOne() {

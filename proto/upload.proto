@@ -1,0 +1,11 @@
+edition = "2024";
+
+option go_package = "/pb";
+package pb;
+
+message UploadRsp {
+	uint64 id = 1;
+	bool ok = 2;
+	string msg = 3;
+}
+

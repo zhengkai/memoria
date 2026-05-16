@@ -19,7 +19,10 @@ import (
 
 const xattrHashKey = `user.sha256hash`
 
-var StaticDirTail = config.StaticDir + `/`
+var (
+	ErrHashNotMatch = fmt.Errorf(`hash not match`)
+	StaticDirTail   = config.StaticDir + `/`
+)
 
 type StaticFile struct {
 	Path   string
@@ -234,7 +237,9 @@ func (s *StaticFile) ReadJSON(m proto.Message) error {
 	return config.JSONUnmarshaler.Unmarshal(ab, m)
 }
 
-var ErrHashNotMatch = fmt.Errorf(`hash not match`)
+func StaticTmp() (*os.File, error) {
+	return os.CreateTemp(Static(`tmp`), `tmp-go-*`)
+}
 
 func Static(file string) string {
 	file = strings.TrimPrefix(file, StaticDirTail)
@@ -316,7 +321,7 @@ func ReadStaticData(file string, m proto.Message) error {
 
 func writeBin(file string, li ...[]byte) (err error) {
 
-	f, err := os.CreateTemp(Static(`tmp`), `tmp-go-*`)
+	f, err := StaticTmp()
 	if err != nil {
 		return
 	}

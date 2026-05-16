@@ -33,7 +33,7 @@ func (t *tarpit) flood() {
 				time.Sleep(time.Second)
 			}
 
-			_, err := t.Write([]byte(`<div>stop, go away`))
+			_, err := t.Write(alertMsg)
 			if err != nil {
 				return
 			}

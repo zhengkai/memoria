@@ -34,5 +34,5 @@ func (t *tarpit) Attack() {
 	timeCost := time.Since(time.Time(t.bs)) / time.Millisecond
 	metrics.Tarpit(t.weapon, t.sum, timeCost)
 
-	zj.J(`tarpit end`, t.IP, util.FormatBytes(t.sum), timeCost)
+	zj.J(`tarpit   end`, t.IP, t.weapon, util.FormatBytes(t.sum), t.bs)
 }

@@ -29,6 +29,7 @@ func Server() {
 
 	} else {
 		mux.HandleFunc(`/robots.txt`, robotsHandle)
+		mux.HandleFunc(`/api/upload`, api.UploadHandle)
 		mux.HandleFunc(`/api/export`, export.Handle)
 		mux.HandleFunc(`/api`, api.Handle)
 

@@ -4,6 +4,8 @@ import (
 	"project/util"
 )
 
+var alertMsg = []byte(`<div>stop, go away `)
+
 type tarpit struct {
 	util.HTTP
 	sum    int

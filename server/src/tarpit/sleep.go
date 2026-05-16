@@ -14,4 +14,17 @@ func (t *tarpit) Sleep() {
 		// 客户端断开或超时，结束等待
 		return
 	}
+
+	for {
+		select {
+		case <-t.R.Context().Done():
+			return
+		default:
+			time.Sleep(time.Second)
+			_, err := t.Write(alertMsg)
+			if err != nil {
+				return
+			}
+		}
+	}
 }

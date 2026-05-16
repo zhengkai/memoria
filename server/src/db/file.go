@@ -1,6 +1,7 @@
 package db
 
 import (
+	"crypto/sha256"
 	"database/sql"
 	"project/pb"
 	"project/util"
@@ -61,4 +62,29 @@ func GetFile(id uint64) ([]byte, error) {
 		return nil, util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF(`file %d not found`, id)
 	}
 	return bin, nil
+}
+
+// file_id hash bin mime name w h is_retina ts_create
+
+func InsertFile(name, mime string, bin []byte) (uint64, *util.Error) {
+
+	hash := sha256.Sum256(bin)
+
+	query := `SELECT file_id FROM file WHERE hash = ?`
+	var id uint64
+	d.QueryRow(query, hash[:]).Scan(&id)
+	if id > 0 {
+		return id, nil
+	}
+
+	query = `INSERT INTO file (hash, bin, mime, name, ts_create) VALUES (?, ?, ?, ?, ?)`
+	res, err := d.Exec(query, hash[:], bin, mime, name, util.Now())
+	if err != nil {
+		return 0, util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("insert file fail, %s", name)
+	}
+	isnertID, err := res.LastInsertId()
+	if err != nil {
+		return 0, util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF("insert file fail, %s", name)
+	}
+	return uint64(isnertID), nil
 }
