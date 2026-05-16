@@ -103,7 +103,7 @@ body > main {
 	margin: 0 auto;
 	width: 672px;
 	padding: 1px 0;
-	min-height: calc(100vh - 40px - 96px);
+	min-height: calc(100vh - 42px - 96px);
 }
 
 body.about main, body.error main {
@@ -282,7 +282,7 @@ body.home > section p {
 }
 
 body.home > main {
-	min-height: calc(100vh - 40px - 96px - 256px);
+	min-height: calc(100vh - 42px - 96px - 256px);
 	padding: 16px;
 }
 
