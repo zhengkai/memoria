@@ -25,6 +25,7 @@ func check(h *util.HTTP) bool {
 	path := h.R.URL.Path
 
 	if strings.HasPrefix(path, `/.`) {
+		// RFC 8615 https://en.wikipedia.org/wiki/Well-known_URI
 		return !strings.HasPrefix(path, `/.well-known/`)
 	}
 	if strings.HasPrefix(path, `/wp-`) {

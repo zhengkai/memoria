@@ -3,9 +3,10 @@ package tarpit
 import (
 	"net/http"
 	"project/config"
-	"project/metrics"
 	"time"
 )
+
+var junk []byte
 
 func (t *tarpit) Flood() {
 	if junk == nil {
@@ -13,11 +14,12 @@ func (t *tarpit) Flood() {
 		return
 	}
 
-	metrics.TarpitCount(`flood`)
+	t.weapon = `sleep`
 	t.flood()
 }
 
 func (t *tarpit) flood() {
+
 	flusher, _ := t.W.(http.Flusher)
 	for {
 		select {
