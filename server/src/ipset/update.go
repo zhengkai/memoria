@@ -41,6 +41,8 @@ func update() {
 			return
 		}
 		zj.F(`ipset updated from file, total %d lines, date %s`, cnt, t.Format(time.DateTime))
+
+		nt.InsertCIDR(`111.235.76.0/24`) // 公司出口
 		theTrie = nt
 	})
 }
