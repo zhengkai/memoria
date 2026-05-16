@@ -1,5 +1,3 @@
-import Long from "long";
-
 export const formatDateTime = (ts: number) => {
 
 	const date = new Date(ts);
@@ -23,4 +21,14 @@ export const escapeHtml = (str: string | null | undefined) => {
 		.replace(/>/g, '&gt;')
 		.replace(/"/g, '&quot;')
 		.replace(/'/g, '&#039;');
+}
+
+export const formatBytes = (b: number): string => {
+	const unit = 1024;
+	if (b < unit) {
+		return `${b} B`;
+	}
+	const units = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
+	const exp = Math.min(Math.floor(Math.log(b) / Math.log(unit)), units.length);
+	return `${(b / Math.pow(unit, exp)).toFixed(1)} ${units[exp - 1]}`;
 }
