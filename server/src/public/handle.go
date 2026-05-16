@@ -74,12 +74,12 @@ func (h *handle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		etag:       strings.TrimPrefix(etag, `W/`),
 		headerOnly: headerOnly,
 		mime:       page.MimeHTML,
-		// isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
-		isSecure:   true,
+		isSecure:   r.Header.Get(`X-Forwarded-Proto`) == `https`,
 		routeTable: h.routeTable,
 	}
 
 	if !config.Prod {
+		p.isSecure = true
 		zj.IO(`req`, p.IP, r.Method, r.URL.Path)
 	}
 	p.run()
