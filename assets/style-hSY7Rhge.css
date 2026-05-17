@@ -12207,7 +12207,43 @@ body > aside > nav ul a:hover, body > aside > nav ul a.active {
 
 .file-list > div {
   margin: 12px 0;
+  cursor: default;
 }
 .file-list > div div.name {
   font-weight: bold;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.upload-box > div.form {
+  min-height: 40px;
+  /* display: none; */
+}
+.upload-box > div.msg {
+  margin-top: 16px;
+  width: auto;
+  min-height: 48px;
+  padding: 16px 24px 12px;
+  line-height: 16px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: default;
+}
+.upload-box > div[data-state=uploading] {
+  background-color: #eee;
+}
+.upload-box > div[data-state=success] {
+  font-weight: bold;
+  background-color: #aaffaa;
+}
+.upload-box > div[data-state=alert] {
+  font-weight: bold;
+  background-color: #ffaaaa;
+}
+
+.uploading .upload-box > div.form > * {
+  display: none;
 }/*$vite$:1*/
