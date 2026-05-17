@@ -12203,4 +12203,11 @@ body > aside > nav ul a:hover, body > aside > nav ul a.active {
 .item-list > div div.content {
   max-height: 48px;
   overflow: hidden;
+}
+
+.file-list > div {
+  margin: 12px 0;
+}
+.file-list > div div.name {
+  font-weight: bold;
 }/*$vite$:1*/
