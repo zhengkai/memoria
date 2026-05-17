@@ -8640,6 +8640,234 @@ var pb = $root.pb = (() => {
 		};
 		return RenderArticleIndex;
 	})();
+	pb.UploadRsp = (function() {
+		/**
+		* Properties of an UploadRsp.
+		* @memberof pb
+		* @interface IUploadRsp
+		* @property {number|null} [id] UploadRsp id
+		* @property {boolean|null} [ok] UploadRsp ok
+		* @property {string|null} [msg] UploadRsp msg
+		*/
+		/**
+		* Constructs a new UploadRsp.
+		* @memberof pb
+		* @classdesc Represents an UploadRsp.
+		* @implements IUploadRsp
+		* @constructor
+		* @param {pb.IUploadRsp=} [properties] Properties to set
+		*/
+		function UploadRsp(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* UploadRsp id.
+		* @member {number} id
+		* @memberof pb.UploadRsp
+		* @instance
+		*/
+		UploadRsp.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* UploadRsp ok.
+		* @member {boolean} ok
+		* @memberof pb.UploadRsp
+		* @instance
+		*/
+		UploadRsp.prototype.ok = false;
+		/**
+		* UploadRsp msg.
+		* @member {string} msg
+		* @memberof pb.UploadRsp
+		* @instance
+		*/
+		UploadRsp.prototype.msg = "";
+		/**
+		* Creates a new UploadRsp instance using the specified properties.
+		* @function create
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {pb.IUploadRsp=} [properties] Properties to set
+		* @returns {pb.UploadRsp} UploadRsp instance
+		*/
+		UploadRsp.create = function create(properties) {
+			return new UploadRsp(properties);
+		};
+		/**
+		* Encodes the specified UploadRsp message. Does not implicitly {@link pb.UploadRsp.verify|verify} messages.
+		* @function encode
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {pb.IUploadRsp} message UploadRsp message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		UploadRsp.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.ok != null && Object.hasOwnProperty.call(message, "ok")) writer.uint32(16).bool(message.ok);
+			if (message.msg != null && Object.hasOwnProperty.call(message, "msg")) writer.uint32(26).string(message.msg);
+			return writer;
+		};
+		/**
+		* Encodes the specified UploadRsp message, length delimited. Does not implicitly {@link pb.UploadRsp.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {pb.IUploadRsp} message UploadRsp message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		UploadRsp.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an UploadRsp message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.UploadRsp} UploadRsp
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		UploadRsp.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.UploadRsp();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.ok = reader.bool();
+						break;
+					case 3:
+						message.msg = reader.string();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an UploadRsp message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.UploadRsp} UploadRsp
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		UploadRsp.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an UploadRsp message.
+		* @function verify
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		UploadRsp.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.ok != null && message.hasOwnProperty("ok")) {
+				if (typeof message.ok !== "boolean") return "ok: boolean expected";
+			}
+			if (message.msg != null && message.hasOwnProperty("msg")) {
+				if (!$util.isString(message.msg)) return "msg: string expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an UploadRsp message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.UploadRsp} UploadRsp
+		*/
+		UploadRsp.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.UploadRsp) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.UploadRsp();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.ok != null) message.ok = Boolean(object.ok);
+			if (object.msg != null) message.msg = String(object.msg);
+			return message;
+		};
+		/**
+		* Creates a plain object from an UploadRsp message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {pb.UploadRsp} message UploadRsp
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		UploadRsp.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				object.ok = false;
+				object.msg = "";
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.ok != null && message.hasOwnProperty("ok")) object.ok = message.ok;
+			if (message.msg != null && message.hasOwnProperty("msg")) object.msg = message.msg;
+			return object;
+		};
+		/**
+		* Converts this UploadRsp to JSON.
+		* @function toJSON
+		* @memberof pb.UploadRsp
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		UploadRsp.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for UploadRsp
+		* @function getTypeUrl
+		* @memberof pb.UploadRsp
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		UploadRsp.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.UploadRsp";
+		};
+		return UploadRsp;
+	})();
 	return pb;
 })();
 //#endregion
@@ -8948,7 +9176,7 @@ var Search = class {
 };
 //#endregion
 //#region src/component/file/list.html?raw
-var list_default = "<form method=\"POST\" enctype=\"multipart/form-data\">\n	<input type=\"file\" name=\"file\">\n	<button type=\"submit\">Upload</button>\n</form>\n\n<div class=\"file-list\">\n</div>\n";
+var list_default = "<div class=\"upload-box\">\n	<div class=\"form\">\n		<input class=\"form-control\" type=\"file\" name=\"file\">\n	</div>\n	<div class=\"msg\" data-state=\"foo\">\n	</div>\n</div>\n\n<div class=\"file-list\">\n</div>\n";
 //#endregion
 //#region src/component/file/list.ts
 var FileList = class {
@@ -8967,34 +9195,50 @@ var FileList = class {
 			this.data = re.list.map((o) => pb.File.create(o));
 			this.cursor = re.cursor;
 		}
-		console.log(this.data, this.cursor);
 		this.genHTML();
 	}
 	initHTML() {
 		this.root.innerHTML = list_default;
-		const f = this.root.querySelector("form");
-		f.onsubmit = (e) => {
+		const f = this.root.querySelector("input[type=file]");
+		f.onchange = (e) => {
 			e.preventDefault();
 			this.upload(f);
 		};
 	}
-	upload(f) {
-		const input = f.querySelector("input[type=\"file\"]");
+	async upload(input) {
+		this.root.classList.add("uploading");
+		this.msg("uploading", "正在上传…");
 		const file = input.files[0];
-		console.log("file", f, input, file);
 		const formData = new FormData();
 		formData.append("file", file);
-		fetch("/api/upload", {
+		const res = await fetch("/api/upload", {
 			method: "POST",
 			body: formData
-		}).then((res) => res.text()).then((msg) => this.afterUpload(msg));
-		console.log("submit");
+		});
+		input.value = "";
+		const re = pb.UploadRsp.fromObject(await res.json());
+		this.afterUpload(re);
 	}
-	afterUpload(msg) {
-		console.log("after upload", msg);
+	afterUpload(re) {
+		this.root.classList.remove("uploading");
+		if (re.id) {
+			this.msg("success", `上传成功，文件ID：${re.id}`);
+			this.getData();
+			return;
+		}
+		let msg = `上传失败，未知错误`;
+		if (re.msg?.length) msg = `上传失败：${re.msg}`;
+		this.msg("alert", msg);
+	}
+	msg(state, msg) {
+		const box = this.root.querySelector(".upload-box > .msg");
+		if (!box) return;
+		box.dataset.state = state;
+		box.textContent = msg;
 	}
 	genHTML() {
 		const box = this.root.querySelector(".file-list");
+		box.innerHTML = "";
 		for (const o of this.data) {
 			const item = document.createElement("div");
 			let link = "";
@@ -9038,4 +9282,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-nj02Sjzd.js.map
+//# sourceMappingURL=index-BYoEbn69.js.map
