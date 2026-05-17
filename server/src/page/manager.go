@@ -41,11 +41,12 @@ type Manager struct {
 	styleLink   string
 	faviconLink string
 
-	homeTpl          *template.Template
-	articleIndexTpl  *template.Template
-	articleSingleTpl *template.Template
-	noteTpl          *template.Template
-	errorTpl         *template.Template
+	homeTpl          Template
+	articleIndexTpl  Template
+	articleSingleTpl Template
+	noteTpl          Template
+	errorTpl         Template
+	rssTpl           Template
 }
 
 func (m *Manager) initTpl() {
@@ -54,6 +55,7 @@ func (m *Manager) initTpl() {
 	m.articleSingleTpl = m.makeTpl(`article`)
 	m.noteTpl = m.makeTpl(`note`, `item`)
 	m.errorTpl = m.makeTpl(`error`)
+	m.rssTpl = m.makeRSSTpl()
 }
 
 func (m *Manager) Init() error {
@@ -89,6 +91,7 @@ func (m *Manager) Init() error {
 	m.articleInit()
 	m.homeInit()
 	m.errorInit()
+	m.rssInit()
 
 	zj.IO(`page memory cache size`, util.FormatBytes(m.cacheSize))
 

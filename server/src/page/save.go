@@ -2,13 +2,12 @@ package page
 
 import (
 	"fmt"
-	"html/template"
 	"project/config"
 	"project/util"
 	"project/zj"
 )
 
-func (m *Manager) genPage(file string, data IMeta, tpl *template.Template) *Page {
+func (m *Manager) genPage(file string, data IMeta, tpl Template) *Page {
 
 	output, err := execTplToFile(file, tpl, data)
 	if err != nil {

@@ -12,6 +12,7 @@ const (
 
 	MimeHTML = `text/html; charset=utf-8`
 	MimeCSS  = `text/css; charset=utf-8`
+	MimeAtom = `application/atom+xml; charset=utf-8`
 )
 
 type Page struct {

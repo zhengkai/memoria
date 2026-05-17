@@ -6,6 +6,7 @@ const (
 	FileArticle = `page/article.html`
 	FileHome    = `page/home.html`
 	FileStyle   = `page/style.css`
+	FileRSS     = `page/rss/article.xml`
 )
 
 func FileItem[T PItem | uint64](id T) string {

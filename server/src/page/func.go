@@ -1,7 +1,10 @@
 package page
 
 import (
+	"bytes"
+	"encoding/xml"
 	"html/template"
+	"strings"
 	"time"
 )
 
@@ -22,6 +25,9 @@ func (m *Manager) makeTplFunc() {
 		"linkItem": func(id uint64) string {
 			return m.config.GetPathPrefix() + LinkItem(id)
 		},
+		"linkItemFull": func(id uint64) string {
+			return `https://` + m.config.GetDomain() + m.config.GetPathPrefix() + LinkItem(id)
+		},
 		"linkNote": func(year uint32) string {
 			return m.config.GetPathPrefix() + LinkNote(year)
 		},
@@ -33,6 +39,12 @@ func (m *Manager) makeTplFunc() {
 		},
 		"linkHome": func() string {
 			return m.config.GetPathPrefix() + LinkHome
+		},
+		"rssEscape": func(in template.HTML) string {
+			in = template.HTML(strings.ReplaceAll(string(in), `<img src="/file/`, `<img src="https://`+m.config.GetDomain()+`/file/`))
+			var b bytes.Buffer
+			xml.EscapeText(&b, []byte(in))
+			return b.String()
 		},
 	}
 }

@@ -6,6 +6,7 @@
 {{if and .Meta.Canonical (not .Meta.Internal)}}<meta name="canonical" content="{{.Meta.SiteBaseLink}}{{.Meta.Canonical}}">
 {{end}}<link rel="icon" type="image/webp" href="{{.Meta.Favicon}}">
 <link rel="stylesheet" href="{{.Meta.SiteBaseLink}}{{.Meta.Style}}">
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="{{.Meta.SiteBaseLink}}/rss" />
 </head>
 <body{{if .Meta.BodyClass}} class="{{.Meta.BodyClass}}"{{end}}>
 {{template "header" .}}

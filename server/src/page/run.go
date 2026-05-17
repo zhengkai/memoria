@@ -1,5 +1,0 @@
-package page
-
-func Run() {
-
-}

@@ -4,12 +4,17 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"html/template"
+	"io"
 	"os"
 	"path/filepath"
 	"project/config"
 	"project/util"
 	"project/zj"
 )
+
+type Template interface {
+	Execute(wr io.Writer, data any) error
+}
 
 type tplOutput struct {
 	file    string
@@ -35,7 +40,7 @@ func (m *Manager) makeTpl(file ...string) *template.Template {
 	)
 }
 
-func execTpl(tpl *template.Template, data any) ([]byte, error) {
+func execTpl(tpl Template, data any) ([]byte, error) {
 
 	var buf bytes.Buffer
 
@@ -47,7 +52,7 @@ func execTpl(tpl *template.Template, data any) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func execTplToFile(file string, tpl *template.Template, data IMeta) (*tplOutput, error) {
+func execTplToFile(file string, tpl Template, data IMeta) (*tplOutput, error) {
 
 	output, err := execTpl(tpl, data)
 	if err != nil {
