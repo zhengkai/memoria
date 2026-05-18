@@ -14,7 +14,7 @@ func (t *tarpit) Flood() {
 		return
 	}
 
-	t.weapon = `sleep`
+	t.weapon = `flood`
 	t.flood()
 }
 
