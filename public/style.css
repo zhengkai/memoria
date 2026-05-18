@@ -205,9 +205,9 @@ footer {
 }
 
 body.home header ul li:nth-of-type(1) a,
-body.article header ul li:nth-of-type(2) a,
-body.tweet header ul li:nth-of-type(3) a,
-body.about header ul li:nth-of-type(2) a {
+body.article-original header ul li:nth-of-type(2) a,
+body.article-curated header ul li:nth-of-type(4) a,
+body.tweet header ul li:nth-of-type(3) a {
 	color: #fff;
 	text-decoration: none;
 }
@@ -331,10 +331,14 @@ body.article main {
 		font-size: 24px;
 		user-select: none;
 	}
-	ul {
+	> ul {
 		padding-right: 16px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+	> div {
+		padding: 32px 0 64px;
+		text-align: center;
 	}
 }
 

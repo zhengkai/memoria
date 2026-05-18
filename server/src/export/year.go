@@ -6,7 +6,8 @@ import (
 )
 
 type ByYear struct {
-	year map[uint32][]*pb.ItemDB
+	needRefresh bool
+	year        map[uint32][]*pb.ItemDB
 }
 
 func NewByYear() *ByYear {

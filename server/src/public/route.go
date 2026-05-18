@@ -1,6 +1,7 @@
 package public
 
 import (
+	"project/page"
 	"project/tarpit"
 )
 
@@ -8,6 +9,8 @@ const routeMatchLen = 4
 
 var routeTable = map[string]func(*public){
 	"article": (*public).article,
+	"curated": (*public).curated,
+	"delete":  (*public).trash,
 	"archive": (*public).item,
 	"blog":    (*public).item,
 	"file":    (*public).file,
@@ -26,6 +29,20 @@ func (h *handle) genRoute() map[string]func(*public) {
 		m[prefix[:routeMatchLen]] = fn
 	}
 	return m
+}
+
+func (p *public) commonPage(pr page.Provider) {
+
+	if p.pm == nil {
+		p.litePage(pr)
+		return
+	}
+
+	if !p.isSecure {
+		p.redirect(pr.Link())
+		return
+	}
+	p.readPage(pr.File())
 }
 
 func (p *public) route() {

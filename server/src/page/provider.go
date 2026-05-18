@@ -35,6 +35,26 @@ func (a PArticle) Link() string {
 	return LinkArticle
 }
 
+type PCurated struct{}
+
+func (a PCurated) File() string {
+	return FileCurated
+}
+
+func (a PCurated) Link() string {
+	return LinkCurated
+}
+
+type PTrash struct{}
+
+func (a PTrash) File() string {
+	return FileTrash
+}
+
+func (a PTrash) Link() string {
+	return LinkTrash
+}
+
 type PHome struct{}
 
 func (h PHome) File() string {

@@ -71,10 +71,6 @@ func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 
 				count++
 
-				if re.Item.GetMeta().GetTsHide() > 0 {
-					continue
-				}
-
 				re.Item.SetId(id)
 				if !yield(re, nil) {
 					rows.Close()

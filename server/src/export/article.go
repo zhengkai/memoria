@@ -1,20 +1,35 @@
 package export
 
 import (
+	"fmt"
 	"project/pb"
 	"project/util"
 	"project/zj"
 	"slices"
 )
 
-const ArticleFileName = `data/article-list.bin`
+func ArticleFile(name string) string {
+	return fmt.Sprintf(`data/article/%s.bin`, name)
+}
 
 func (g *Export) exportArticle() {
 
 	zj.J(`export article`)
 
+	for name, data := range map[string]*ByYear{
+		`article`: g.article,
+		`curated`: g.curated,
+		`trash`:   g.trash,
+		`full`:    g.articleFull,
+	} {
+		g.exportArticleEach(name, data)
+	}
+}
+
+func (g *Export) exportArticleEach(name string, data *ByYear) {
+
 	var yl []uint32
-	for y, li := range g.article.year {
+	for y, li := range data.year {
 		yl = append(yl, y)
 		sortItemList(li)
 	}
@@ -27,7 +42,7 @@ func (g *Export) exportArticle() {
 	}
 
 	for idx, y := range yl {
-		src := g.article.year[y]
+		src := data.year[y]
 		dst := pb.RenderArticleYear_builder{
 			Year: &y,
 			List: make([]*pb.ItemLite, len(src)),
@@ -43,7 +58,7 @@ func (g *Export) exportArticle() {
 	}
 
 	g.addFail(
-		`article`,
-		util.WriteStaticData(ArticleFileName, d.Build()),
+		`article `+name,
+		util.WriteStaticData(ArticleFile(name), d.Build()),
 	)
 }

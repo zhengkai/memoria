@@ -4,6 +4,8 @@ import "fmt"
 
 const (
 	LinkArticle = `/article.html`
+	LinkCurated = `/curated.html`
+	LinkTrash   = `/delete.html`
 	LinkHome    = `/`
 )
 

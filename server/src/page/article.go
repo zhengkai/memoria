@@ -10,6 +10,7 @@ import (
 type ArticleIndex struct {
 	Meta
 	Content *pb.RenderArticleIndex
+	Role    string
 }
 
 type ArticleSingle struct {
@@ -18,24 +19,42 @@ type ArticleSingle struct {
 }
 
 func (m *Manager) articleInit() {
+	m.articleInitEach(`article`, `闲言`, PArticle{})
+	m.articleInitEach(`curated`, `拾遗`, PCurated{})
+	m.articleInitEach(`trash`, `删余`, PTrash{})
+}
 
-	index := &pb.RenderArticleIndex{}
+func (m *Manager) articleInitEach(name, title string, p Provider) {
 
-	err := util.ReadStaticData(export.ArticleFileName, index)
+	da := &pb.RenderArticleIndex{}
+
+	err := util.ReadStaticData(export.ArticleFile(name), da)
 	if err != nil {
 		zj.W(err)
 		return
 	}
 
-	for _, y := range index.GetList() {
+	for _, y := range da.GetList() {
 		for _, il := range y.GetList() {
 
 			id := il.GetId()
 			file := FileItem(id)
 
 			d := m.loadItem(id)
+
+			meta := d.DB.GetMeta()
+			/*
+				if meta.GetTsHide() == 0 {
+					if meta.GetOriginal() {
+
+					} else {
+
+					}
+				}
+			*/
+
 			m.setMeta(`item`, d)
-			d.Title = d.DB.GetMeta().GetTitle()
+			d.Title = meta.GetTitle()
 			d.Canonical = LinkItem(id)
 
 			m.genPage(file, d, m.articleSingleTpl)
@@ -43,11 +62,20 @@ func (m *Manager) articleInit() {
 	}
 
 	d := &ArticleIndex{
-		Content: index,
+		Content: da,
 	}
-	m.setMeta(`article`, d)
-	d.Title = `闲言`
-	d.Canonical = LinkArticle
 
-	m.genPage(FileArticle, d, m.articleIndexTpl)
+	class := `article`
+	if name == `article` {
+		class += ` article-original`
+		d.Role = `original`
+	} else if name == `curated` {
+		class += ` article-curated`
+	}
+
+	m.setMeta(class, d)
+	d.Title = title
+	d.Canonical = p.Link()
+
+	m.genPage(p.File(), d, m.articleIndexTpl)
 }

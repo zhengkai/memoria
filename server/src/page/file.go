@@ -4,6 +4,8 @@ import "fmt"
 
 const (
 	FileArticle = `page/article.html`
+	FileCurated = `page/curated.html`
+	FileTrash   = `page/delete.html`
 	FileHome    = `page/home.html`
 	FileStyle   = `page/style.css`
 	FileRSS     = `page/rss/article.xml`

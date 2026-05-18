@@ -37,6 +37,9 @@ func (m *Manager) makeTplFunc() {
 		"linkArticle": func() string {
 			return m.config.GetPathPrefix() + LinkArticle
 		},
+		"linkCurated": func() string {
+			return m.config.GetPathPrefix() + LinkCurated
+		},
 		"linkHome": func() string {
 			return m.config.GetPathPrefix() + LinkHome
 		},

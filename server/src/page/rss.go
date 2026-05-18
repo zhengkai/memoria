@@ -32,7 +32,7 @@ func (m *Manager) makeRSSTpl() *template.Template {
 func (m *Manager) rssInit() error {
 
 	index := &pb.RenderArticleIndex{}
-	err := util.ReadStaticData(export.ArticleFileName, index)
+	err := util.ReadStaticData(export.ArticleFile(`full`), index)
 	if err != nil {
 		zj.W(err)
 		return err
@@ -59,9 +59,12 @@ func (m *Manager) fillRSS(index *pb.RenderArticleIndex) (d *RSS) {
 		for _, il := range y.GetList() {
 			id := il.GetId()
 			it := m.loadItem(id)
+			meta := it.DB.GetMeta()
+			if meta.GetTsHide() > 0 {
+				continue
+			}
 			d.Entry = append(d.Entry, it)
-			m := it.DB.GetMeta()
-			d.TSUpdate = max(m.GetTsCreate(), m.GetTsRevise(), d.TSUpdate)
+			d.TSUpdate = max(meta.GetTsCreate(), meta.GetTsRevise(), d.TSUpdate)
 			if len(d.Entry) >= feedSize {
 				return
 			}

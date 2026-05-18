@@ -5,15 +5,13 @@ import (
 )
 
 func (p *public) article() {
+	p.commonPage(page.PArticle{})
+}
 
-	if p.pm == nil {
-		p.litePage(page.PArticle{})
-		return
-	}
+func (p *public) curated() {
+	p.commonPage(page.PCurated{})
+}
 
-	if !p.isSecure {
-		p.redirect(page.LinkArticle)
-		return
-	}
-	p.readPage(page.FileArticle)
+func (p *public) trash() {
+	p.commonPage(page.PCurated{})
 }

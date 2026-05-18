@@ -53,8 +53,11 @@ type Export struct {
 	item []*pb.ItemDB
 
 	// g.article, g.note 记录对应的全部数据（包括 pb.ItemDB 而不止 id）
-	article *ByYear
-	note    *ByYear
+	article     *ByYear
+	curated     *ByYear
+	trash       *ByYear
+	articleFull *ByYear
+	note        *ByYear
 
 	// hasArticle, hasNote 决定更新哪部分
 	hasArticle bool
@@ -74,8 +77,11 @@ func (g *Export) addFail(name string, err error) {
 }
 
 func (g *Export) init() {
-	g.note = NewByYear()
 	g.article = NewByYear()
+	g.curated = NewByYear()
+	g.trash = NewByYear()
+	g.articleFull = NewByYear()
+	g.note = NewByYear()
 	g.hasNote = make(map[uint32]bool)
 }
 
@@ -127,24 +133,37 @@ func (g *Export) fetchData(ts uint64) {
 			g.addFail(`fetch data`, err)
 			return
 		}
-		year := GetYear(row.Item)
+
+		it := row.Item
+		year := GetYear(it)
 		isNote := row.Item.GetMeta().GetTitle() == ``
+		needRefresh := row.TSUpdate >= ts
 
 		// g.article, g.note 记录全部数据
-		if isNote {
-			g.note.Add(year, row.Item)
-		} else {
-			g.article.Add(year, row.Item)
-		}
 
-		// g.item，hasArticle, hasNote 只记录要更新的
-		if row.TSUpdate >= ts {
-			g.item = append(g.item, row.Item)
-			if isNote {
+		record := g.note
+		if isNote {
+			if needRefresh {
 				g.hasNote[year] = true
-			} else {
+			}
+		} else {
+			if needRefresh {
 				g.hasArticle = true
 			}
+			if it.GetMeta().GetTsHide() > 0 {
+				record = g.trash
+				zj.J(`trash`, it.GetId())
+			} else if !it.GetMeta().GetOriginal() {
+				record = g.curated
+			} else {
+				record = g.article
+			}
+			g.articleFull.Add(year, it)
+		}
+		record.Add(year, it)
+
+		if needRefresh {
+			g.item = append(g.item, row.Item)
 		}
 	}
 }

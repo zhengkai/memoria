@@ -3,11 +3,12 @@
 	<p id="year-{{.GetYear}}">{{.GetYear}} 年</p>
 	<ul>{{range .GetList}}
 		<li><a href="{{.GetId | linkItem}}">{{.GetMeta.GetTitle}} <time datetime="{{.GetMeta.GetTsCreate | RFC3339}}">{{.GetMeta.GetTsCreate | date}}</time></a></li>{{end}}
-	</ul>{{end}}
+	</ul>{{end}}{{if eq .Role "original" }}
+	<div><a href="{{.Meta.SiteBaseLink}}/delete.html">删余</a></div>{{end}}
 </main>
 
 <aside>
 	<ul>{{range .Content.GetList}}
-		<li><a href="{{linkArticle}}#year-{{.GetYear}}">{{.GetYear}} <span>({{len .GetList}})</span></a></li>{{end}}
+		<li><a href="#year-{{.GetYear}}">{{.GetYear}} <span>({{len .GetList}})</span></a></li>{{end}}
 	</ul>
 </aside>{{end}}
