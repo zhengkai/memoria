@@ -92,7 +92,7 @@ body {
 	overflow-y: scroll;
 	overflow-x: hidden;
 	background-color: #eee;
-	min-width: 672px;
+	min-width: 640px;
 }
 
 ul {
@@ -101,7 +101,7 @@ ul {
 
 body > main {
 	margin: 0 auto;
-	width: 672px;
+	width: 640px;
 	padding: 1px 0;
 	min-height: calc(100vh - 42px - 96px);
 }
@@ -113,7 +113,7 @@ body.about main, body.error main {
 }
 
 body > header, body > footer {
-	min-width: 672px;
+	min-width: 640px;
 }
 body > header a, body > footer a {
 	color: #eee;
@@ -253,6 +253,16 @@ body.home > section h1 > span:nth-of-type(1), body > header > nav > a:nth-of-typ
 	}
 }
 
+body.home > section {
+	height: 256px;
+	padding-top: 64px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1920' height='512' preserveAspectRatio='none' viewBox='0 0 1920 512'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1065%26quot%3b)' fill='none'%3e%3crect width='1920' height='512' x='0' y='0' fill='%230e2a47'%3e%3c/rect%3e%3cpath d='M172.0279826477599 242.5315635076822L183.74374767665057 108.61975646059915 49.83194062956753 96.90399143170848 38.116175600676854 230.81579847879152z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1197.7796630710202 518.5520090974748L1205.3442542945465 374.21100997458046 1053.4386639481258 510.9874178739485z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1750.3129458390817 235.9746622284598L1770.5416930850404 148.35433156559765 1682.9213624221784 128.12558431963893 1662.6926151762195 215.74591498250112z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1541.5722424879193 433.4041474940653L1614.4551057838753 554.7016014924825 1735.7525597822926 481.8187381965264 1662.8696964863366 360.52128419810924z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M720.9108054098944 96.89721143095099L778.1421933443664 31.060030849724697 712.3050127631401-26.171357084747342 655.073624828668 39.66582349647894z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M473.2651196819897 328.14601644216515L605.3316099065224 342.02676390143654 487.1458671412611 196.07952621763243z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M739.4164758908104 108.55662534218577L865.4913512644627 164.83280712548606 854.9724959119435 44.60174028101105z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M479.6303913686974 17.99946897057621L445.8417862340867-45.547654933223086 367.41540294569313 36.90881472059265z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M233.08201527757686 228.72844385244093L277.83089923480526 157.11525971963715 148.03668105698537 125.79852585019643z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M708.6121315672508 515.4783358812039L783.4560385087983 555.2735471044186 805.7269018728467 423.11008108049z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M767.6424416073075 247.3698083872553L703.2898559611099 314.0088615946969 769.9289091685514 378.3614472408946 834.2814948147492 311.722394033453z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M876.9876926626845 231.96053225486543L869.9164120897826 130.83650877422525 768.7923886091424 137.90778934712714 775.8636691820443 239.0318128277673z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1859.300696474033 418.621558914136L1800.1340297638965 422.7588952905001 1835.9233676835108 509.440227167523z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1577.6753128811786 555.3458943112025L1527.1458303924346 416.5172821566509 1438.846700726627 605.8753767999465z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1196.7060927449093 402.8837891298474L1114.5572632363078 441.1904174381776 1152.863891544638 523.339246946779 1235.0127210532394 485.0326186384488z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M470.8067589013401 55.03347790842446L553.9667452314312 178.32322778347032 677.256495106477 95.16324145337927 594.096508776386-28.1265084216666z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1142.4549649947407 379.82161376074833L1045.987036010386 378.1377597968357 1044.3031820464735 474.60568878119045 1140.7711110308283 476.28954274510306z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M632.4631166940785 49.02094665040018L652.9956713915309 102.51008036296054 722.9630946116453 44.96668146050183z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M1452.193733778789 351.75174700233345L1500.9409374012093 409.84640204827457 1563.709318158911 307.67826909167314z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M507.21389826754523 115.18306777884712L590.4468834358235 153.99524617391666 629.259061830893 70.76226100563848 546.0260766626147 31.950082610568927z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1065'%3e%3crect width='1920' height='512' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cstyle%3e %40keyframes float1 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-10px%2c 0)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float1 %7b animation: float1 5s infinite%3b %7d %40keyframes float2 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-5px%2c -5px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float2 %7b animation: float2 4s infinite%3b %7d %40keyframes float3 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(0%2c -10px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float3 %7b animation: float3 6s infinite%3b %7d %3c/style%3e%3c/defs%3e%3c/svg%3e");
+	background-position: center;
+	color: #fff;
+}
+
 body.home > section:hover {
 	h1 > span:nth-of-type(1) {
 		span:nth-of-type(1), span:nth-of-type(2), span:nth-of-type(3) {
@@ -336,7 +346,7 @@ body.article main {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		li {
-			scroll-margin-top: 24px;
+			scroll-margin-top: 16px;
 		}
 	}
 	> div {
@@ -390,7 +400,7 @@ body.article aside {
 	user-select: none;
 	position: fixed;
 	top: 56px;
-	left: calc((100% - 672px) / 2);
+	left: calc((100% - 640px) / 2);
 	padding: 8px 0;
 	max-height: calc(100vh - 40px - 96px - 32px);
 	overflow-y: auto;
@@ -502,7 +512,6 @@ body.tweet aside {
 	position: fixed;
 	width: 140px;
 	padding: 8px 0;
-	width: 140px;
 	left: 0;
 	a {
 		padding: 4px 0;
@@ -528,36 +537,6 @@ body.tweet aside a:hover, body.tweet aside a.select {
 }
 body.tweet aside a:hover span, body.tweet aside a.select span {
 	color: #fff;
-}
-
-@media (max-width: 1600px) {
-	body.tweet main {
-		column-count: 2;
-	}
-}
-@media (max-width: 1200px) {
-	body.tweet main {
-		column-count: 1;
-	}
-}
-@media (max-width: 800px) {
-	body.tweet aside {
-		display: none;
-	}
-	body.tweet main {
-		width: 100%;
-		padding-left: 0;
-		padding-right: 0;
-		margin-left: 0;
-		column-gap: 0;
-	}
-	body.tweet main > article {
-		margin-left: auto;
-		margin-right: auto;
-		max-width: 672px;
-		padding-left: 16px;
-		padding-right: 16px;
-	}
 }
 
 body.item main article pre:has(> code) {
@@ -658,12 +637,76 @@ pre > code {
 	.w { color: #ffffff }
 }
 
-body.home > section {
-	height: 256px;
-	padding-top: 64px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1920' height='512' preserveAspectRatio='none' viewBox='0 0 1920 512'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1065%26quot%3b)' fill='none'%3e%3crect width='1920' height='512' x='0' y='0' fill='%230e2a47'%3e%3c/rect%3e%3cpath d='M172.0279826477599 242.5315635076822L183.74374767665057 108.61975646059915 49.83194062956753 96.90399143170848 38.116175600676854 230.81579847879152z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1197.7796630710202 518.5520090974748L1205.3442542945465 374.21100997458046 1053.4386639481258 510.9874178739485z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1750.3129458390817 235.9746622284598L1770.5416930850404 148.35433156559765 1682.9213624221784 128.12558431963893 1662.6926151762195 215.74591498250112z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1541.5722424879193 433.4041474940653L1614.4551057838753 554.7016014924825 1735.7525597822926 481.8187381965264 1662.8696964863366 360.52128419810924z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M720.9108054098944 96.89721143095099L778.1421933443664 31.060030849724697 712.3050127631401-26.171357084747342 655.073624828668 39.66582349647894z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M473.2651196819897 328.14601644216515L605.3316099065224 342.02676390143654 487.1458671412611 196.07952621763243z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M739.4164758908104 108.55662534218577L865.4913512644627 164.83280712548606 854.9724959119435 44.60174028101105z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M479.6303913686974 17.99946897057621L445.8417862340867-45.547654933223086 367.41540294569313 36.90881472059265z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M233.08201527757686 228.72844385244093L277.83089923480526 157.11525971963715 148.03668105698537 125.79852585019643z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M708.6121315672508 515.4783358812039L783.4560385087983 555.2735471044186 805.7269018728467 423.11008108049z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M767.6424416073075 247.3698083872553L703.2898559611099 314.0088615946969 769.9289091685514 378.3614472408946 834.2814948147492 311.722394033453z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M876.9876926626845 231.96053225486543L869.9164120897826 130.83650877422525 768.7923886091424 137.90778934712714 775.8636691820443 239.0318128277673z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1859.300696474033 418.621558914136L1800.1340297638965 422.7588952905001 1835.9233676835108 509.440227167523z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1577.6753128811786 555.3458943112025L1527.1458303924346 416.5172821566509 1438.846700726627 605.8753767999465z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1196.7060927449093 402.8837891298474L1114.5572632363078 441.1904174381776 1152.863891544638 523.339246946779 1235.0127210532394 485.0326186384488z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M470.8067589013401 55.03347790842446L553.9667452314312 178.32322778347032 677.256495106477 95.16324145337927 594.096508776386-28.1265084216666z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1142.4549649947407 379.82161376074833L1045.987036010386 378.1377597968357 1044.3031820464735 474.60568878119045 1140.7711110308283 476.28954274510306z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M632.4631166940785 49.02094665040018L652.9956713915309 102.51008036296054 722.9630946116453 44.96668146050183z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M1452.193733778789 351.75174700233345L1500.9409374012093 409.84640204827457 1563.709318158911 307.67826909167314z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M507.21389826754523 115.18306777884712L590.4468834358235 153.99524617391666 629.259061830893 70.76226100563848 546.0260766626147 31.950082610568927z' fill='rgba(28%2c 83%2c 142%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1065'%3e%3crect width='1920' height='512' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cstyle%3e %40keyframes float1 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-10px%2c 0)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float1 %7b animation: float1 5s infinite%3b %7d %40keyframes float2 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-5px%2c -5px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float2 %7b animation: float2 4s infinite%3b %7d %40keyframes float3 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(0%2c -10px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float3 %7b animation: float3 6s infinite%3b %7d %3c/style%3e%3c/defs%3e%3c/svg%3e");
-	background-position: center;
-	color: #fff;
+@media (max-width: 1600px) {
+	body.tweet main {
+		column-count: 2;
 	}
+}
+@media (min-width: 768px) and (max-width: 1200px) {
+	body.home > section > * {
+		text-align: center;
+	}
+	body.tweet main {
+		padding: 8px 0 32px 0;
+		column-count: 1;
+		width: min(calc(100% - 140px), 640px);
+		background-color: #def;
+		margin-left: calc(calc(max(0px, 100% - 780px) / 2) + 140px);
+	}
+
+	body.tweet aside {
+		left: calc(max(0px, 100% - 780px) / 2);
+	}
+}
+@media (max-width: 768px) {
+	body.home > section > * {
+		text-align: center;
+	}
+	body > header > nav {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	body.tweet aside {
+		width: 640px;
+		display: block;
+		margin: 0 auto;
+		width: 100%;
+		position: static;
+		ul {
+			margin: 0 auto;
+			max-width: 640px;
+			display: flex;
+			flex-wrap: wrap;
+			width: 100%;
+			li {
+				display: inline-block;
+				width: 160px;
+				float: left;
+			}
+		}
+	}
+	body.tweet main {
+		column-count: 1;
+		width: 100%;
+		padding-left: 0;
+		padding-right: 0;
+		margin-left: 0;
+		column-gap: 0;
+	}
+	body.tweet main > article {
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 640px;
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	body > header ul {
+		margin-right: 8px;
+	}
+	body.article aside {
+		display: none;
+	}
+	body.article main {
+		padding: 0;
+	}
+}
