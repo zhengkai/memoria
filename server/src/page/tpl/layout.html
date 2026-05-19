@@ -20,12 +20,12 @@
 {{define "header"}}
 <header>
 	<nav>{{if ne .Meta.BodyClass "home"}}
-		<a href="{{linkHome}}"><span>Sou</span><span>l</span><span>ogic</span></a>{{end}}
+		<a href="{{.Meta.NavHome}}"><span>Sou</span><span>l</span><span>ogic</span></a>{{end}}
 		<ul>
-			<li><a href="{{linkHome}}">首页</a></li>
-			<li><a href="{{linkArticle}}">闲言</a></li>
-			<li><a href="{{linkNoteMax}}">碎语</a></li>
-			<li><a href="{{linkCurated}}">拾遗</a></li>
+			<li><a href="{{.Meta.NavHome}}">首页</a></li>
+			<li><a href="{{.Meta.NavArticle}}">闲言</a></li>
+			<li><a href="{{.Meta.NavNote}}">碎语</a></li>
+			<li><a href="{{.Meta.NavCurated}}">拾遗</a></li>
 		</ul>
 	</nav>
 </header>{{end}}

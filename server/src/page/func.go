@@ -31,18 +31,6 @@ func (m *Manager) makeTplFunc() {
 		"linkNote": func(year uint32) string {
 			return m.config.GetPathPrefix() + LinkNote(year)
 		},
-		"linkNoteMax": func() string {
-			return m.config.GetPathPrefix() + LinkNote(m.MaxNoteYear)
-		},
-		"linkArticle": func() string {
-			return m.config.GetPathPrefix() + LinkArticle
-		},
-		"linkCurated": func() string {
-			return m.config.GetPathPrefix() + LinkCurated
-		},
-		"linkHome": func() string {
-			return m.config.GetPathPrefix() + LinkHome
-		},
 		"rssEscape": func(in template.HTML) string {
 			in = template.HTML(strings.ReplaceAll(string(in), `<img src="/file/`, `<img src="https://`+m.config.GetDomain()+`/file/`))
 			var b bytes.Buffer

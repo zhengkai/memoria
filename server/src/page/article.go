@@ -19,12 +19,12 @@ type ArticleSingle struct {
 }
 
 func (m *Manager) articleInit() {
-	m.articleInitEach(`article`, `闲言`, PArticle{})
-	m.articleInitEach(`curated`, `拾遗`, PCurated{})
-	m.articleInitEach(`trash`, `删余`, PTrash{})
+	m.articleList(`article`, `闲言`, PArticle{})
+	m.articleList(`curated`, `拾遗`, PCurated{})
+	m.articleList(`trash`, `删余`, PTrash{})
 }
 
-func (m *Manager) articleInitEach(name, title string, p Provider) {
+func (m *Manager) articleList(name, title string, p Provider) {
 
 	da := &pb.RenderArticleIndex{}
 
@@ -41,19 +41,19 @@ func (m *Manager) articleInitEach(name, title string, p Provider) {
 			file := FileItem(id)
 
 			d := m.loadItem(id)
+			m.setMeta(`item`, d)
 
 			meta := d.DB.GetMeta()
-			/*
-				if meta.GetTsHide() == 0 {
-					if meta.GetOriginal() {
-
-					} else {
-
-					}
+			if meta.GetTsHide() == 0 {
+				if meta.GetOriginal() {
+					d.AddClass(`article-original`)
+					d.NavArticle = m.config.GetPathPrefix() + LinkItemInIndex(PArticle{}, id)
+				} else {
+					d.AddClass(`article-curated`)
+					d.NavCurated = m.config.GetPathPrefix() + LinkItemInIndex(PCurated{}, id)
 				}
-			*/
+			}
 
-			m.setMeta(`item`, d)
 			d.Title = meta.GetTitle()
 			d.Canonical = LinkItem(id)
 
@@ -64,16 +64,14 @@ func (m *Manager) articleInitEach(name, title string, p Provider) {
 	d := &ArticleIndex{
 		Content: da,
 	}
-
-	class := `article`
+	m.setMeta(`article`, d)
 	if name == `article` {
-		class += ` article-original`
+		d.AddClass(`article-original`)
 		d.Role = `original`
 	} else if name == `curated` {
-		class += ` article-curated`
+		d.AddClass(`article-curated`)
 	}
 
-	m.setMeta(class, d)
 	d.Title = title
 	d.Canonical = p.Link()
 

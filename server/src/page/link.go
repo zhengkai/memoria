@@ -21,6 +21,10 @@ func LinkItemInNote[T PNote | uint32, T2 PItem | uint64](year T, id T2) string {
 	return fmt.Sprintf(`%s#n%d`, LinkNote(year), id)
 }
 
+func LinkItemInIndex[T PItem | uint64](index Provider, id T) string {
+	return fmt.Sprintf(`%s#n%d`, index.Link(), id)
+}
+
 func (m *Manager) FullLink(path string) string {
 	return `https://` + m.config.GetDomain() + m.config.GetPathPrefix() + path
 }

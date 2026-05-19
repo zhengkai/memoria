@@ -335,6 +335,9 @@ body.article main {
 		padding-right: 16px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		li {
+			scroll-margin-top: 24px;
+		}
 	}
 	> div {
 		padding: 32px 0 64px;

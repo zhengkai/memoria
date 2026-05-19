@@ -11,6 +11,11 @@ type Meta struct {
 	File          string
 	HeaderExpires Expire
 
+	NavHome    string
+	NavArticle string
+	NavNote    string
+	NavCurated string
+
 	Internal bool
 }
 
@@ -22,6 +27,10 @@ func (m *Meta) GetMeta() *Meta {
 	return m
 }
 
+func (m *Meta) AddClass(s string) {
+	m.BodyClass += ` ` + s
+}
+
 func (m *Manager) setMeta(bodyClass string, d IMeta) {
 	meta := d.GetMeta()
 	meta.SiteName = m.config.GetSiteName()
@@ -31,4 +40,9 @@ func (m *Manager) setMeta(bodyClass string, d IMeta) {
 	meta.BodyClass = bodyClass
 	meta.HeaderExpires = ExpireMiddle
 	meta.Title = ``
+
+	meta.NavHome = m.config.GetPathPrefix() + LinkHome
+	meta.NavArticle = m.config.GetPathPrefix() + LinkArticle
+	meta.NavCurated = m.config.GetPathPrefix() + LinkCurated
+	meta.NavNote = m.config.GetPathPrefix() + LinkNote(m.MaxNoteYear)
 }
