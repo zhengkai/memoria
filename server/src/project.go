@@ -6,6 +6,7 @@ import (
 	"project/build"
 	"project/config"
 	"project/db"
+	"project/pg"
 	"project/public"
 	"project/util"
 	"project/web"
@@ -29,6 +30,7 @@ func run() {
 			go public.Handle.Run()
 		}
 		db.WaitConn()
+		pg.Init()
 	}
 
 	go web.Server()

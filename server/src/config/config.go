@@ -15,4 +15,6 @@ var (
 	HostName = `unknown`
 
 	Key = ``
+
+	PgSQL = `tanya:tanya@tanya:5432/memoria`
 )
