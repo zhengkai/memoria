@@ -3,12 +3,15 @@ package api
 import (
 	"io"
 	"net/http"
+	"path/filepath"
 	"project/config"
 	"project/db"
 	"project/export"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
+	"strings"
 )
 
 func UploadHandle(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +63,10 @@ func uploadHandle(w http.ResponseWriter, r *http.Request) (uint64, error) {
 	mime := h.Header.Get(`Content-Type`)
 	zj.J(h.Filename, mime, len(ab))
 
-	id, dbe := db.InsertFile(h.Filename, mime, ab)
+	ext := filepath.Ext(h.Filename)
+	ext = strings.TrimLeft(ext, `.`)
+
+	id, dbe := pg.InsertFile(h.Filename, ext, ab)
 	if dbe != nil {
 		zj.W(dbe.Original)
 		return 0, dbe

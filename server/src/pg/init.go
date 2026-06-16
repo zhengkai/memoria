@@ -8,15 +8,20 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	_ "embed"
 )
 
-func Init() error {
+//go:embed table-init.sql
+var tableInitSQL string
+
+func (p *PG) Init() error {
 
 	// 创建池
-	ctx, cacel := util.CTXTimeoutQuick()
+	ctx, cancel := util.CTXTimeoutQuick()
 	var err error
-	d, err = pgxpool.New(ctx, `postgres://`+config.PgSQL)
-	cacel()
+	p.p, err = pgxpool.New(ctx, `postgres://`+config.PgSQL)
+	cancel()
 	if err != nil {
 		zj.W(`pgsql fail:`, err)
 		return err
@@ -26,9 +31,9 @@ func Init() error {
 	var prevErr string
 	var ver string
 	for {
-		ctx, cacel := util.CTXTimeoutQuick()
-		err = d.QueryRow(ctx, `SHOW server_version`).Scan(&ver)
-		cacel()
+		ctx, cancel := util.CTXTimeoutQuick()
+		err = p.p.QueryRow(ctx, `SHOW server_version`).Scan(&ver)
+		cancel()
 		if err != nil {
 			es := err.Error()
 			if prevErr != es {
@@ -40,6 +45,15 @@ func Init() error {
 		}
 		break
 	}
+
+	func() {
+		ctx, cancel := util.CTXTimeout()
+		_, e2 := p.p.Exec(ctx, tableInitSQL)
+		cancel()
+		if e2 != nil {
+			zj.W(`pgsql table init fail:`, err)
+		}
+	}()
 
 	// 打印地址
 	addr := config.PgSQL

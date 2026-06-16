@@ -1,38 +1,79 @@
 package pg
 
 import (
-	"context"
-	"io"
+	"crypto/sha256"
 	"project/pb"
 	"project/util"
 	"project/zj"
+	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-const queryInsertFile = `INSERT INTO file (hash, bin, mime, name)
-	VALUES ($1, $2, $3, $4)
+const sqlInsertFile = `INSERT INTO public.file (hash, data, ext, name, ts_create)
+	VALUES ($1, $2, $3, $4, $5)
 	ON CONFLICT (hash) DO UPDATE SET hash = EXCLUDED.hash
 	RETURNING file_id`
 
-const queryFileList = `SELECT file_id, name, mime, hash, ts_create, LENGTH(bin) as size FROM file `
+const sqlImportFile = `INSERT INTO public.file (file_id, hash, data, ext, name, ts_create)
+	OVERRIDING SYSTEM VALUE
+	VALUES ($1, $2, $3, $4, $5, $6)
+	ON CONFLICT (hash) DO UPDATE SET hash = EXCLUDED.hash
+	RETURNING file_id`
 
-func SaveFile(ctx context.Context, conn *pgxpool.Pool, r io.Reader, mime, name string) (int64, error) {
-	return 0, nil
+const sqlFileList = `SELECT file_id, name, ext, hash, ts_create, LENGTH(data) as size FROM public.file `
+
+func (p *PG) InsertFile(name, ext string, data []byte) (uint64, *util.Error) {
+
+	hash := sha256.Sum256(data)
+
+	sql := `SELECT file_id FROM file WHERE hash = $1`
+	var id int64
+	ctx, cancel := util.CTXTimeout()
+	p.p.QueryRow(ctx, sql, hash[:]).Scan(&id)
+	cancel()
+	if id > 0 {
+		return uint64(id), nil
+	}
+
+	ctx2, cancel := util.CTXTimeout()
+	err := p.p.QueryRow(ctx2, sqlInsertFile, hash[:], data, ext, name, time.Now()).Scan(&id)
+	cancel()
+	if err != nil {
+		return 0, util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF(`insert file fail`)
+	}
+
+	return util.Uint64(id), nil
+}
+
+func (p *PG) ImportFile(id uint64, name, ext string, data []byte, t time.Time) (uint64, *util.Error) {
+
+	hash := sha256.Sum256(data)
+
+	var rid int64
+	ctx2, cancel := util.CTXTimeout()
+	err := p.p.QueryRow(ctx2, sqlImportFile, id, hash[:], data, ext, name, t).Scan(&id)
+	cancel()
+	if err != nil {
+		zj.W(err)
+		return 0, util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF(`insert file fail`)
+	}
+
+	return util.Uint64(rid), nil
 }
 
 func GetFile(id uint64) ([]byte, error) {
 
-	var bin []byte
+	var data []byte
 
 	ctx, cancel := util.CTXTimeout()
-	err := d.QueryRow(ctx, `SELECT bin FROM file WHERE file_id = ?`, id).Scan(&bin)
+	err := p.p.QueryRow(ctx, `SELECT data FROM public.file WHERE file_id = $1`, id).Scan(&data)
 	cancel()
+	zj.W(err)
 	if err != nil {
 		return nil, util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF(`file %d not found`, id)
 	}
-	return bin, nil
+	return data, nil
 }
 
 func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
@@ -41,20 +82,20 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 	var err error
 
 	ctx, cacel := util.CTXTimeoutQuick()
+	defer cacel()
 	if startID > 0 {
 		if orderDesc {
-			rows, err = d.Query(ctx, queryFileList+`WHERE file_id < ? ORDER BY file_id DESC LIMIT ?`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id < $1 ORDER BY file_id DESC LIMIT $1`, startID, limit)
 		} else {
-			rows, err = d.Query(ctx, queryFileList+`WHERE file_id > ? ORDER BY file_id ASC LIMIT ?`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id > $1 ORDER BY file_id ASC LIMIT $1`, startID, limit)
 		}
 	} else {
 		if orderDesc {
-			rows, err = d.Query(ctx, queryFileList+`ORDER BY file_id DESC LIMIT ?`, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id DESC LIMIT $1`, limit)
 		} else {
-			rows, err = d.Query(ctx, queryFileList+`ORDER BY file_id ASC LIMIT ?`, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id ASC LIMIT $1`, limit)
 		}
 	}
-	cacel()
 	if err != nil {
 		zj.J(err)
 		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF(`list file fail`)
@@ -69,16 +110,33 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 
 		var hash []byte
 
-		err = rows.Scan(&cursor, &f.Name, &f.Mime, &hash, &f.TsCreate, &f.Size)
+		var t time.Time
+
+		err = rows.Scan(&cursor, &f.Name, &f.Mime, &hash, &t, &f.Size)
 		if err != nil {
 			zj.W(err)
 			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF(`list file fail (when scan list)`)
 		}
 		f.Id = &cursor
+
+		f.TsCreate = new(uint64(t.UnixMilli()))
 		copy(f.Hash[:], hash[:32])
 
 		li = append(li, f.Build())
 	}
 
 	return pb.FileList_builder{List: li, Cursor: &cursor}.Build(), nil
+}
+
+func (p *PG) SyncFileIDSequence() error {
+
+	sql := `SELECT setval(
+		pg_get_serial_sequence('public.file', 'file_id'),
+		(SELECT MAX(file_id) FROM public.file)
+	);`
+
+	ctx, cancel := util.CTXTimeout()
+	_, err := p.p.Query(ctx, sql)
+	cancel()
+	return err
 }

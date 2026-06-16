@@ -33,6 +33,8 @@ func run() {
 		pg.Init()
 	}
 
+	// migrate.Run()
+
 	go web.Server()
 
 	// go fix.Run()

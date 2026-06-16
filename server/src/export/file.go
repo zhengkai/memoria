@@ -2,8 +2,8 @@ package export
 
 import (
 	"fmt"
-	"project/db"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
 )
@@ -22,7 +22,7 @@ func (g *Export) fetchFile(ts uint64) (fl []*pb.File) {
 	limit := 100
 
 	for {
-		df, err := db.ListFile(cursor, limit, true)
+		df, err := pg.ListFile(cursor, limit, true)
 		if err != nil {
 			break
 		}
@@ -56,7 +56,8 @@ func (g *Export) exportFile(f *pb.File) {
 		}
 	}
 	if !util.StaticExists(file) {
-		ab, err := db.GetFile(id)
+		ab, err := pg.GetFile(id)
+		zj.J(`export file:`, id)
 		if err != nil {
 			zj.W(err)
 			return

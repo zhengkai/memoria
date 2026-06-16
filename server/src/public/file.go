@@ -42,10 +42,11 @@ func (p *public) sendFileHeader(f *pb.File) {
 
 	he := p.W.Header()
 	he.Set(`ETag`, `"forever"`)
-	he.Set(`Content-Type`, f.GetMime())
+	contentType := util.GetMime(f.GetMime())
+	he.Set(`Content-Type`, contentType)
 	if f.GetName() != `` {
 		mode := `attachment`
-		if strings.HasPrefix(f.GetMime(), `image/`) || f.GetMime() == `application/pdf` {
+		if strings.HasPrefix(contentType, `image/`) || f.GetMime() == `pdf` {
 			mode = `inline`
 		}
 		displayName := fmt.Sprintf(`%s; filename="%s"`, mode, f.GetName())
