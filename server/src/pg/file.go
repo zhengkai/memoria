@@ -10,18 +10,18 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const sqlInsertFile = `INSERT INTO public.file (hash, data, ext, name, ts_create)
+const sqlInsertFile = `INSERT INTO public.file (hash, data, ext, name, time_create)
 	VALUES ($1, $2, $3, $4, $5)
-	ON CONFLICT (hash) DO UPDATE SET hash = EXCLUDED.hash
+	ON CONFLICT (hash) DO NOTHING
 	RETURNING file_id`
 
-const sqlImportFile = `INSERT INTO public.file (file_id, hash, data, ext, name, ts_create)
+const sqlImportFile = `INSERT INTO public.file (file_id, hash, data, ext, name, time_create)
 	OVERRIDING SYSTEM VALUE
 	VALUES ($1, $2, $3, $4, $5, $6)
-	ON CONFLICT (hash) DO UPDATE SET hash = EXCLUDED.hash
+	ON CONFLICT (hash) DO NOTHING
 	RETURNING file_id`
 
-const sqlFileList = `SELECT file_id, name, ext, hash, ts_create, LENGTH(data) as size FROM public.file `
+const sqlFileList = `SELECT file_id, name, ext, hash, time_create, LENGTH(data) as size FROM public.file `
 
 func (p *PG) InsertFile(name, ext string, data []byte) (uint64, *util.Error) {
 
@@ -36,9 +36,9 @@ func (p *PG) InsertFile(name, ext string, data []byte) (uint64, *util.Error) {
 		return uint64(id), nil
 	}
 
-	ctx2, cancel := util.CTXTimeout()
+	ctx2, cancel2 := util.CTXTimeout()
 	err := p.p.QueryRow(ctx2, sqlInsertFile, hash[:], data, ext, name, time.Now()).Scan(&id)
-	cancel()
+	cancel2()
 	if err != nil {
 		return 0, util.NewError(err).SetCode(pb.Error_DB_INSERT).DetailF(`insert file fail`)
 	}
@@ -126,17 +126,4 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 	}
 
 	return pb.FileList_builder{List: li, Cursor: &cursor}.Build(), nil
-}
-
-func (p *PG) SyncFileIDSequence() error {
-
-	sql := `SELECT setval(
-		pg_get_serial_sequence('public.file', 'file_id'),
-		(SELECT MAX(file_id) FROM public.file)
-	);`
-
-	ctx, cancel := util.CTXTimeout()
-	_, err := p.p.Query(ctx, sql)
-	cancel()
-	return err
 }

@@ -17,7 +17,7 @@ func Search(s *pb.ItemSearch) (re []*pb.Item, cursor uint64, effected uint64, er
 	var isSearch = !util.IsEmptyPB(s)
 	for {
 		limit := target - len(re)
-		li, err = db.ListItem(int(searchID), limit, true)
+		li, err = db.ListItem(searchID, limit, true)
 		if err != nil {
 			return nil, 0, effected, err
 		}

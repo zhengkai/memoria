@@ -17,7 +17,10 @@ var p = &PG{}
 var Init = p.Init
 var InsertFile = p.InsertFile
 var ImportFile = p.ImportFile
-var SyncFileIDSequence = p.SyncFileIDSequence
+var SyncIDSequence = p.SyncIDSequence
+
+var SetItem = p.SetItem
+var ImportItem = p.ImportItem
 
 func (p *PG) Query(sql string, args ...any) (pgx.Rows, error) {
 	ctx, cacel := util.CTXTimeoutQuick()

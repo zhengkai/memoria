@@ -3,14 +3,35 @@ edition = "2024";
 option go_package = "/pb";
 package pb;
 
+import "format.proto";
 import "revision.proto";
 import "opengraph.proto";
+
+message ItemContent {
+	Format.Enum format = 1;
+	string raw = 2;
+}
 
 message Item {
 	uint64 id = 1;
 	ItemMeta meta = 2;
 	Revision content = 3;
 	OpenGraph og = 4;
+}
+
+message ItemV2 {
+	uint64 id = 1;
+	ItemMetaV2 meta = 2;
+	ItemContent content = 3;
+	uint64 ts_meta = 4;
+	uint64 ts_revision = 5;
+	uint64 ts_update = 6;
+}
+
+message ItemUpdate {
+	uint64 id = 1;
+	ItemMetaV2 meta = 2;
+	ItemContent content = 3;
 }
 
 message ItemLite {
@@ -34,6 +55,24 @@ message ItemDB {
 	ItemMeta meta = 2;
 	uint64 revision_id = 3;
 	uint64 og_id = 4;
+}
+
+message ItemDBv2 {
+	uint64 id = 1;
+	uint64 meta_revision_id = 2;
+	uint64 content_revision_id = 3;
+	uint64 ts_meta = 4;
+	uint64 ts_content = 5;
+	uint64 ts_update = 6;
+}
+
+message ItemMetaV2 {
+	uint64 ts_hide = 1;
+	uint64 root = 2;
+	string title = 3;
+	bool original = 4;
+	bool trivial = 5;
+	OpenGraph og = 7;
 }
 
 message ItemEdit {

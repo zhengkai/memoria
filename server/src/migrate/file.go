@@ -11,7 +11,7 @@ import (
 func File() {
 	limit := 10
 	var cursor uint64
-	m := make(map[string]string, 10)
+	// m := make(map[string]string, 10)
 
 	zj.J(`migrate File start`)
 	for {
@@ -23,7 +23,7 @@ func File() {
 		cursor = re.GetCursor()
 
 		for _, v := range re.GetList() {
-			m[v.GetMime()] = v.GetName()
+			// m[v.GetMime()] = v.GetName()
 
 			ext, ok := extMap[v.GetMime()]
 			if !ok {
@@ -55,7 +55,7 @@ func File() {
 		}
 	}
 
-	pg.SyncFileIDSequence()
+	pg.SyncIDSequence(`file`, `file_id`)
 
 	zj.J(`migrate File end`)
 
