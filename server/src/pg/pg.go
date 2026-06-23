@@ -33,6 +33,9 @@ var GetMeta = dp.GetMeta
 var SyncIDSequence = dp.SyncIDSequence
 var ImportItem = dp.ImportItem
 
+var GetExportTime = dp.GetExportTime
+var SetExportTime = dp.SetExportTime
+
 func (p *PG) Query(sql string, args ...any) (pgx.Rows, error) {
 	ctx, cacel := util.CTXTimeoutQuick()
 	re, err := p.p.Query(ctx, sql, args...)

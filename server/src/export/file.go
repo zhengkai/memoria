@@ -6,6 +6,7 @@ import (
 	"project/pg"
 	"project/util"
 	"project/zj"
+	"time"
 )
 
 func FileFileName(id uint64) string {
@@ -16,7 +17,9 @@ func FileMetaFileName(id uint64) string {
 	return fmt.Sprintf(`file/%03d/%03d.pb`, id/1000, id%1000)
 }
 
-func (g *Export) fetchFile(ts uint64) (fl []*pb.File) {
+func (g *Export) fetchFile(t time.Time) (fl []*pb.File) {
+
+	ts := uint64(t.UnixMilli())
 
 	var cursor uint64
 	limit := 100

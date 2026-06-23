@@ -2,19 +2,19 @@
 package export
 
 import (
-	"project/db"
 	"project/pb"
 	"project/pg"
 	"project/util"
 	"project/zj"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var mux sync.Mutex
 
 const (
-	Tolerance uint64 = 600 * 1000
+	Tolerance = 600 * time.Second
 
 	TimeFile  = `data/export-time.txt`
 	StyleFile = `page/style.css`
@@ -87,22 +87,22 @@ func (g *Export) run() {
 
 	g.init()
 
-	now := util.Now()
+	now := time.Now()
 
-	ts, err := db.GetExportTime()
-	zj.J(`export time`, ts)
+	t, err := pg.GetExportTime()
+	zj.J(`export time`, t)
 	if err != nil {
 		zj.W(`export fail, no time:`, err)
 		return
 	}
 
 	if g.isFull {
-		ts = 0
-	} else if ts > Tolerance {
-		ts -= Tolerance
+		t = time.Unix(0, 0)
+	} else {
+		t.Add(-Tolerance)
 	}
 
-	doItem, doFile := g.fetch(ts)
+	doItem, doFile := g.fetch(t)
 
 	if !doItem && !doFile {
 		zj.J(`nothing for export, skip`)
@@ -113,82 +113,85 @@ func (g *Export) run() {
 		return
 	}
 
-	db.SetExportTime(now)
+	pg.SetExportTime(now)
 
-	util.WriteStaticBin(TimeFile, []byte(strconv.Itoa(int(now))))
+	util.WriteStaticBin(TimeFile, []byte(strconv.Itoa(int(now.UnixMilli()))))
 }
 
-func (g *Export) fetchData(ts uint64) {
+func (g *Export) fetchData(t time.Time) {
 
-	zj.J(`fetch data since`, ts)
+	zj.J(`fetch data since`, t.Format(time.DateTime))
 
 	var cursor uint64
 	limit := 100
 
-	for {
+	ts := uint64(t.UnixMilli())
 
+	for {
+		// 扫全库，因为列表页有其他没更新的 item
 		li, err := pg.ListItem(cursor, limit, false)
 		if err != nil {
 			zj.W(`fetch data fail, cursor %d: %s`, cursor, err.Error())
 			return
 		}
 		for _, id := range li {
-			zj.N(`fetch item`, id)
+			if !g.fetchDataOne(id, ts) {
+				return
+			}
 		}
 		if len(li) < limit {
 			break
 		}
 	}
-
-	// 扫全库，因为列表页有其他没更新的 item
-	//	for row, err := range db.GetAllItemDB(ctx) {
-	//		if err != nil {
-	//			g.addFail(`fetch data`, err)
-	//			return
-	//		}
-	//
-	//		it := row.Item
-	//		year := GetYear(it)
-	//
-	//		meta, e2 := pg.GetMeta(it.GetMetaRevisionId())
-	//		if e2 != nil {
-	//			zj.W(`fetch item %d meta fail`, it.GetId(), e2)
-	//			continue
-	//		}
-	//
-	//		isNote := row.Item.GetMeta().GetTitle() == ``
-	//		needRefresh := row.TSUpdate >= ts
-	//
-	//		// g.article, g.note 记录全部数据
-	//
-	//		record := g.note
-	//		if isNote {
-	//			if needRefresh {
-	//				g.hasNote[year] = true
-	//			}
-	//		} else {
-	//			if needRefresh {
-	//				g.hasArticle = true
-	//			}
-	//			if it.GetMeta().GetTsHide() > 0 {
-	//				record = g.trash
-	//				zj.J(`trash`, it.GetId())
-	//			} else if !it.GetMeta().GetOriginal() {
-	//				record = g.curated
-	//			} else {
-	//				record = g.article
-	//			}
-	//			g.articleFull.Add(year, it)
-	//		}
-	//		record.Add(year, it)
-	//
-	//		if needRefresh {
-	//			g.item = append(g.item, row.Item)
-	//		}
-	//	}
 }
 
-func (g *Export) fetchDataOne(ts uint64) {
+func (g *Export) fetchDataOne(id, ts uint64) (ok bool) {
+	zj.N(`fetch item`, id)
+
+	db, err := pg.LoadItemDB(id)
+	if err != nil {
+		return
+	}
+	year := GetYear(db)
+	meta, e2 := pg.GetMeta(db.GetMetaRevisionId())
+	if e2 != nil {
+		return
+	}
+	isNote := meta.GetTitle() == ``
+	needRefresh := db.GetTsMeta() >= ts || db.GetTsContent() >= ts
+
+	g.fetchDataOneRecord(year, isNote, needRefresh, db, meta)
+
+	return true
+}
+
+func (g *Export) fetchDataOneRecord(year uint32, isNote bool, needRefresh bool, db *pb.ItemDBv2, meta *pb.ItemMetaV2) {
+
+	// g.article, g.note 记录全部数据
+	record := g.note
+	if isNote {
+		if needRefresh {
+			g.hasNote[year] = true
+		}
+	} else {
+		if needRefresh {
+			g.hasArticle = true
+		}
+		if meta.GetTsHide() > 0 {
+			record = g.trash
+			zj.J(`trash`, db.GetId())
+		} else if !meta.GetOriginal() {
+			record = g.curated
+		} else {
+			record = g.article
+		}
+		g.articleFull.Add(year, db)
+	}
+	record.Add(year, db)
+
+	if needRefresh {
+		g.item = append(g.item, db)
+	}
 }
 
 func (g *Export) doExport() {
@@ -206,10 +209,10 @@ func (g *Export) doExport() {
 	}
 }
 
-func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
+func (g *Export) fetch(t time.Time) (doItem bool, doFile bool) {
 
 	g.wg.Go(func() {
-		g.fetchData(ts)
+		g.fetchData(t)
 		if len(g.item) == 0 {
 			return
 		}
@@ -219,11 +222,16 @@ func (g *Export) fetch(ts uint64) (doItem bool, doFile bool) {
 	})
 
 	g.wg.Go(func() {
-		fl := g.fetchFile(ts)
+		fl := g.fetchFile(t)
 		if len(fl) == 0 {
 			return
 		}
-		zj.J(`export file`, len(fl))
+
+		idl := make([]uint64, len(fl))
+		for i, f := range fl {
+			idl[i] = f.GetId()
+		}
+		zj.J(`export file`, idl)
 		doFile = true
 		for _, f := range fl {
 			g.exportFile(f)

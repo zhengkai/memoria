@@ -16,7 +16,7 @@ ALTER TABLE public.file ALTER COLUMN data SET STORAGE EXTERNAL;
 
 CREATE TABLE public.export_time (
 	export_id bigint NOT NULL PRIMARY KEY,
-    time timestamp with time zone NOT NULL
+    time created_at
 );
 
 CREATE TABLE public.revision (

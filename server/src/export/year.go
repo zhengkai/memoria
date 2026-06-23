@@ -7,19 +7,19 @@ import (
 
 type ByYear struct {
 	needRefresh bool
-	year        map[uint32][]*pb.ItemDB
+	year        map[uint32][]*pb.ItemDBv2
 }
 
 func NewByYear() *ByYear {
 	return &ByYear{
-		year: make(map[uint32][]*pb.ItemDB),
+		year: make(map[uint32][]*pb.ItemDBv2),
 	}
 }
 
-func (y *ByYear) Add(year uint32, it *pb.ItemDB) {
+func (y *ByYear) Add(year uint32, it *pb.ItemDBv2) {
 	m, ok := y.year[year]
 	if !ok {
-		m = make([]*pb.ItemDB, 0, 100)
+		m = make([]*pb.ItemDBv2, 0, 100)
 	}
 	y.year[year] = append(m, it)
 }
