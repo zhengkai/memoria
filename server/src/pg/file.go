@@ -62,7 +62,7 @@ func (p *PG) ImportFile(id uint64, name, ext string, data []byte, t time.Time) (
 	return util.Uint64(rid), nil
 }
 
-func GetFile(id uint64) ([]byte, error) {
+func (p *PG) GetFile(id uint64) ([]byte, error) {
 
 	var data []byte
 
@@ -76,7 +76,7 @@ func GetFile(id uint64) ([]byte, error) {
 	return data, nil
 }
 
-func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
+func (p *PG) ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 
 	var rows pgx.Rows
 	var err error
@@ -85,9 +85,9 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 	defer cacel()
 	if startID > 0 {
 		if orderDesc {
-			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id < $1 ORDER BY file_id DESC LIMIT $1`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id < $1 ORDER BY file_id DESC LIMIT $2`, startID, limit)
 		} else {
-			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id > $1 ORDER BY file_id ASC LIMIT $1`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id > $1 ORDER BY file_id ASC LIMIT $2`, startID, limit)
 		}
 	} else {
 		if orderDesc {
@@ -97,7 +97,7 @@ func ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
 		}
 	}
 	if err != nil {
-		zj.J(err)
+		zj.W(err)
 		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF(`list file fail`)
 	}
 	defer rows.Close()

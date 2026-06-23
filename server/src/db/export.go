@@ -13,7 +13,7 @@ const (
 )
 
 type ExportRow struct {
-	Item     *pb.ItemDB
+	Item     *pb.ItemDBv2
 	TSUpdate uint64
 }
 
@@ -62,7 +62,7 @@ func GetAllItemDB(ctx context.Context) func(func(*ExportRow, error) bool) {
 					return
 				}
 
-				re.Item = &pb.ItemDB{}
+				re.Item = &pb.ItemDBv2{}
 				if err := proto.Unmarshal(bin, re.Item); err != nil {
 					rows.Close()
 					yield(nil, err)

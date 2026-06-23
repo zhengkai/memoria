@@ -10,9 +10,9 @@ export const tplItemList = (li: pb.IItem[], div: HTMLDivElement | null) => {
 	}
 };
 
-export const tplItemRow = (it: pb.IItem): HTMLDivElement => {
+export const tplItemRow = (it: pb.IItemV2): HTMLDivElement => {
 	const d = document.createElement('div');
-	const datetime = util.formatDateTime(it.meta!.tsCreate!);
+	const datetime = util.formatDateTime(it.tsCreate!);
 	const url = `?action=edit&id=${it.id}`;
 	d.innerHTML = `<div>
 		<div><a href="${url}" target="_blank">${it.id}</a></div>

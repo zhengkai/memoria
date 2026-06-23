@@ -4,13 +4,11 @@ package export
 import (
 	"project/db"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
 	"strconv"
 	"sync"
-	"time"
-
-	"github.com/zhengkai/life-go"
 )
 
 var mux sync.Mutex
@@ -50,7 +48,7 @@ type Export struct {
 	wg     sync.WaitGroup
 
 	// 只记录要更新的 item
-	item []*pb.ItemDB
+	item []*pb.ItemDBv2
 
 	// g.article, g.note 记录对应的全部数据（包括 pb.ItemDB 而不止 id）
 	article     *ByYear
@@ -124,48 +122,73 @@ func (g *Export) fetchData(ts uint64) {
 
 	zj.J(`fetch data since`, ts)
 
-	ctx, cancel := life.CTXTimeout(10 * time.Minute)
-	defer cancel()
+	var cursor uint64
+	limit := 100
 
-	// 扫全库，因为列表页有其他没更新的 item
-	for row, err := range db.GetAllItemDB(ctx) {
+	for {
+
+		li, err := pg.ListItem(cursor, limit, false)
 		if err != nil {
-			g.addFail(`fetch data`, err)
+			zj.W(`fetch data fail, cursor %d: %s`, cursor, err.Error())
 			return
 		}
-
-		it := row.Item
-		year := GetYear(it)
-		isNote := row.Item.GetMeta().GetTitle() == ``
-		needRefresh := row.TSUpdate >= ts
-
-		// g.article, g.note 记录全部数据
-
-		record := g.note
-		if isNote {
-			if needRefresh {
-				g.hasNote[year] = true
-			}
-		} else {
-			if needRefresh {
-				g.hasArticle = true
-			}
-			if it.GetMeta().GetTsHide() > 0 {
-				record = g.trash
-				zj.J(`trash`, it.GetId())
-			} else if !it.GetMeta().GetOriginal() {
-				record = g.curated
-			} else {
-				record = g.article
-			}
-			g.articleFull.Add(year, it)
+		for _, id := range li {
+			zj.N(`fetch item`, id)
 		}
-		record.Add(year, it)
-
-		if needRefresh {
-			g.item = append(g.item, row.Item)
+		if len(li) < limit {
+			break
 		}
 	}
+
+	// 扫全库，因为列表页有其他没更新的 item
+	//	for row, err := range db.GetAllItemDB(ctx) {
+	//		if err != nil {
+	//			g.addFail(`fetch data`, err)
+	//			return
+	//		}
+	//
+	//		it := row.Item
+	//		year := GetYear(it)
+	//
+	//		meta, e2 := pg.GetMeta(it.GetMetaRevisionId())
+	//		if e2 != nil {
+	//			zj.W(`fetch item %d meta fail`, it.GetId(), e2)
+	//			continue
+	//		}
+	//
+	//		isNote := row.Item.GetMeta().GetTitle() == ``
+	//		needRefresh := row.TSUpdate >= ts
+	//
+	//		// g.article, g.note 记录全部数据
+	//
+	//		record := g.note
+	//		if isNote {
+	//			if needRefresh {
+	//				g.hasNote[year] = true
+	//			}
+	//		} else {
+	//			if needRefresh {
+	//				g.hasArticle = true
+	//			}
+	//			if it.GetMeta().GetTsHide() > 0 {
+	//				record = g.trash
+	//				zj.J(`trash`, it.GetId())
+	//			} else if !it.GetMeta().GetOriginal() {
+	//				record = g.curated
+	//			} else {
+	//				record = g.article
+	//			}
+	//			g.articleFull.Add(year, it)
+	//		}
+	//		record.Add(year, it)
+	//
+	//		if needRefresh {
+	//			g.item = append(g.item, row.Item)
+	//		}
+	//	}
+}
+
+func (g *Export) fetchDataOne(ts uint64) {
 }
 
 func (g *Export) doExport() {

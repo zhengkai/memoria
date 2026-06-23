@@ -24,8 +24,8 @@ message ItemV2 {
 	ItemMetaV2 meta = 2;
 	ItemContent content = 3;
 	uint64 ts_meta = 4;
-	uint64 ts_revision = 5;
-	uint64 ts_update = 6;
+	uint64 ts_content = 5;
+	uint64 ts_create = 6;
 }
 
 message ItemUpdate {
@@ -63,7 +63,7 @@ message ItemDBv2 {
 	uint64 content_revision_id = 3;
 	uint64 ts_meta = 4;
 	uint64 ts_content = 5;
-	uint64 ts_update = 6;
+	uint64 ts_create = 6;
 }
 
 message ItemMetaV2 {
@@ -77,7 +77,7 @@ message ItemMetaV2 {
 
 message ItemEdit {
 	uint64 id = 1;
-	Revision content = 2;
+	ItemContent content = 2;
 	string title = 3;
 	uint64 root = 4;
 	uint64 ts_create = 5;
@@ -89,7 +89,7 @@ message ItemEdit {
 }
 
 message ItemList {
-	repeated Item list = 1;
+	repeated ItemV2 list = 1;
 	uint64 cursor = 2;
 	uint64 effected = 3;
 }

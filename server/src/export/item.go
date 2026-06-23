@@ -2,10 +2,12 @@ package export
 
 import (
 	"fmt"
-	"project/item"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
+
+	"google.golang.org/protobuf/proto"
 )
 
 func ItemFile(id uint64) string {
@@ -29,50 +31,43 @@ func (g *Export) exportItem() {
 	}
 }
 
-func (g *Export) exportItemRow(it *pb.ItemDB) {
+func (g *Export) exportItemRow(it *pb.ItemDBv2) {
+
+	id := it.GetId()
 
 	// itemDB
 	err := util.WriteStaticData(
-		ItemFile(it.GetId()),
+		ItemFile(id),
 		it,
 	)
 	if err != nil {
-		g.addFail(fmt.Sprintf(`item %d`, it.GetId()), err)
+		g.addFail(fmt.Sprintf(`item %d`, id), err)
 		return
 	}
 
 	// revision
-	name := fmt.Sprintf(`item %d revision %d`, it.GetId(), it.GetRevisionId())
-	rev, err := item.RevisionGet(it.GetRevisionId())
+	mid := it.GetContentRevisionId()
+	meta, err := pg.GetMeta(mid)
+	name := fmt.Sprintf(`item %d, content %d`, id, mid)
+	g.writeRev(mid, name, meta, err)
+
+	cid := it.GetMetaRevisionId()
+	content, err := pg.GetContent(cid)
+	name = fmt.Sprintf(`item %d, content %d`, id, cid)
+	g.writeRev(cid, name, content, err)
+}
+
+func (g *Export) writeRev(rid uint64, name string, m proto.Message, err error) {
 	if err != nil {
 		g.addFail(name, err)
 		return
 	}
-	err = util.WriteStaticData(
-		RevisionFile(it.GetRevisionId()),
-		rev,
+	file := RevisionFile(rid)
+	e2 := util.WriteStaticData(
+		file,
+		m,
 	)
 	if err != nil {
-		g.addFail(name, err)
-		return
-	}
-
-	// og
-
-	if it.GetOgId() > 0 {
-		name := fmt.Sprintf(`item %d og %d`, it.GetId(), it.GetOgId())
-		bin, err := item.BinGet(it.GetOgId())
-		if err != nil {
-			g.addFail(name, err)
-			return
-		}
-		err = util.WriteStaticBin(
-			BinFile(it.GetOgId()),
-			bin,
-		)
-		if err != nil {
-			g.addFail(name, err)
-			return
-		}
+		g.addFail(name, e2)
 	}
 }

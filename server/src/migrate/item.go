@@ -35,23 +35,19 @@ func Item() {
 		if len(re) < limit {
 			break
 		}
-
 	}
+
+	pg.SyncIDSequence(`item`, `item_id`)
 }
 
 func itemOne(id uint64) (err error) {
 
-	idb, err := db.LoadItem(id)
+	raw, err := db.LoadItem(id)
 	if err != nil {
 		return
 	}
 
-	d, err := item.GetItemFull(idb)
-	if err != nil {
-		return
-	}
-
-	r, _, err := db.LoadRevision(idb.GetRevisionId())
+	r, _, err := db.LoadRevision(raw.GetRevisionId())
 	if err != nil {
 		return
 	}
@@ -61,7 +57,7 @@ func itemOne(id uint64) (err error) {
 		Raw:    new(r.GetRaw()),
 	}.Build()
 
-	sm := idb.GetMeta()
+	sm := raw.GetMeta()
 
 	meta := pb.ItemMetaV2_builder{
 		TsHide:   new(sm.GetTsHide()),
@@ -70,7 +66,15 @@ func itemOne(id uint64) (err error) {
 		Original: new(sm.GetOriginal()),
 		Trivial:  new(sm.GetTrivial()),
 	}.Build()
-	if og := d.GetOg(); og != nil {
+
+	ogID := raw.GetOgId()
+	if ogID > 0 {
+		var og = &pb.OpenGraph{}
+		ex := item.GetBinPool().Get(ogID, og)
+		if ex != nil {
+			zj.WF(`item get og %d fail: %d`, ogID, ex.Error())
+			return
+		}
 		meta.SetOg(og)
 	}
 

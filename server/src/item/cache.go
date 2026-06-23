@@ -2,8 +2,8 @@ package item
 
 import (
 	"errors"
-	"project/db"
 	"project/pb"
+	"project/pg"
 	"time"
 
 	"github.com/zhengkai/coral/v2"
@@ -17,7 +17,7 @@ var (
 var itemPool = newItemPool()
 
 type ItemPool struct {
-	cache coral.Cache[uint64, *pb.ItemDB]
+	cache coral.Cache[uint64, *pb.ItemDBv2]
 }
 
 func newItemPool() *ItemPool {
@@ -27,7 +27,7 @@ func newItemPool() *ItemPool {
 	return rp
 }
 
-func (rp *ItemPool) GetDB(id uint64) (*pb.ItemDB, error) {
+func (rp *ItemPool) GetDB(id uint64) (*pb.ItemDBv2, error) {
 	d, err := rp.cache.Get(id)
 	if err != nil {
 		return nil, err
@@ -35,11 +35,15 @@ func (rp *ItemPool) GetDB(id uint64) (*pb.ItemDB, error) {
 	return d, nil
 }
 
+func (rp *ItemPool) Delete(id uint64) {
+	rp.cache.Delete(id)
+}
+
 func (rp *ItemPool) Clear() {
 	rp.cache.Reset()
 }
 
-func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
+func (rp *ItemPool) Get(id uint64) (*pb.ItemV2, error) {
 	d, err := rp.cache.Get(id)
 	if err != nil {
 		return nil, err
@@ -48,9 +52,9 @@ func (rp *ItemPool) Get(id uint64) (*pb.Item, error) {
 	return GetItemFull(d)
 }
 
-func (rp *ItemPool) cacheLoad(id uint64) (*pb.ItemDB, *time.Time, error) {
+func (rp *ItemPool) cacheLoad(id uint64) (*pb.ItemDBv2, *time.Time, error) {
 
-	r, err := db.LoadItem(id)
+	r, err := pg.LoadItemDB(id)
 	if err != nil {
 		return nil, nil, err
 	}

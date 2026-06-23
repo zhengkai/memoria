@@ -18,7 +18,7 @@ func itemSet(ie *pb.ItemEdit, e *util.Error) uint64 {
 	return ie.GetId()
 }
 
-func itemGet(id uint64, e *util.Error) *pb.Item {
+func itemGet(id uint64, e *util.Error) *pb.ItemV2 {
 	it, err := item.Get(id)
 	if err != nil {
 		e.Fill(err)
@@ -35,7 +35,7 @@ func itemListRecent(_ uint32, e *util.Error) *pb.ItemList {
 		return nil
 	}
 
-	re := make([]*pb.Item, len(li))
+	re := make([]*pb.ItemV2, len(li))
 
 	for i, v := range li {
 		it, err := item.Get(v)

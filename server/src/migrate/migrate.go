@@ -4,7 +4,8 @@ package migrate
 import "project/zj"
 
 func run() {
-	// File()
+
+	File()
 
 	Item()
 

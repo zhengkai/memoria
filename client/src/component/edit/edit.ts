@@ -7,7 +7,7 @@ export class Edit {
 
 	id: number;
 	root: HTMLElement;
-	item = pb.Item.create({
+	item = pb.ItemV2.create({
 		"meta": {
 			"original": true,
 		},
@@ -33,7 +33,7 @@ export class Edit {
 		if (!it) {
 			return;
 		}
-		this.item = pb.Item.create(it);
+		this.item = pb.ItemV2.create(it);
 
 		this.genHTML();
 	}

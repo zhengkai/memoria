@@ -1,34 +1,35 @@
 // Package item
 package item
 
-import "project/pb"
+import (
+	"project/pb"
+	"project/pg"
+)
 
 var Get = itemPool.Get
 
 var Clear = itemPool.Clear
 
-func GetItemFull(d *pb.ItemDB) (*pb.Item, error) {
+func GetItemFull(d *pb.ItemDBv2) (*pb.ItemV2, error) {
 
-	r, err := revisionPool.Get(d.GetRevisionId())
-	if err != nil {
-		return nil, err
+	meta, e2 := pg.GetMeta(d.GetMetaRevisionId())
+	if e2 != nil {
+		return nil, e2
 	}
 
-	ogID := d.GetOgId()
-	var og = &pb.OpenGraph{}
-	if ogID > 0 {
-		err := binPool.Get(ogID, og)
-		if err != nil {
-			return nil, err
-		}
+	content, e2 := pg.GetContent(d.GetContentRevisionId())
+	if e2 != nil {
+		return nil, e2
 	}
 
-	it := pb.Item_builder{
-		Id:      new(d.GetId()),
-		Meta:    d.GetMeta(),
-		Content: r,
-		Og:      og,
+	re := pb.ItemV2_builder{
+		Id:        new(d.GetId()),
+		Meta:      meta,
+		Content:   content,
+		TsMeta:    new(d.GetTsMeta()),
+		TsContent: new(d.GetTsContent()),
+		TsCreate:  new(d.GetTsCreate()),
 	}.Build()
 
-	return it, nil
+	return re, nil
 }

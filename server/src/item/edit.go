@@ -1,13 +1,9 @@
 package item
 
 import (
-	"project/db"
 	"project/pb"
+	"project/pg"
 	"project/util"
-	"project/zj"
-	"time"
-
-	"google.golang.org/protobuf/proto"
 )
 
 var ErrItemContentEmpty = &util.Error{
@@ -27,29 +23,16 @@ func Edit(ie *pb.ItemEdit) error {
 
 func editItem(ie *pb.ItemEdit) error {
 
-	raw, err := itemPool.GetDB(ie.GetId())
+	id := ie.GetId()
+
+	raw, err := itemPool.GetDB(id)
 	if err != nil {
 		return err
 	}
 
-	n := util.ClonePB(raw)
-
-	rid, err := revisionPool.Save(ie.GetContent())
-	if err != nil {
-		return err
-	}
-
-	meta := n.GetMeta()
-
-	// ts_create
-	if ie.GetTsCreate() > 0 {
-		meta.SetTsCreate(ie.GetTsCreate())
-	}
-
-	// ts_revise
-	if raw.GetRevisionId() != rid {
-		n.SetRevisionId(rid)
-		meta.SetTsRevise(util.Now())
+	meta, e2 := pg.GetMeta(raw.GetMetaRevisionId())
+	if e2 != nil {
+		return e2
 	}
 
 	// ts_hide
@@ -69,71 +52,39 @@ func editItem(ie *pb.ItemEdit) error {
 	meta.SetOriginal(ie.GetOriginal())
 	meta.SetTrivial(ie.GetTrivial())
 
-	meta.SetTweetId(ie.GetTweetId())
+	meta.SetOg(ie.GetOg())
 
-	ogID, err := binPool.Save(ie.GetOg())
-	if err == nil {
-		n.SetOgId(ogID)
-	}
-
-	// n.SetOg(ie.GetOg())
-	n.GetMeta().SetTweetId(ie.GetTweetId())
-
-	if proto.Equal(n, raw) {
-		zj.J(`item no change`, raw.GetId(), rid)
-		return nil
-	}
-
-	err = db.SaveItem(n)
-	if err != nil {
+	_, e2 = pg.SetItem(id, meta, ie.GetContent())
+	if e2 != nil {
 		return err
 	}
 
-	zj.J(`rid`, raw.GetRevisionId(), rid)
-	if raw.GetRevisionId() != rid {
-		db.AddRevisionHistory(ie.GetId(), rid)
-	}
-	proto.Reset(raw)
-	proto.Merge(raw, n)
+	itemPool.Delete(id)
 
 	return nil
 }
 
 func newItem(ie *pb.ItemEdit) error {
 
-	rid, err := revisionPool.Save(ie.GetContent())
-	if err != nil {
-		return err
-	}
-
-	now := uint64(time.Now().UnixMilli())
-	tsCreate := now
-	if ie.GetTsCreate() > 0 {
-		tsCreate = ie.GetTsCreate()
-	}
-
-	meta := pb.ItemMeta_builder{
-		TsCreate: &tsCreate,
-		TsRevise: new(uint64(0)),
+	meta := pb.ItemMetaV2_builder{
 		TsHide:   new(uint64(0)),
 		Root:     new(ie.GetRoot()),
 		Title:    new(ie.GetTitle()),
 		Original: new(ie.GetOriginal()),
 		Trivial:  new(ie.GetTrivial()),
-		TweetId:  new(ie.GetTweetId()),
+		Og:       ie.GetOg(),
 	}.Build()
 	if ie.GetHide() {
-		meta.SetTsHide(now)
+		meta.SetTsHide(util.Now())
 	}
 
-	d := pb.ItemDB_builder{
-		Meta:       meta,
-		RevisionId: &rid,
-	}.Build()
-	id, err := db.NewItem(d)
-	if err != nil {
-		return err
+	content := ie.GetContent()
+
+	id, e2 := pg.SetItem(0, meta, content)
+	if e2 != nil {
+		return e2
 	}
+
 	ie.SetId(id)
-	return err
+	return nil
 }

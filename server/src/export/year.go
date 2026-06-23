@@ -24,8 +24,8 @@ func (y *ByYear) Add(year uint32, it *pb.ItemDB) {
 	y.year[year] = append(m, it)
 }
 
-func GetYear(it *pb.ItemDB) uint32 {
-	ts := it.GetMeta().GetTsCreate()
+func GetYear(it *pb.ItemDBv2) uint32 {
+	ts := it.GetTsCreate()
 	t := time.UnixMilli(int64(ts))
 	return uint32(t.Year())
 }

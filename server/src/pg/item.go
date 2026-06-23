@@ -5,30 +5,30 @@ import (
 	"project/util"
 	"project/zj"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 )
 
-const sqlUpdateItem = `UPDATE public.item
-	SET meta_id = $2,
-		content_id = $3,
-		time_meta = CASE WHEN meta_id IS DISTINCT FROM $2 THEN $4 ELSE time_meta END,
-		time_content = CASE WHEN content_id IS DISTINCT FROM $3 THEN $4 ELSE time_content END
-	WHERE item_id = $1 AND (
-        meta_id IS DISTINCT FROM $2
-        OR content_id IS DISTINCT FROM $3
-    )`
+const (
+	sqlUpdateItem = `UPDATE public.item
+		SET meta_id = $2,
+			content_id = $3,
+			time_meta = CASE WHEN meta_id IS DISTINCT FROM $2 THEN $4 ELSE time_meta END,
+			time_content = CASE WHEN content_id IS DISTINCT FROM $3 THEN $4 ELSE time_content END
+		WHERE item_id = $1 AND (
+	        meta_id IS DISTINCT FROM $2
+	        OR content_id IS DISTINCT FROM $3
+	    )`
 
-const sqlInsertItem = `INSERT INTO public.item
-	(meta_id, content_id, time_meta, time_content, time_create)
-	VALUES($1, $2, $3, $3, $3)
-	RETURNING item_id`
+	sqlInsertItem = `INSERT INTO public.item
+		(meta_id, content_id, time_meta, time_content, time_create)
+		VALUES($1, $2, $3, $3, $3)
+		RETURNING item_id`
 
-func (p *PG) InsertContent(content *pb.ItemContent) (uint64, *util.Error) {
-	return p.insertRevision(content, nil)
-}
+	sqlItemList = `SELECT item_id FROM item `
 
-func (p *PG) InsertMeta(meta *pb.ItemMetaV2) (uint64, *util.Error) {
-	return p.insertRevision(meta, nil)
-}
+	sqlGetItemDB = `SELECT meta_id, content_id, time_meta, time_content, time_create FROM public.item WHERE item_id = $1`
+)
 
 func (p *PG) SetItem(id uint64, meta *pb.ItemMetaV2, content *pb.ItemContent) (uint64, *util.Error) {
 
@@ -95,6 +95,112 @@ func (p *PG) itemHistory(id, mid, cid uint64, t time.Time) error {
 	return err
 }
 
+func (p *PG) LoadItemDB(id uint64) (*pb.ItemDBv2, error) {
+
+	ctx, cancel := util.CTXTimeout()
+	defer cancel()
+	row := p.p.QueryRow(ctx, sqlGetItemDB, id)
+
+	it := &pb.ItemDBv2_builder{
+		Id: new(id),
+	}
+
+	var tMeta, tContent, tCreate time.Time
+	err := row.Scan(&it.MetaRevisionId, &it.ContentRevisionId, &tMeta, &tContent, &tCreate)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF(`load item %d fail, not found`, id)
+		}
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF(`load item %d fail`, id)
+	}
+	re := it.Build()
+	re.SetTsMeta(uint64(tMeta.UnixMilli()))
+	re.SetTsContent(uint64(tContent.UnixMilli()))
+	re.SetTsCreate(uint64(tCreate.UnixMilli()))
+	return re, nil
+}
+
+func (p *PG) LoadItemFull(d *pb.ItemDBv2) (*pb.ItemV2, error) {
+
+	meta, e2 := p.GetMeta(d.GetMetaRevisionId())
+	if e2 != nil {
+		return nil, e2
+	}
+
+	content, e2 := p.GetContent(d.GetContentRevisionId())
+	if e2 != nil {
+		return nil, e2
+	}
+
+	re := pb.ItemV2_builder{
+		Id:        new(d.GetId()),
+		Meta:      meta,
+		Content:   content,
+		TsMeta:    new(d.GetTsMeta()),
+		TsContent: new(d.GetTsContent()),
+		TsCreate:  new(d.GetTsCreate()),
+	}.Build()
+
+	return re, nil
+}
+
+func (p *PG) RecentItem() ([]uint64, error) {
+	sql := sqlItemList + `ORDER BY ts_update DESC LIMIT 10`
+
+	ctx, cancel := util.CTXTimeout()
+	defer cancel()
+	rows, err := p.p.Query(ctx, sql)
+	if err != nil {
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("recent item fail")
+	}
+
+	return resultItem(rows)
+}
+
+func (p *PG) ListItem(startID uint64, limit int, orderDesc bool) ([]uint64, error) {
+
+	var rows pgx.Rows
+	var err error
+	ctx, cancel := util.CTXTimeout()
+	defer cancel()
+	if startID > 0 {
+		if orderDesc {
+			rows, err = p.p.Query(ctx, sqlItemList+`WHERE item_id < ? ORDER BY item_id DESC LIMIT $1`, startID, limit)
+		} else {
+			rows, err = p.p.Query(ctx, sqlItemList+`WHERE item_id > ? ORDER BY item_id ASC LIMIT $1`, startID, limit)
+		}
+	} else {
+		if orderDesc {
+			rows, err = p.p.Query(ctx, sqlItemList+`ORDER BY item_id DESC LIMIT $1`, limit)
+		} else {
+			rows, err = p.p.Query(ctx, sqlItemList+`ORDER BY item_id ASC LIMIT $1`, limit)
+		}
+	}
+	if err != nil {
+		zj.W(err)
+		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail")
+	}
+
+	return resultItem(rows)
+}
+
+func resultItem(rs pgx.Rows) ([]uint64, error) {
+
+	defer rs.Close()
+
+	var li []uint64
+
+	for rs.Next() {
+		var id uint64
+		err := rs.Scan(&id)
+		if err != nil {
+			return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail (when scan list)")
+		}
+		li = append(li, id)
+	}
+	return li, nil
+}
+
 func (p *PG) ImportItem(id uint64, meta *pb.ItemMetaV2, content *pb.ItemContent, tsCreate, tsRevise uint64) error {
 
 	sql := `INSERT INTO public.item (item_id, meta_id, content_id, time_meta, time_content, time_create)
@@ -116,7 +222,10 @@ func (p *PG) ImportItem(id uint64, meta *pb.ItemMetaV2, content *pb.ItemContent,
 	}
 
 	tCreate := time.UnixMilli(int64(tsCreate))
-	tRevise := time.UnixMilli(int64(tsRevise))
+	tRevise := tCreate
+	if tsRevise > 0 {
+		tRevise = time.UnixMilli(int64(tsRevise))
+	}
 	if tsRevise == 0 {
 		tRevise = tCreate
 	}

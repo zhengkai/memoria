@@ -12,15 +12,26 @@ type PG struct {
 	p *pgxpool.Pool
 }
 
-var p = &PG{}
+var dp = &PG{}
 
-var Init = p.Init
-var InsertFile = p.InsertFile
-var ImportFile = p.ImportFile
-var SyncIDSequence = p.SyncIDSequence
+var Init = dp.Init
+var InsertFile = dp.InsertFile
+var GetFile = dp.GetFile
+var ListFile = dp.ListFile
+var ImportFile = dp.ImportFile
 
-var SetItem = p.SetItem
-var ImportItem = p.ImportItem
+var LoadItemDB = dp.LoadItemDB
+var SetItem = dp.SetItem
+var ListItem = dp.ListItem
+
+var InsertContent = dp.InsertContent
+var GetContent = dp.GetContent
+
+var InsertMeta = dp.InsertMeta
+var GetMeta = dp.GetMeta
+
+var SyncIDSequence = dp.SyncIDSequence
+var ImportItem = dp.ImportItem
 
 func (p *PG) Query(sql string, args ...any) (pgx.Rows, error) {
 	ctx, cacel := util.CTXTimeoutQuick()

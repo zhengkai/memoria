@@ -21,7 +21,7 @@ message APIReq {
 message APIRsp {
 	Error error = 1;
 	oneof one {
-		Item item_get = 10;
+		ItemV2 item_get = 10;
 		uint64 item_set = 11;
 		ItemList item_list_recent = 20;
 		ItemList item_search = 21;
