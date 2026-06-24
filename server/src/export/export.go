@@ -6,6 +6,7 @@ import (
 	"project/pg"
 	"project/util"
 	"project/zj"
+	"runtime/debug"
 	"strconv"
 	"sync"
 	"time"
@@ -14,9 +15,11 @@ import (
 var mux sync.Mutex
 
 const (
+	DataDir = `data-v2`
+
 	Tolerance = 600 * time.Second
 
-	TimeFile  = `data/export-time.txt`
+	TimeFile  = DataDir + `/export-time.txt`
 	StyleFile = `page/style.css`
 )
 
@@ -68,6 +71,9 @@ func (g *Export) addFail(name string, err error) {
 	if err == nil || g.fail != nil {
 		return
 	}
+
+	debug.PrintStack()
+
 	g.fail = &ExportFail{
 		Name:  name,
 		Error: err,
@@ -129,12 +135,15 @@ func (g *Export) fetchData(t time.Time) {
 
 	for {
 		// 扫全库，因为列表页有其他没更新的 item
-		li, err := pg.ListItem(cursor, limit, false)
+		li, err := pg.ListItem(cursor, false)
 		if err != nil {
 			zj.W(`fetch data fail, cursor %d: %s`, cursor, err.Error())
 			return
 		}
 		for _, id := range li {
+			if cursor == 0 || cursor < id {
+				cursor = id
+			}
 			if !g.fetchDataOne(id, ts) {
 				return
 			}
@@ -146,7 +155,6 @@ func (g *Export) fetchData(t time.Time) {
 }
 
 func (g *Export) fetchDataOne(id, ts uint64) (ok bool) {
-	zj.N(`fetch item`, id)
 
 	db, err := pg.LoadItemDB(id)
 	if err != nil {
@@ -171,6 +179,7 @@ func (g *Export) fetchDataOneRecord(year uint32, isNote bool, needRefresh bool, 
 	record := g.note
 	if isNote {
 		if needRefresh {
+			zj.J(`note`, year)
 			g.hasNote[year] = true
 		}
 	} else {
@@ -179,7 +188,7 @@ func (g *Export) fetchDataOneRecord(year uint32, isNote bool, needRefresh bool, 
 		}
 		if meta.GetTsHide() > 0 {
 			record = g.trash
-			zj.J(`trash`, db.GetId())
+			// zj.J(`trash`, db.GetId())
 		} else if !meta.GetOriginal() {
 			record = g.curated
 		} else {

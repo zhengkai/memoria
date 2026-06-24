@@ -22,10 +22,9 @@ func (g *Export) fetchFile(t time.Time) (fl []*pb.File) {
 	ts := uint64(t.UnixMilli())
 
 	var cursor uint64
-	limit := 100
 
 	for {
-		df, err := pg.ListFile(cursor, limit, true)
+		df, err := pg.ListFile(cursor, true)
 		if err != nil {
 			break
 		}
@@ -38,7 +37,7 @@ func (g *Export) fetchFile(t time.Time) (fl []*pb.File) {
 			fl = append(fl, f)
 		}
 
-		if len(df.GetList()) < limit {
+		if len(df.GetList()) < 100 {
 			break
 		}
 	}

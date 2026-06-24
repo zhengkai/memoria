@@ -16,9 +16,15 @@ message RenderNoteYearIndex {
 
 message RenderArticleYear {
 	uint32 year = 1;
-	repeated ItemLite list = 2;
+	repeated RenderArticleItem list = 2;
 }
 
 message RenderArticleIndex {
 	repeated RenderArticleYear list = 1;
+}
+
+message RenderArticleItem {
+	uint64 id = 1;
+	ItemMetaV2 meta = 2;
+	uint64 ts_create = 6;
 }

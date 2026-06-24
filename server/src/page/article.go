@@ -43,7 +43,7 @@ func (m *Manager) articleList(name, title string, p Provider) {
 			d := m.loadItem(id)
 			m.setMeta(`item`, d)
 
-			meta := d.DB.GetMeta()
+			meta := &d.DBMeta
 			if meta.GetTsHide() == 0 {
 				if meta.GetOriginal() {
 					d.AddClass(`article-original`)

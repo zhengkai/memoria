@@ -7,7 +7,7 @@ import (
 	"project/zj"
 )
 
-const NoteDataDir = `data/note`
+const NoteDataDir = DataDir + `/note`
 
 func NoteFileName(year uint32) string {
 	return fmt.Sprintf(`%s/%04d.bin`, NoteDataDir, year)

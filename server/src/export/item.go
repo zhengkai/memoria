@@ -11,15 +11,15 @@ import (
 )
 
 func ItemFile(id uint64) string {
-	return fmt.Sprintf(`data/item/%03d/%03d.bin`, id/1000, id%1000)
+	return fmt.Sprintf(`%s/item/%03d/%03d.bin`, DataDir, id/1000, id%1000)
 }
 
 func RevisionFile(id uint64) string {
-	return fmt.Sprintf(`data/revision/%03d/%03d.bin`, id/1000, id%1000)
+	return fmt.Sprintf(`%s/revision/%03d/%03d.bin`, DataDir, id/1000, id%1000)
 }
 
 func BinFile(id uint64) string {
-	return fmt.Sprintf(`data/bin/%03d/%03d.bin`, id/1000, id%1000)
+	return fmt.Sprintf(`%s/bin/%03d/%03d.bin`, DataDir, id/1000, id%1000)
 }
 
 func (g *Export) exportItem() {
@@ -36,10 +36,7 @@ func (g *Export) exportItemRow(it *pb.ItemDBv2) {
 	id := it.GetId()
 
 	// itemDB
-	err := util.WriteStaticData(
-		ItemFile(id),
-		it,
-	)
+	err := util.WriteStaticData(ItemFile(id), it)
 	if err != nil {
 		g.addFail(fmt.Sprintf(`item %d`, id), err)
 		return
@@ -47,12 +44,18 @@ func (g *Export) exportItemRow(it *pb.ItemDBv2) {
 
 	// revision
 	mid := it.GetContentRevisionId()
-	meta, err := pg.GetMeta(mid)
+	meta, e2 := pg.GetMeta(mid)
+	if e2 != nil {
+		err = e2
+	}
 	name := fmt.Sprintf(`item %d, content %d`, id, mid)
 	g.writeRev(mid, name, meta, err)
 
 	cid := it.GetMetaRevisionId()
-	content, err := pg.GetContent(cid)
+	content, e3 := pg.GetContent(cid)
+	if e3 != nil {
+		err = e3
+	}
 	name = fmt.Sprintf(`item %d, content %d`, id, cid)
 	g.writeRev(cid, name, content, err)
 }
@@ -63,11 +66,8 @@ func (g *Export) writeRev(rid uint64, name string, m proto.Message, err error) {
 		return
 	}
 	file := RevisionFile(rid)
-	e2 := util.WriteStaticData(
-		file,
-		m,
-	)
-	if err != nil {
+	e2 := util.WriteStaticData(file, m)
+	if e2 != nil {
 		g.addFail(name, e2)
 	}
 }

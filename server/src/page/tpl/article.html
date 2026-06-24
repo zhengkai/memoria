@@ -1,9 +1,9 @@
 {{define "content"}}
 <main>
 	<article>
-		<h1>{{.DB.GetMeta.GetTitle}}</h1>
+		<h1>{{.Title}}</h1>
 
-		<p><time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{ .DB.GetMeta.GetTsCreate | datetime }}</time><br>{{ if .DB.GetMeta.GetTitle }}{{ if .DB.GetMeta.GetOriginal }}作者：郑凯{{ else }}转载{{ end }}{{ end }}</p>
+		<p><time datetime="{{.DB.GetTsCreate | RFC3339}}">{{ .DB.GetTsCreate | datetime }}</time><br>{{ if .Title }}{{ if .DBMeta.GetOriginal }}作者：郑凯{{ else }}转载{{ end }}{{ end }}</p>
 
 		{{.Content}}
 	</article>

@@ -17,9 +17,9 @@
 	<title>{{ .Title | html }}</title>
 	<link rel="alternate" type="text/html" href="{{ .ID | linkItemFull }}"/>
 	<id>soulogic.com:item:{{ .ID }}</id>
-	<updated>{{ or (.DB.GetMeta.GetTsRevise) (.DB.GetMeta.GetTsCreate) | RFC3339 }}</updated>
-	<published>{{ .DB.GetMeta.GetTsCreate | RFC3339 }}</published>
-	{{ if .DB.GetMeta.GetOriginal }}<author>
+	<updated>{{ or (.DB.GetTsContent) (.DB.GetTsCreate) | RFC3339 }}</updated>
+	<published>{{ .DB.GetTsCreate | RFC3339 }}</published>
+	{{ if .DBMeta.GetOriginal }}<author>
 		<name>Zheng Kai</name>
 		<uri>https://soulogic.com/</uri>
 		<email>zhengkai@gmail.com</email>

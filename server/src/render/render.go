@@ -10,7 +10,7 @@ import (
 )
 
 func renderFileName(revisionID uint64) string {
-	return fmt.Sprintf(`data/render/%03d/%03d.html`, revisionID/1000, revisionID%1000)
+	return fmt.Sprintf(`%s/render/%03d/%03d.html`, export.DataDir, revisionID/1000, revisionID%1000)
 }
 
 var renderMap = map[pb.Format_Enum]func(string) ([]byte, error){
@@ -19,19 +19,21 @@ var renderMap = map[pb.Format_Enum]func(string) ([]byte, error){
 	pb.Format_ASCIIDOC: ASCIIDoc,
 }
 
-func Render(it *pb.ItemDB) ([]byte, error) {
+func Render(it *pb.ItemDBv2) ([]byte, error) {
 
-	file := renderFileName(it.GetRevisionId())
+	cid := it.GetContentRevisionId()
+
+	file := renderFileName(cid)
 	ab, err := util.ReadStaticBin(file)
 	if err == nil {
 		// zj.IO(`read render file success:`, file)
 		return ab, nil
 	}
 
-	revFile := export.RevisionFile(it.GetRevisionId())
+	contentFile := export.RevisionFile(cid)
 
-	rev := &pb.Revision{}
-	err = util.ReadStaticData(revFile, rev)
+	rev := &pb.ItemContent{}
+	err = util.ReadStaticData(contentFile, rev)
 	if err != nil {
 		return nil, err
 	}

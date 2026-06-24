@@ -39,6 +39,12 @@ message ItemLite {
 	ItemMeta meta = 2;
 }
 
+message ItemLiteV2 {
+	uint64 id = 1;
+	ItemMetaV2 meta = 2;
+	uint64 ts_create = 6;
+}
+
 message ItemMeta {
 	uint64 ts_create = 1;
 	uint64 ts_revise = 2;

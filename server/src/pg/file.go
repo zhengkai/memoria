@@ -69,14 +69,13 @@ func (p *PG) GetFile(id uint64) ([]byte, error) {
 	ctx, cancel := util.CTXTimeout()
 	err := p.p.QueryRow(ctx, `SELECT data FROM public.file WHERE file_id = $1`, id).Scan(&data)
 	cancel()
-	zj.W(err)
 	if err != nil {
 		return nil, util.NewError(err).SetCode(pb.Error_DB_NOT_FOUND).DetailF(`file %d not found`, id)
 	}
 	return data, nil
 }
 
-func (p *PG) ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, error) {
+func (p *PG) ListFile(startID uint64, orderDesc bool) (*pb.FileList, error) {
 
 	var rows pgx.Rows
 	var err error
@@ -85,15 +84,15 @@ func (p *PG) ListFile(startID uint64, limit int, orderDesc bool) (*pb.FileList, 
 	defer cacel()
 	if startID > 0 {
 		if orderDesc {
-			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id < $1 ORDER BY file_id DESC LIMIT $2`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id < $1 ORDER BY file_id DESC LIMIT 100`, startID)
 		} else {
-			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id > $1 ORDER BY file_id ASC LIMIT $2`, startID, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`WHERE file_id > $1 ORDER BY file_id ASC LIMIT 100`, startID)
 		}
 	} else {
 		if orderDesc {
-			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id DESC LIMIT $1`, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id DESC LIMIT 100`)
 		} else {
-			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id ASC LIMIT $1`, limit)
+			rows, err = p.p.Query(ctx, sqlFileList+`ORDER BY file_id ASC LIMIT 100`)
 		}
 	}
 	if err != nil {

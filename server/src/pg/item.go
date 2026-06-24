@@ -157,27 +157,31 @@ func (p *PG) RecentItem() ([]uint64, error) {
 	return resultItem(rows)
 }
 
-func (p *PG) ListItem(startID uint64, limit int, orderDesc bool) ([]uint64, error) {
+func (p *PG) ListItem(startID uint64, orderDesc bool) ([]uint64, error) {
 
 	var rows pgx.Rows
 	var err error
 	ctx, cancel := util.CTXTimeout()
 	defer cancel()
+
+	ORDER := `ASC`
+	if orderDesc {
+		ORDER = `DESC`
+	}
+	ORDER = `ORDER BY item_id ` + ORDER + ` LIMIT 100`
+
 	if startID > 0 {
+		arrow := `>`
 		if orderDesc {
-			rows, err = p.p.Query(ctx, sqlItemList+`WHERE item_id < ? ORDER BY item_id DESC LIMIT $1`, startID, limit)
-		} else {
-			rows, err = p.p.Query(ctx, sqlItemList+`WHERE item_id > ? ORDER BY item_id ASC LIMIT $1`, startID, limit)
+			arrow = `<`
 		}
+		sql := sqlItemList + `WHERE item_id ` + arrow + ` $1 ` + ORDER
+		rows, err = p.p.Query(ctx, sql, startID)
 	} else {
-		if orderDesc {
-			rows, err = p.p.Query(ctx, sqlItemList+`ORDER BY item_id DESC LIMIT $1`, limit)
-		} else {
-			rows, err = p.p.Query(ctx, sqlItemList+`ORDER BY item_id ASC LIMIT $1`, limit)
-		}
+		sql := sqlItemList + ORDER
+		rows, err = p.p.Query(ctx, sql)
 	}
 	if err != nil {
-		zj.W(err)
 		return nil, util.NewError(err).SetCode(pb.Error_DB_SELECT).DetailF("list item fail")
 	}
 

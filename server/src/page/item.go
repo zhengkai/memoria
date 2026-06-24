@@ -6,20 +6,41 @@ import (
 	"project/pb"
 	"project/render"
 	"project/util"
+	"project/zj"
 )
 
 type Item struct {
 	Meta
 	ID       uint64
-	DB       pb.ItemDB
+	DB       pb.ItemDBv2
 	Content  template.HTML
 	Error    error
 	NoteYear uint32
+	DBMeta   pb.ItemMetaV2
 }
 
 func (it *Item) directRead() error {
-	it.Error = util.ReadStaticData(export.ItemFile(it.ID), &it.DB)
-	return it.Error
+	file := export.ItemFile(it.ID)
+	err := util.ReadStaticData(file, &it.DB)
+	if err != nil {
+		zj.WF(`read item %d data file %s failed: %v`, it.ID, file, err)
+		it.Error = err
+		return err
+	}
+	return nil
+}
+
+func (it *Item) loadDBMeta() error {
+	mid := it.DB.GetMetaRevisionId()
+
+	metaFile := export.RevisionFile(mid)
+	err := util.ReadStaticData(metaFile, &it.DBMeta)
+	if err != nil {
+		zj.WF(`read item %d meta file %s failed: %v`, it.ID, metaFile, err)
+		it.Error = err
+		return err
+	}
+	return nil
 }
 
 func (m *Manager) LoadItem(id uint64) (re *Item) {
@@ -44,6 +65,10 @@ func (m *Manager) loadItem(id uint64) (re *Item) {
 	}
 
 	if re.directRead() != nil {
+		return
+	}
+
+	if re.loadDBMeta() != nil {
 		return
 	}
 
