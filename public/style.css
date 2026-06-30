@@ -432,16 +432,29 @@ body.article aside {
 
 article {
 	line-height: 1.75;
-}
-article > * {
-	overflow: hidden;
-}
-article p {
-	padding: 4px 0;
-}
-
-article img {
-	max-width: 100%;
+	> * {
+		overflow: hidden;
+	}
+	p {
+		padding: 4px 0;
+	}
+	img {
+		max-width: 100%;
+	}
+	ol {
+		padding-left: 32px;
+		li {
+			list-style-type: decimal;
+			list-style-position: outside;
+		}
+	}
+	ul {
+		padding-left: 32px;
+		li {
+			list-style-type: disc;
+			list-style-position: outside;
+		}
+	}
 }
 
 body.tweet main {
