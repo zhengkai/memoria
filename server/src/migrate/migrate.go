@@ -1,9 +1,15 @@
 // Package migrate 迁移用临时模块
 package migrate
 
-import "project/zj"
+import (
+	"project/pb"
+	"project/pg"
+	"project/zj"
+)
 
 func run() {
+
+	reset()
 
 	File()
 
@@ -12,6 +18,18 @@ func run() {
 	testMeta()
 
 	zj.IO(`migrate done`)
+}
+
+func reset() {
+	pg.TRUNCATE(`edit_history`)
+	pg.TRUNCATE(`export_time`)
+	pg.TRUNCATE(`item`)
+	pg.TRUNCATE(`file`)
+	pg.TRUNCATE(`revision`)
+
+	c := &pb.ItemContent{}
+	pg.InsertContent(c)
+
 }
 
 func testMeta() {

@@ -16,6 +16,6 @@ var (
 
 	Key = ``
 
-	// PgSQL = `tanya:tanya@tanya:5432/memoria`
-	PgSQL = `anna:anna@anna:5432/memoria_dev`
+	PgSQL = `memoria:memoria@172.17.0.1:5432/memoria`
+	// PgSQL = `anna:anna@anna:5432/memoria`
 )

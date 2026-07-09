@@ -20,6 +20,8 @@ var GetFile = dp.GetFile
 var ListFile = dp.ListFile
 var ImportFile = dp.ImportFile
 
+var TRUNCATE = dp.TRUNCATE
+
 var LoadItemDB = dp.LoadItemDB
 var SetItem = dp.SetItem
 var ListItem = dp.ListItem

@@ -11,6 +11,10 @@ import (
 )
 
 const (
+	sqlGetRevisionByHash = `SELECT revision_id
+		FROM revision
+		WHERE hash = $1;`
+
 	sqlInsertRevision = `WITH ins AS (
 		    INSERT INTO public.revision (hash, data, time_create)
 		    VALUES ($1, $2, $3)
@@ -61,6 +65,13 @@ func (p *PG) insertRevision(m proto.Message) (uint64, *util.Error) {
 	hash := sha256.Sum256(ab)
 
 	var id int64
+
+	ctx2, cancel2 := util.CTXTimeout()
+	p.p.QueryRow(ctx2, sqlGetRevisionByHash, hash[:]).Scan(&id)
+	cancel2()
+	if id > 0 {
+		return util.Uint64(id), nil
+	}
 
 	ctx, cancel := util.CTXTimeout()
 	err = p.p.QueryRow(ctx, sqlInsertRevision, hash[:], ab, time.Now()).Scan(&id)

@@ -14,6 +14,7 @@ func init() {
 	list := map[string]*string{
 		`MEMORIA_WEB`:    &WebAddr,
 		`MEMORIA_MYSQL`:  &MySQL,
+		`MEMORIA_PGSQL`:  &PgSQL,
 		`MEMORIA_DIR`:    &StaticDir,
 		`MEMORIA_CLIENT`: &ClientDir,
 		`MEMORIA_KEY`:    &Key,
