@@ -39,7 +39,7 @@ func (gw *Gateway) dispatch(req *pb.APIReq) *pb.APIRsp {
 		er := pb.APIRsp_builder{Error: e.AsPB()}.Build()
 		zj.WF(`api error %3d: %s`, e.Code, e.Message)
 		if e.Detail != `` {
-			zj.W(`	detail: %s`, e.Detail)
+			zj.WF(`	detail: %s`, e.Detail)
 		}
 		return er
 	}

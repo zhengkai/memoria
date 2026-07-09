@@ -102,8 +102,9 @@ func (e *Error) SetDetail(d string) *Error {
 func (e *Error) DetailF(format string, a ...any) *Error {
 	if len(a) == 0 {
 		e.Detail = format
+	} else {
+		e.Detail = fmt.Sprintf(format, a...)
 	}
-	e.Detail = fmt.Sprintf(format, a...)
 	return e
 }
 

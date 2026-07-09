@@ -99,7 +99,7 @@ func RecentItem() ([]uint64, error) {
 	return resultItem(rows)
 }
 
-func ListItem(startID int, limit int, orderDesc bool) ([]uint64, error) {
+func ListItem(startID uint64, limit int, orderDesc bool) ([]uint64, error) {
 
 	var rows *sql.Rows
 	var err error

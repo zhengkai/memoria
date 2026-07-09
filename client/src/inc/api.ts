@@ -49,7 +49,7 @@ class API {
 	}
 
 	async itemGet(id: number) {
-		return await this._apiCall<pb.Item>('itemGet', id);
+		return await this._apiCall<pb.ItemV2>('itemGet', id);
 	}
 
 	async itemSet(e: pb.ItemEdit) {

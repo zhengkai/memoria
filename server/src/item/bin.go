@@ -21,6 +21,10 @@ type BinPool struct {
 	mux   sync.RWMutex
 }
 
+func GetBinPool() *BinPool {
+	return binPool
+}
+
 func newBinPool() *BinPool {
 
 	rp := &BinPool{

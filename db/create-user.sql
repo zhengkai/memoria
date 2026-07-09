@@ -1,0 +1,3 @@
+CREATE USER anna WITH PASSWORD 'anna';
+CREATE DATABASE memoria_dev OWNER anna;
+GRANT ALL PRIVILEGES ON DATABASE memoria_dev TO anna;

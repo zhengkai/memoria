@@ -59,12 +59,12 @@ func (m *Manager) fillRSS(index *pb.RenderArticleIndex) (d *RSS) {
 		for _, il := range y.GetList() {
 			id := il.GetId()
 			it := m.loadItem(id)
-			meta := it.DB.GetMeta()
+			meta := &it.DBMeta
 			if meta.GetTsHide() > 0 {
 				continue
 			}
 			d.Entry = append(d.Entry, it)
-			d.TSUpdate = max(meta.GetTsCreate(), meta.GetTsRevise(), d.TSUpdate)
+			d.TSUpdate = max(it.DB.GetTsCreate(), it.DB.GetTsContent(), it.DB.GetTsMeta(), d.TSUpdate)
 			if len(d.Entry) >= feedSize {
 				return
 			}

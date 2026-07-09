@@ -1,7 +1,7 @@
 {{define "item-row"}}
 <article id="n{{.ID}}">
 	<header>
-		<time datetime="{{.DB.GetMeta.GetTsCreate | RFC3339}}">{{.DB.GetMeta.GetTsCreate | datetime}}</time>
+		<time datetime="{{.DB.GetTsCreate | RFC3339}}">{{.DBMeta.GetTsCreate | datetime}}</time>
 	</header>
 
 	{{.Content}}

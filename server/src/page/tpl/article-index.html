@@ -2,7 +2,7 @@
 <main>{{range .Content.GetList}}
 	<p id="year-{{.GetYear}}">{{.GetYear}} 年</p>
 	<ul>{{range .GetList}}
-		<li id="n{{.GetId}}"><a href="{{.GetId | linkItem}}">{{.GetMeta.GetTitle}} <time datetime="{{.GetMeta.GetTsCreate | RFC3339}}">{{.GetMeta.GetTsCreate | date}}</time></a></li>{{end}}
+		<li id="n{{.GetId}}"><a href="{{.GetId | linkItem}}">{{.GetMeta.GetTitle}} <time datetime="{{.GetTsCreate | RFC3339}}">{{.GetTsCreate | date}}</time></a></li>{{end}}
 	</ul>{{end}}{{if eq .Role "original" }}
 	<div><a href="{{.Meta.SiteBaseLink}}/delete.html">删余</a></div>{{end}}
 </main>

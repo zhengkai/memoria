@@ -3,13 +3,14 @@ package export
 import (
 	"fmt"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
 	"slices"
 )
 
 func ArticleFile(name string) string {
-	return fmt.Sprintf(`data/article/%s.bin`, name)
+	return fmt.Sprintf(`%s/article/%s.bin`, DataDir, name)
 }
 
 func (g *Export) exportArticle() {
@@ -42,18 +43,26 @@ func (g *Export) exportArticleEach(name string, data *ByYear) {
 	}
 
 	for idx, y := range yl {
-		src := data.year[y]
 		dst := pb.RenderArticleYear_builder{
 			Year: &y,
-			List: make([]*pb.ItemLite, len(src)),
 		}
-		for idx, it := range src {
-			lite := pb.ItemLite_builder{
-				Id:   new(it.GetId()),
-				Meta: it.GetMeta(),
+		for _, raw := range data.year[y] {
+			mid := raw.GetMetaRevisionId()
+			meta, e2 := pg.GetMeta(mid)
+			if e2 != nil {
+				zj.WF(`get item %d meta %d failed: %s`, raw.GetId(), mid, e2.Detail)
+				continue
+			}
+			it := pb.RenderArticleItem_builder{
+				Id:       new(raw.GetId()),
+				Meta:     meta,
+				TsCreate: new(raw.GetTsCreate()),
 			}.Build()
-			dst.List[idx] = lite
+
+			dst.List = append(dst.List, it)
+
 		}
+
 		d.List[idx] = dst.Build()
 	}
 

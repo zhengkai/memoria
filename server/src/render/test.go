@@ -10,7 +10,7 @@ import (
 )
 
 func Test() {
-	TestScan()
+	// TestScan()
 	// TestBasic()
 }
 
@@ -65,7 +65,7 @@ func TestNote(file string) {
 
 func TestItem(id uint64) {
 
-	it := &pb.ItemDB{}
+	it := &pb.ItemDBv2{}
 	if err := util.ReadStaticData(export.ItemFile(id), it); err != nil {
 		zj.WF(`read item %d failed: %v`, id, err)
 		return

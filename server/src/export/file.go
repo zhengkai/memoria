@@ -2,10 +2,11 @@ package export
 
 import (
 	"fmt"
-	"project/db"
 	"project/pb"
+	"project/pg"
 	"project/util"
 	"project/zj"
+	"time"
 )
 
 func FileFileName(id uint64) string {
@@ -16,13 +17,14 @@ func FileMetaFileName(id uint64) string {
 	return fmt.Sprintf(`file/%03d/%03d.pb`, id/1000, id%1000)
 }
 
-func (g *Export) fetchFile(ts uint64) (fl []*pb.File) {
+func (g *Export) fetchFile(t time.Time) (fl []*pb.File) {
+
+	ts := uint64(t.UnixMilli())
 
 	var cursor uint64
-	limit := 100
 
 	for {
-		df, err := db.ListFile(cursor, limit, true)
+		df, err := pg.ListFile(cursor, true)
 		if err != nil {
 			break
 		}
@@ -35,7 +37,7 @@ func (g *Export) fetchFile(ts uint64) (fl []*pb.File) {
 			fl = append(fl, f)
 		}
 
-		if len(df.GetList()) < limit {
+		if len(df.GetList()) < 100 {
 			break
 		}
 	}
@@ -56,7 +58,8 @@ func (g *Export) exportFile(f *pb.File) {
 		}
 	}
 	if !util.StaticExists(file) {
-		ab, err := db.GetFile(id)
+		ab, err := pg.GetFile(id)
+		zj.J(`export file:`, id)
 		if err != nil {
 			zj.W(err)
 			return

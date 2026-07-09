@@ -19,7 +19,8 @@ message Error {
 		DB_NOT_FOUND = 302;
 		DB_DUPLICATE = 303;
 		DB_INSERT = 304;
-		DB_SELECT = 305;
+		DB_UPDATE = 305;
+		DB_SELECT = 306;
 	}
 	Code code = 1;
 	string message = 2;
