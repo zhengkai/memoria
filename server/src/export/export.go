@@ -105,7 +105,7 @@ func (g *Export) run() {
 	if g.isFull {
 		t = time.Unix(0, 0)
 	} else {
-		t.Add(-Tolerance)
+		t = t.Add(-Tolerance)
 	}
 
 	doItem, doFile := g.fetch(t)

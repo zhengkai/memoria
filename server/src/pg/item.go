@@ -145,7 +145,7 @@ func (p *PG) LoadItemFull(d *pb.ItemDBv2) (*pb.ItemV2, error) {
 }
 
 func (p *PG) RecentItem() ([]uint64, error) {
-	sql := sqlItemList + `ORDER BY ts_update DESC LIMIT 10`
+	sql := sqlItemList + `ORDER BY time_content DESC LIMIT 10`
 
 	ctx, cancel := util.CTXTimeout()
 	defer cancel()

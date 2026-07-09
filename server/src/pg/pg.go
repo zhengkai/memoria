@@ -23,6 +23,7 @@ var ImportFile = dp.ImportFile
 var LoadItemDB = dp.LoadItemDB
 var SetItem = dp.SetItem
 var ListItem = dp.ListItem
+var RecentItem = dp.RecentItem
 
 var InsertContent = dp.InsertContent
 var GetContent = dp.GetContent

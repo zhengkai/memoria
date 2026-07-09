@@ -1,10 +1,10 @@
 package api
 
 import (
-	"project/db"
 	"project/export"
 	"project/item"
 	"project/pb"
+	"project/pg"
 	"project/util"
 )
 
@@ -29,7 +29,7 @@ func itemGet(id uint64, e *util.Error) *pb.ItemV2 {
 
 func itemListRecent(_ uint32, e *util.Error) *pb.ItemList {
 
-	li, err := db.RecentItem()
+	li, err := pg.RecentItem()
 	if err != nil {
 		e.Fill(err)
 		return nil
