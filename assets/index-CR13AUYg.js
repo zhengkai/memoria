@@ -2547,7 +2547,7 @@ var pb = $root.pb = (() => {
 		* @memberof pb
 		* @interface IAPIRsp
 		* @property {pb.IError|null} [error] APIRsp error
-		* @property {pb.IItem|null} [itemGet] APIRsp itemGet
+		* @property {pb.IItemV2|null} [itemGet] APIRsp itemGet
 		* @property {number|null} [itemSet] APIRsp itemSet
 		* @property {pb.IItemList|null} [itemListRecent] APIRsp itemListRecent
 		* @property {pb.IItemList|null} [itemSearch] APIRsp itemSearch
@@ -2575,7 +2575,7 @@ var pb = $root.pb = (() => {
 		APIRsp.prototype.error = null;
 		/**
 		* APIRsp itemGet.
-		* @member {pb.IItem|null|undefined} itemGet
+		* @member {pb.IItemV2|null|undefined} itemGet
 		* @memberof pb.APIRsp
 		* @instance
 		*/
@@ -2648,7 +2648,7 @@ var pb = $root.pb = (() => {
 		APIRsp.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
 			if (message.error != null && Object.hasOwnProperty.call(message, "error")) $root.pb.Error.encode(message.error, writer.uint32(10).fork()).ldelim();
-			if (message.itemGet != null && Object.hasOwnProperty.call(message, "itemGet")) $root.pb.Item.encode(message.itemGet, writer.uint32(82).fork()).ldelim();
+			if (message.itemGet != null && Object.hasOwnProperty.call(message, "itemGet")) $root.pb.ItemV2.encode(message.itemGet, writer.uint32(82).fork()).ldelim();
 			if (message.itemSet != null && Object.hasOwnProperty.call(message, "itemSet")) writer.uint32(88).uint64(message.itemSet);
 			if (message.itemListRecent != null && Object.hasOwnProperty.call(message, "itemListRecent")) $root.pb.ItemList.encode(message.itemListRecent, writer.uint32(162).fork()).ldelim();
 			if (message.itemSearch != null && Object.hasOwnProperty.call(message, "itemSearch")) $root.pb.ItemList.encode(message.itemSearch, writer.uint32(170).fork()).ldelim();
@@ -2691,7 +2691,7 @@ var pb = $root.pb = (() => {
 						message.error = $root.pb.Error.decode(reader, reader.uint32(), void 0, long + 1);
 						break;
 					case 10:
-						message.itemGet = $root.pb.Item.decode(reader, reader.uint32(), void 0, long + 1);
+						message.itemGet = $root.pb.ItemV2.decode(reader, reader.uint32(), void 0, long + 1);
 						break;
 					case 11:
 						message.itemSet = reader.uint64();
@@ -2746,7 +2746,7 @@ var pb = $root.pb = (() => {
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
 				properties.one = 1;
 				{
-					let error = $root.pb.Item.verify(message.itemGet, long + 1);
+					let error = $root.pb.ItemV2.verify(message.itemGet, long + 1);
 					if (error) return "itemGet." + error;
 				}
 			}
@@ -2800,7 +2800,7 @@ var pb = $root.pb = (() => {
 			}
 			if (object.itemGet != null) {
 				if (typeof object.itemGet !== "object") throw TypeError(".pb.APIRsp.itemGet: object expected");
-				message.itemGet = $root.pb.Item.fromObject(object.itemGet, long + 1);
+				message.itemGet = $root.pb.ItemV2.fromObject(object.itemGet, long + 1);
 			}
 			if (object.itemSet != null) {
 				if ($util.Long) (message.itemSet = $util.Long.fromValue(object.itemSet)).unsigned = true;
@@ -2837,7 +2837,7 @@ var pb = $root.pb = (() => {
 			if (options.defaults) object.error = null;
 			if (message.error != null && message.hasOwnProperty("error")) object.error = $root.pb.Error.toObject(message.error, options);
 			if (message.itemGet != null && message.hasOwnProperty("itemGet")) {
-				object.itemGet = $root.pb.Item.toObject(message.itemGet, options);
+				object.itemGet = $root.pb.ItemV2.toObject(message.itemGet, options);
 				if (options.oneofs) object.one = "itemGet";
 			}
 			if (message.itemSet != null && message.hasOwnProperty("itemSet")) {
@@ -3027,7 +3027,8 @@ var pb = $root.pb = (() => {
 				case 302:
 				case 303:
 				case 304:
-				case 305: break;
+				case 305:
+				case 306: break;
 			}
 			if (message.message != null && message.hasOwnProperty("message")) {
 				if (!$util.isString(message.message)) return "message: string expected";
@@ -3094,9 +3095,13 @@ var pb = $root.pb = (() => {
 				case 304:
 					message.code = 304;
 					break;
-				case "DB_SELECT":
+				case "DB_UPDATE":
 				case 305:
 					message.code = 305;
+					break;
+				case "DB_SELECT":
+				case 306:
+					message.code = 306;
 					break;
 			}
 			if (object.message != null) message.message = String(object.message);
@@ -3158,7 +3163,8 @@ var pb = $root.pb = (() => {
 		* @property {number} DB_NOT_FOUND=302 DB_NOT_FOUND value
 		* @property {number} DB_DUPLICATE=303 DB_DUPLICATE value
 		* @property {number} DB_INSERT=304 DB_INSERT value
-		* @property {number} DB_SELECT=305 DB_SELECT value
+		* @property {number} DB_UPDATE=305 DB_UPDATE value
+		* @property {number} DB_SELECT=306 DB_SELECT value
 		*/
 		Error.Code = (function() {
 			const valuesById = {}, values = Object.create(valuesById);
@@ -3172,10 +3178,234 @@ var pb = $root.pb = (() => {
 			values[valuesById[302] = "DB_NOT_FOUND"] = 302;
 			values[valuesById[303] = "DB_DUPLICATE"] = 303;
 			values[valuesById[304] = "DB_INSERT"] = 304;
-			values[valuesById[305] = "DB_SELECT"] = 305;
+			values[valuesById[305] = "DB_UPDATE"] = 305;
+			values[valuesById[306] = "DB_SELECT"] = 306;
 			return values;
 		})();
 		return Error;
+	})();
+	pb.ItemContent = (function() {
+		/**
+		* Properties of an ItemContent.
+		* @memberof pb
+		* @interface IItemContent
+		* @property {pb.Format.Enum|null} [format] ItemContent format
+		* @property {string|null} [raw] ItemContent raw
+		*/
+		/**
+		* Constructs a new ItemContent.
+		* @memberof pb
+		* @classdesc Represents an ItemContent.
+		* @implements IItemContent
+		* @constructor
+		* @param {pb.IItemContent=} [properties] Properties to set
+		*/
+		function ItemContent(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemContent format.
+		* @member {pb.Format.Enum} format
+		* @memberof pb.ItemContent
+		* @instance
+		*/
+		ItemContent.prototype.format = 0;
+		/**
+		* ItemContent raw.
+		* @member {string} raw
+		* @memberof pb.ItemContent
+		* @instance
+		*/
+		ItemContent.prototype.raw = "";
+		/**
+		* Creates a new ItemContent instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemContent
+		* @static
+		* @param {pb.IItemContent=} [properties] Properties to set
+		* @returns {pb.ItemContent} ItemContent instance
+		*/
+		ItemContent.create = function create(properties) {
+			return new ItemContent(properties);
+		};
+		/**
+		* Encodes the specified ItemContent message. Does not implicitly {@link pb.ItemContent.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemContent
+		* @static
+		* @param {pb.IItemContent} message ItemContent message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemContent.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.format != null && Object.hasOwnProperty.call(message, "format")) writer.uint32(8).int32(message.format);
+			if (message.raw != null && Object.hasOwnProperty.call(message, "raw")) writer.uint32(18).string(message.raw);
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemContent message, length delimited. Does not implicitly {@link pb.ItemContent.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemContent
+		* @static
+		* @param {pb.IItemContent} message ItemContent message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemContent.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemContent message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemContent
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemContent} ItemContent
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemContent.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemContent();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.format = reader.int32();
+						break;
+					case 2:
+						message.raw = reader.string();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemContent message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemContent
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemContent} ItemContent
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemContent.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemContent message.
+		* @function verify
+		* @memberof pb.ItemContent
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemContent.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.format != null && message.hasOwnProperty("format")) switch (message.format) {
+				default: return "format: enum value expected";
+				case 0:
+				case 1:
+				case 2: break;
+			}
+			if (message.raw != null && message.hasOwnProperty("raw")) {
+				if (!$util.isString(message.raw)) return "raw: string expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemContent message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemContent
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemContent} ItemContent
+		*/
+		ItemContent.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemContent) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemContent();
+			switch (object.format) {
+				default:
+					if (typeof object.format === "number") {
+						message.format = object.format;
+						break;
+					}
+					break;
+				case "PLAIN":
+				case 0:
+					message.format = 0;
+					break;
+				case "MARKDOWN":
+				case 1:
+					message.format = 1;
+					break;
+				case "ASCIIDOC":
+				case 2:
+					message.format = 2;
+					break;
+			}
+			if (object.raw != null) message.raw = String(object.raw);
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemContent message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemContent
+		* @static
+		* @param {pb.ItemContent} message ItemContent
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemContent.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				object.format = options.enums === String ? "PLAIN" : 0;
+				object.raw = "";
+			}
+			if (message.format != null && message.hasOwnProperty("format")) object.format = options.enums === String ? $root.pb.Format.Enum[message.format] === void 0 ? message.format : $root.pb.Format.Enum[message.format] : message.format;
+			if (message.raw != null && message.hasOwnProperty("raw")) object.raw = message.raw;
+			return object;
+		};
+		/**
+		* Converts this ItemContent to JSON.
+		* @function toJSON
+		* @memberof pb.ItemContent
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemContent.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemContent
+		* @function getTypeUrl
+		* @memberof pb.ItemContent
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemContent.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemContent";
+		};
+		return ItemContent;
 	})();
 	pb.Item = (function() {
 		/**
@@ -3435,6 +3665,559 @@ var pb = $root.pb = (() => {
 		};
 		return Item;
 	})();
+	pb.ItemV2 = (function() {
+		/**
+		* Properties of an ItemV2.
+		* @memberof pb
+		* @interface IItemV2
+		* @property {number|null} [id] ItemV2 id
+		* @property {pb.IItemMetaV2|null} [meta] ItemV2 meta
+		* @property {pb.IItemContent|null} [content] ItemV2 content
+		* @property {number|null} [tsMeta] ItemV2 tsMeta
+		* @property {number|null} [tsContent] ItemV2 tsContent
+		* @property {number|null} [tsCreate] ItemV2 tsCreate
+		*/
+		/**
+		* Constructs a new ItemV2.
+		* @memberof pb
+		* @classdesc Represents an ItemV2.
+		* @implements IItemV2
+		* @constructor
+		* @param {pb.IItemV2=} [properties] Properties to set
+		*/
+		function ItemV2(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemV2 id.
+		* @member {number} id
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemV2 meta.
+		* @member {pb.IItemMetaV2|null|undefined} meta
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.meta = null;
+		/**
+		* ItemV2 content.
+		* @member {pb.IItemContent|null|undefined} content
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.content = null;
+		/**
+		* ItemV2 tsMeta.
+		* @member {number} tsMeta
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.tsMeta = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemV2 tsContent.
+		* @member {number} tsContent
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.tsContent = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemV2 tsCreate.
+		* @member {number} tsCreate
+		* @memberof pb.ItemV2
+		* @instance
+		*/
+		ItemV2.prototype.tsCreate = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* Creates a new ItemV2 instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemV2
+		* @static
+		* @param {pb.IItemV2=} [properties] Properties to set
+		* @returns {pb.ItemV2} ItemV2 instance
+		*/
+		ItemV2.create = function create(properties) {
+			return new ItemV2(properties);
+		};
+		/**
+		* Encodes the specified ItemV2 message. Does not implicitly {@link pb.ItemV2.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemV2
+		* @static
+		* @param {pb.IItemV2} message ItemV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemV2.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.meta != null && Object.hasOwnProperty.call(message, "meta")) $root.pb.ItemMetaV2.encode(message.meta, writer.uint32(18).fork()).ldelim();
+			if (message.content != null && Object.hasOwnProperty.call(message, "content")) $root.pb.ItemContent.encode(message.content, writer.uint32(26).fork()).ldelim();
+			if (message.tsMeta != null && Object.hasOwnProperty.call(message, "tsMeta")) writer.uint32(32).uint64(message.tsMeta);
+			if (message.tsContent != null && Object.hasOwnProperty.call(message, "tsContent")) writer.uint32(40).uint64(message.tsContent);
+			if (message.tsCreate != null && Object.hasOwnProperty.call(message, "tsCreate")) writer.uint32(48).uint64(message.tsCreate);
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemV2 message, length delimited. Does not implicitly {@link pb.ItemV2.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemV2
+		* @static
+		* @param {pb.IItemV2} message ItemV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemV2.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemV2 message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemV2} ItemV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemV2.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemV2();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.meta = $root.pb.ItemMetaV2.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					case 3:
+						message.content = $root.pb.ItemContent.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					case 4:
+						message.tsMeta = reader.uint64();
+						break;
+					case 5:
+						message.tsContent = reader.uint64();
+						break;
+					case 6:
+						message.tsCreate = reader.uint64();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemV2 message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemV2} ItemV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemV2.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemV2 message.
+		* @function verify
+		* @memberof pb.ItemV2
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemV2.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.meta != null && message.hasOwnProperty("meta")) {
+				let error = $root.pb.ItemMetaV2.verify(message.meta, long + 1);
+				if (error) return "meta." + error;
+			}
+			if (message.content != null && message.hasOwnProperty("content")) {
+				let error = $root.pb.ItemContent.verify(message.content, long + 1);
+				if (error) return "content." + error;
+			}
+			if (message.tsMeta != null && message.hasOwnProperty("tsMeta")) {
+				if (!$util.isInteger(message.tsMeta) && !(message.tsMeta && $util.isInteger(message.tsMeta.low) && $util.isInteger(message.tsMeta.high))) return "tsMeta: integer|Long expected";
+			}
+			if (message.tsContent != null && message.hasOwnProperty("tsContent")) {
+				if (!$util.isInteger(message.tsContent) && !(message.tsContent && $util.isInteger(message.tsContent.low) && $util.isInteger(message.tsContent.high))) return "tsContent: integer|Long expected";
+			}
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) {
+				if (!$util.isInteger(message.tsCreate) && !(message.tsCreate && $util.isInteger(message.tsCreate.low) && $util.isInteger(message.tsCreate.high))) return "tsCreate: integer|Long expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemV2 message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemV2
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemV2} ItemV2
+		*/
+		ItemV2.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemV2) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemV2();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.meta != null) {
+				if (typeof object.meta !== "object") throw TypeError(".pb.ItemV2.meta: object expected");
+				message.meta = $root.pb.ItemMetaV2.fromObject(object.meta, long + 1);
+			}
+			if (object.content != null) {
+				if (typeof object.content !== "object") throw TypeError(".pb.ItemV2.content: object expected");
+				message.content = $root.pb.ItemContent.fromObject(object.content, long + 1);
+			}
+			if (object.tsMeta != null) {
+				if ($util.Long) (message.tsMeta = $util.Long.fromValue(object.tsMeta)).unsigned = true;
+				else if (typeof object.tsMeta === "string") message.tsMeta = parseInt(object.tsMeta, 10);
+				else if (typeof object.tsMeta === "number") message.tsMeta = object.tsMeta;
+				else if (typeof object.tsMeta === "object") message.tsMeta = new $util.LongBits(object.tsMeta.low >>> 0, object.tsMeta.high >>> 0).toNumber(true);
+			}
+			if (object.tsContent != null) {
+				if ($util.Long) (message.tsContent = $util.Long.fromValue(object.tsContent)).unsigned = true;
+				else if (typeof object.tsContent === "string") message.tsContent = parseInt(object.tsContent, 10);
+				else if (typeof object.tsContent === "number") message.tsContent = object.tsContent;
+				else if (typeof object.tsContent === "object") message.tsContent = new $util.LongBits(object.tsContent.low >>> 0, object.tsContent.high >>> 0).toNumber(true);
+			}
+			if (object.tsCreate != null) {
+				if ($util.Long) (message.tsCreate = $util.Long.fromValue(object.tsCreate)).unsigned = true;
+				else if (typeof object.tsCreate === "string") message.tsCreate = parseInt(object.tsCreate, 10);
+				else if (typeof object.tsCreate === "number") message.tsCreate = object.tsCreate;
+				else if (typeof object.tsCreate === "object") message.tsCreate = new $util.LongBits(object.tsCreate.low >>> 0, object.tsCreate.high >>> 0).toNumber(true);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemV2 message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemV2
+		* @static
+		* @param {pb.ItemV2} message ItemV2
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemV2.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				object.meta = null;
+				object.content = null;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsMeta = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsMeta = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsContent = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsContent = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsCreate = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsCreate = options.longs === String ? "0" : 0;
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.meta != null && message.hasOwnProperty("meta")) object.meta = $root.pb.ItemMetaV2.toObject(message.meta, options);
+			if (message.content != null && message.hasOwnProperty("content")) object.content = $root.pb.ItemContent.toObject(message.content, options);
+			if (message.tsMeta != null && message.hasOwnProperty("tsMeta")) if (typeof message.tsMeta === "number") object.tsMeta = options.longs === String ? String(message.tsMeta) : message.tsMeta;
+			else object.tsMeta = options.longs === String ? $util.Long.prototype.toString.call(message.tsMeta) : options.longs === Number ? new $util.LongBits(message.tsMeta.low >>> 0, message.tsMeta.high >>> 0).toNumber(true) : message.tsMeta;
+			if (message.tsContent != null && message.hasOwnProperty("tsContent")) if (typeof message.tsContent === "number") object.tsContent = options.longs === String ? String(message.tsContent) : message.tsContent;
+			else object.tsContent = options.longs === String ? $util.Long.prototype.toString.call(message.tsContent) : options.longs === Number ? new $util.LongBits(message.tsContent.low >>> 0, message.tsContent.high >>> 0).toNumber(true) : message.tsContent;
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) if (typeof message.tsCreate === "number") object.tsCreate = options.longs === String ? String(message.tsCreate) : message.tsCreate;
+			else object.tsCreate = options.longs === String ? $util.Long.prototype.toString.call(message.tsCreate) : options.longs === Number ? new $util.LongBits(message.tsCreate.low >>> 0, message.tsCreate.high >>> 0).toNumber(true) : message.tsCreate;
+			return object;
+		};
+		/**
+		* Converts this ItemV2 to JSON.
+		* @function toJSON
+		* @memberof pb.ItemV2
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemV2.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemV2
+		* @function getTypeUrl
+		* @memberof pb.ItemV2
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemV2.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemV2";
+		};
+		return ItemV2;
+	})();
+	pb.ItemUpdate = (function() {
+		/**
+		* Properties of an ItemUpdate.
+		* @memberof pb
+		* @interface IItemUpdate
+		* @property {number|null} [id] ItemUpdate id
+		* @property {pb.IItemMetaV2|null} [meta] ItemUpdate meta
+		* @property {pb.IItemContent|null} [content] ItemUpdate content
+		*/
+		/**
+		* Constructs a new ItemUpdate.
+		* @memberof pb
+		* @classdesc Represents an ItemUpdate.
+		* @implements IItemUpdate
+		* @constructor
+		* @param {pb.IItemUpdate=} [properties] Properties to set
+		*/
+		function ItemUpdate(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemUpdate id.
+		* @member {number} id
+		* @memberof pb.ItemUpdate
+		* @instance
+		*/
+		ItemUpdate.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemUpdate meta.
+		* @member {pb.IItemMetaV2|null|undefined} meta
+		* @memberof pb.ItemUpdate
+		* @instance
+		*/
+		ItemUpdate.prototype.meta = null;
+		/**
+		* ItemUpdate content.
+		* @member {pb.IItemContent|null|undefined} content
+		* @memberof pb.ItemUpdate
+		* @instance
+		*/
+		ItemUpdate.prototype.content = null;
+		/**
+		* Creates a new ItemUpdate instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {pb.IItemUpdate=} [properties] Properties to set
+		* @returns {pb.ItemUpdate} ItemUpdate instance
+		*/
+		ItemUpdate.create = function create(properties) {
+			return new ItemUpdate(properties);
+		};
+		/**
+		* Encodes the specified ItemUpdate message. Does not implicitly {@link pb.ItemUpdate.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {pb.IItemUpdate} message ItemUpdate message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemUpdate.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.meta != null && Object.hasOwnProperty.call(message, "meta")) $root.pb.ItemMetaV2.encode(message.meta, writer.uint32(18).fork()).ldelim();
+			if (message.content != null && Object.hasOwnProperty.call(message, "content")) $root.pb.ItemContent.encode(message.content, writer.uint32(26).fork()).ldelim();
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemUpdate message, length delimited. Does not implicitly {@link pb.ItemUpdate.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {pb.IItemUpdate} message ItemUpdate message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemUpdate.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemUpdate message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemUpdate} ItemUpdate
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemUpdate.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemUpdate();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.meta = $root.pb.ItemMetaV2.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					case 3:
+						message.content = $root.pb.ItemContent.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemUpdate message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemUpdate} ItemUpdate
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemUpdate.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemUpdate message.
+		* @function verify
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemUpdate.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.meta != null && message.hasOwnProperty("meta")) {
+				let error = $root.pb.ItemMetaV2.verify(message.meta, long + 1);
+				if (error) return "meta." + error;
+			}
+			if (message.content != null && message.hasOwnProperty("content")) {
+				let error = $root.pb.ItemContent.verify(message.content, long + 1);
+				if (error) return "content." + error;
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemUpdate message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemUpdate} ItemUpdate
+		*/
+		ItemUpdate.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemUpdate) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemUpdate();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.meta != null) {
+				if (typeof object.meta !== "object") throw TypeError(".pb.ItemUpdate.meta: object expected");
+				message.meta = $root.pb.ItemMetaV2.fromObject(object.meta, long + 1);
+			}
+			if (object.content != null) {
+				if (typeof object.content !== "object") throw TypeError(".pb.ItemUpdate.content: object expected");
+				message.content = $root.pb.ItemContent.fromObject(object.content, long + 1);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemUpdate message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {pb.ItemUpdate} message ItemUpdate
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemUpdate.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				object.meta = null;
+				object.content = null;
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.meta != null && message.hasOwnProperty("meta")) object.meta = $root.pb.ItemMetaV2.toObject(message.meta, options);
+			if (message.content != null && message.hasOwnProperty("content")) object.content = $root.pb.ItemContent.toObject(message.content, options);
+			return object;
+		};
+		/**
+		* Converts this ItemUpdate to JSON.
+		* @function toJSON
+		* @memberof pb.ItemUpdate
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemUpdate.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemUpdate
+		* @function getTypeUrl
+		* @memberof pb.ItemUpdate
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemUpdate.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemUpdate";
+		};
+		return ItemUpdate;
+	})();
 	pb.ItemLite = (function() {
 		/**
 		* Properties of an ItemLite.
@@ -3648,6 +4431,247 @@ var pb = $root.pb = (() => {
 			return typeUrlPrefix + "/pb.ItemLite";
 		};
 		return ItemLite;
+	})();
+	pb.ItemLiteV2 = (function() {
+		/**
+		* Properties of an ItemLiteV2.
+		* @memberof pb
+		* @interface IItemLiteV2
+		* @property {number|null} [id] ItemLiteV2 id
+		* @property {pb.IItemMetaV2|null} [meta] ItemLiteV2 meta
+		* @property {number|null} [tsCreate] ItemLiteV2 tsCreate
+		*/
+		/**
+		* Constructs a new ItemLiteV2.
+		* @memberof pb
+		* @classdesc Represents an ItemLiteV2.
+		* @implements IItemLiteV2
+		* @constructor
+		* @param {pb.IItemLiteV2=} [properties] Properties to set
+		*/
+		function ItemLiteV2(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemLiteV2 id.
+		* @member {number} id
+		* @memberof pb.ItemLiteV2
+		* @instance
+		*/
+		ItemLiteV2.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemLiteV2 meta.
+		* @member {pb.IItemMetaV2|null|undefined} meta
+		* @memberof pb.ItemLiteV2
+		* @instance
+		*/
+		ItemLiteV2.prototype.meta = null;
+		/**
+		* ItemLiteV2 tsCreate.
+		* @member {number} tsCreate
+		* @memberof pb.ItemLiteV2
+		* @instance
+		*/
+		ItemLiteV2.prototype.tsCreate = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* Creates a new ItemLiteV2 instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {pb.IItemLiteV2=} [properties] Properties to set
+		* @returns {pb.ItemLiteV2} ItemLiteV2 instance
+		*/
+		ItemLiteV2.create = function create(properties) {
+			return new ItemLiteV2(properties);
+		};
+		/**
+		* Encodes the specified ItemLiteV2 message. Does not implicitly {@link pb.ItemLiteV2.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {pb.IItemLiteV2} message ItemLiteV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemLiteV2.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.meta != null && Object.hasOwnProperty.call(message, "meta")) $root.pb.ItemMetaV2.encode(message.meta, writer.uint32(18).fork()).ldelim();
+			if (message.tsCreate != null && Object.hasOwnProperty.call(message, "tsCreate")) writer.uint32(48).uint64(message.tsCreate);
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemLiteV2 message, length delimited. Does not implicitly {@link pb.ItemLiteV2.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {pb.IItemLiteV2} message ItemLiteV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemLiteV2.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemLiteV2 message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemLiteV2} ItemLiteV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemLiteV2.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemLiteV2();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.meta = $root.pb.ItemMetaV2.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					case 6:
+						message.tsCreate = reader.uint64();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemLiteV2 message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemLiteV2} ItemLiteV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemLiteV2.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemLiteV2 message.
+		* @function verify
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemLiteV2.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.meta != null && message.hasOwnProperty("meta")) {
+				let error = $root.pb.ItemMetaV2.verify(message.meta, long + 1);
+				if (error) return "meta." + error;
+			}
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) {
+				if (!$util.isInteger(message.tsCreate) && !(message.tsCreate && $util.isInteger(message.tsCreate.low) && $util.isInteger(message.tsCreate.high))) return "tsCreate: integer|Long expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemLiteV2 message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemLiteV2} ItemLiteV2
+		*/
+		ItemLiteV2.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemLiteV2) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemLiteV2();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.meta != null) {
+				if (typeof object.meta !== "object") throw TypeError(".pb.ItemLiteV2.meta: object expected");
+				message.meta = $root.pb.ItemMetaV2.fromObject(object.meta, long + 1);
+			}
+			if (object.tsCreate != null) {
+				if ($util.Long) (message.tsCreate = $util.Long.fromValue(object.tsCreate)).unsigned = true;
+				else if (typeof object.tsCreate === "string") message.tsCreate = parseInt(object.tsCreate, 10);
+				else if (typeof object.tsCreate === "number") message.tsCreate = object.tsCreate;
+				else if (typeof object.tsCreate === "object") message.tsCreate = new $util.LongBits(object.tsCreate.low >>> 0, object.tsCreate.high >>> 0).toNumber(true);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemLiteV2 message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {pb.ItemLiteV2} message ItemLiteV2
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemLiteV2.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				object.meta = null;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsCreate = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsCreate = options.longs === String ? "0" : 0;
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.meta != null && message.hasOwnProperty("meta")) object.meta = $root.pb.ItemMetaV2.toObject(message.meta, options);
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) if (typeof message.tsCreate === "number") object.tsCreate = options.longs === String ? String(message.tsCreate) : message.tsCreate;
+			else object.tsCreate = options.longs === String ? $util.Long.prototype.toString.call(message.tsCreate) : options.longs === Number ? new $util.LongBits(message.tsCreate.low >>> 0, message.tsCreate.high >>> 0).toNumber(true) : message.tsCreate;
+			return object;
+		};
+		/**
+		* Converts this ItemLiteV2 to JSON.
+		* @function toJSON
+		* @memberof pb.ItemLiteV2
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemLiteV2.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemLiteV2
+		* @function getTypeUrl
+		* @memberof pb.ItemLiteV2
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemLiteV2.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemLiteV2";
+		};
+		return ItemLiteV2;
 	})();
 	pb.ItemMeta = (function() {
 		/**
@@ -4262,13 +5286,635 @@ var pb = $root.pb = (() => {
 		};
 		return ItemDB;
 	})();
+	pb.ItemDBv2 = (function() {
+		/**
+		* Properties of an ItemDBv2.
+		* @memberof pb
+		* @interface IItemDBv2
+		* @property {number|null} [id] ItemDBv2 id
+		* @property {number|null} [metaRevisionId] ItemDBv2 metaRevisionId
+		* @property {number|null} [contentRevisionId] ItemDBv2 contentRevisionId
+		* @property {number|null} [tsMeta] ItemDBv2 tsMeta
+		* @property {number|null} [tsContent] ItemDBv2 tsContent
+		* @property {number|null} [tsCreate] ItemDBv2 tsCreate
+		*/
+		/**
+		* Constructs a new ItemDBv2.
+		* @memberof pb
+		* @classdesc Represents an ItemDBv2.
+		* @implements IItemDBv2
+		* @constructor
+		* @param {pb.IItemDBv2=} [properties] Properties to set
+		*/
+		function ItemDBv2(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemDBv2 id.
+		* @member {number} id
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemDBv2 metaRevisionId.
+		* @member {number} metaRevisionId
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.metaRevisionId = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemDBv2 contentRevisionId.
+		* @member {number} contentRevisionId
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.contentRevisionId = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemDBv2 tsMeta.
+		* @member {number} tsMeta
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.tsMeta = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemDBv2 tsContent.
+		* @member {number} tsContent
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.tsContent = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemDBv2 tsCreate.
+		* @member {number} tsCreate
+		* @memberof pb.ItemDBv2
+		* @instance
+		*/
+		ItemDBv2.prototype.tsCreate = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* Creates a new ItemDBv2 instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {pb.IItemDBv2=} [properties] Properties to set
+		* @returns {pb.ItemDBv2} ItemDBv2 instance
+		*/
+		ItemDBv2.create = function create(properties) {
+			return new ItemDBv2(properties);
+		};
+		/**
+		* Encodes the specified ItemDBv2 message. Does not implicitly {@link pb.ItemDBv2.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {pb.IItemDBv2} message ItemDBv2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemDBv2.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.metaRevisionId != null && Object.hasOwnProperty.call(message, "metaRevisionId")) writer.uint32(16).uint64(message.metaRevisionId);
+			if (message.contentRevisionId != null && Object.hasOwnProperty.call(message, "contentRevisionId")) writer.uint32(24).uint64(message.contentRevisionId);
+			if (message.tsMeta != null && Object.hasOwnProperty.call(message, "tsMeta")) writer.uint32(32).uint64(message.tsMeta);
+			if (message.tsContent != null && Object.hasOwnProperty.call(message, "tsContent")) writer.uint32(40).uint64(message.tsContent);
+			if (message.tsCreate != null && Object.hasOwnProperty.call(message, "tsCreate")) writer.uint32(48).uint64(message.tsCreate);
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemDBv2 message, length delimited. Does not implicitly {@link pb.ItemDBv2.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {pb.IItemDBv2} message ItemDBv2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemDBv2.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemDBv2 message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemDBv2} ItemDBv2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemDBv2.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemDBv2();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.metaRevisionId = reader.uint64();
+						break;
+					case 3:
+						message.contentRevisionId = reader.uint64();
+						break;
+					case 4:
+						message.tsMeta = reader.uint64();
+						break;
+					case 5:
+						message.tsContent = reader.uint64();
+						break;
+					case 6:
+						message.tsCreate = reader.uint64();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemDBv2 message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemDBv2} ItemDBv2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemDBv2.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemDBv2 message.
+		* @function verify
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemDBv2.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.metaRevisionId != null && message.hasOwnProperty("metaRevisionId")) {
+				if (!$util.isInteger(message.metaRevisionId) && !(message.metaRevisionId && $util.isInteger(message.metaRevisionId.low) && $util.isInteger(message.metaRevisionId.high))) return "metaRevisionId: integer|Long expected";
+			}
+			if (message.contentRevisionId != null && message.hasOwnProperty("contentRevisionId")) {
+				if (!$util.isInteger(message.contentRevisionId) && !(message.contentRevisionId && $util.isInteger(message.contentRevisionId.low) && $util.isInteger(message.contentRevisionId.high))) return "contentRevisionId: integer|Long expected";
+			}
+			if (message.tsMeta != null && message.hasOwnProperty("tsMeta")) {
+				if (!$util.isInteger(message.tsMeta) && !(message.tsMeta && $util.isInteger(message.tsMeta.low) && $util.isInteger(message.tsMeta.high))) return "tsMeta: integer|Long expected";
+			}
+			if (message.tsContent != null && message.hasOwnProperty("tsContent")) {
+				if (!$util.isInteger(message.tsContent) && !(message.tsContent && $util.isInteger(message.tsContent.low) && $util.isInteger(message.tsContent.high))) return "tsContent: integer|Long expected";
+			}
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) {
+				if (!$util.isInteger(message.tsCreate) && !(message.tsCreate && $util.isInteger(message.tsCreate.low) && $util.isInteger(message.tsCreate.high))) return "tsCreate: integer|Long expected";
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemDBv2 message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemDBv2} ItemDBv2
+		*/
+		ItemDBv2.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemDBv2) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemDBv2();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.metaRevisionId != null) {
+				if ($util.Long) (message.metaRevisionId = $util.Long.fromValue(object.metaRevisionId)).unsigned = true;
+				else if (typeof object.metaRevisionId === "string") message.metaRevisionId = parseInt(object.metaRevisionId, 10);
+				else if (typeof object.metaRevisionId === "number") message.metaRevisionId = object.metaRevisionId;
+				else if (typeof object.metaRevisionId === "object") message.metaRevisionId = new $util.LongBits(object.metaRevisionId.low >>> 0, object.metaRevisionId.high >>> 0).toNumber(true);
+			}
+			if (object.contentRevisionId != null) {
+				if ($util.Long) (message.contentRevisionId = $util.Long.fromValue(object.contentRevisionId)).unsigned = true;
+				else if (typeof object.contentRevisionId === "string") message.contentRevisionId = parseInt(object.contentRevisionId, 10);
+				else if (typeof object.contentRevisionId === "number") message.contentRevisionId = object.contentRevisionId;
+				else if (typeof object.contentRevisionId === "object") message.contentRevisionId = new $util.LongBits(object.contentRevisionId.low >>> 0, object.contentRevisionId.high >>> 0).toNumber(true);
+			}
+			if (object.tsMeta != null) {
+				if ($util.Long) (message.tsMeta = $util.Long.fromValue(object.tsMeta)).unsigned = true;
+				else if (typeof object.tsMeta === "string") message.tsMeta = parseInt(object.tsMeta, 10);
+				else if (typeof object.tsMeta === "number") message.tsMeta = object.tsMeta;
+				else if (typeof object.tsMeta === "object") message.tsMeta = new $util.LongBits(object.tsMeta.low >>> 0, object.tsMeta.high >>> 0).toNumber(true);
+			}
+			if (object.tsContent != null) {
+				if ($util.Long) (message.tsContent = $util.Long.fromValue(object.tsContent)).unsigned = true;
+				else if (typeof object.tsContent === "string") message.tsContent = parseInt(object.tsContent, 10);
+				else if (typeof object.tsContent === "number") message.tsContent = object.tsContent;
+				else if (typeof object.tsContent === "object") message.tsContent = new $util.LongBits(object.tsContent.low >>> 0, object.tsContent.high >>> 0).toNumber(true);
+			}
+			if (object.tsCreate != null) {
+				if ($util.Long) (message.tsCreate = $util.Long.fromValue(object.tsCreate)).unsigned = true;
+				else if (typeof object.tsCreate === "string") message.tsCreate = parseInt(object.tsCreate, 10);
+				else if (typeof object.tsCreate === "number") message.tsCreate = object.tsCreate;
+				else if (typeof object.tsCreate === "object") message.tsCreate = new $util.LongBits(object.tsCreate.low >>> 0, object.tsCreate.high >>> 0).toNumber(true);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemDBv2 message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {pb.ItemDBv2} message ItemDBv2
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemDBv2.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.metaRevisionId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.metaRevisionId = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.contentRevisionId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.contentRevisionId = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsMeta = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsMeta = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsContent = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsContent = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsCreate = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsCreate = options.longs === String ? "0" : 0;
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.metaRevisionId != null && message.hasOwnProperty("metaRevisionId")) if (typeof message.metaRevisionId === "number") object.metaRevisionId = options.longs === String ? String(message.metaRevisionId) : message.metaRevisionId;
+			else object.metaRevisionId = options.longs === String ? $util.Long.prototype.toString.call(message.metaRevisionId) : options.longs === Number ? new $util.LongBits(message.metaRevisionId.low >>> 0, message.metaRevisionId.high >>> 0).toNumber(true) : message.metaRevisionId;
+			if (message.contentRevisionId != null && message.hasOwnProperty("contentRevisionId")) if (typeof message.contentRevisionId === "number") object.contentRevisionId = options.longs === String ? String(message.contentRevisionId) : message.contentRevisionId;
+			else object.contentRevisionId = options.longs === String ? $util.Long.prototype.toString.call(message.contentRevisionId) : options.longs === Number ? new $util.LongBits(message.contentRevisionId.low >>> 0, message.contentRevisionId.high >>> 0).toNumber(true) : message.contentRevisionId;
+			if (message.tsMeta != null && message.hasOwnProperty("tsMeta")) if (typeof message.tsMeta === "number") object.tsMeta = options.longs === String ? String(message.tsMeta) : message.tsMeta;
+			else object.tsMeta = options.longs === String ? $util.Long.prototype.toString.call(message.tsMeta) : options.longs === Number ? new $util.LongBits(message.tsMeta.low >>> 0, message.tsMeta.high >>> 0).toNumber(true) : message.tsMeta;
+			if (message.tsContent != null && message.hasOwnProperty("tsContent")) if (typeof message.tsContent === "number") object.tsContent = options.longs === String ? String(message.tsContent) : message.tsContent;
+			else object.tsContent = options.longs === String ? $util.Long.prototype.toString.call(message.tsContent) : options.longs === Number ? new $util.LongBits(message.tsContent.low >>> 0, message.tsContent.high >>> 0).toNumber(true) : message.tsContent;
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) if (typeof message.tsCreate === "number") object.tsCreate = options.longs === String ? String(message.tsCreate) : message.tsCreate;
+			else object.tsCreate = options.longs === String ? $util.Long.prototype.toString.call(message.tsCreate) : options.longs === Number ? new $util.LongBits(message.tsCreate.low >>> 0, message.tsCreate.high >>> 0).toNumber(true) : message.tsCreate;
+			return object;
+		};
+		/**
+		* Converts this ItemDBv2 to JSON.
+		* @function toJSON
+		* @memberof pb.ItemDBv2
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemDBv2.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemDBv2
+		* @function getTypeUrl
+		* @memberof pb.ItemDBv2
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemDBv2.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemDBv2";
+		};
+		return ItemDBv2;
+	})();
+	pb.ItemMetaV2 = (function() {
+		/**
+		* Properties of an ItemMetaV2.
+		* @memberof pb
+		* @interface IItemMetaV2
+		* @property {number|null} [tsHide] ItemMetaV2 tsHide
+		* @property {number|null} [root] ItemMetaV2 root
+		* @property {string|null} [title] ItemMetaV2 title
+		* @property {boolean|null} [original] ItemMetaV2 original
+		* @property {boolean|null} [trivial] ItemMetaV2 trivial
+		* @property {pb.IOpenGraph|null} [og] ItemMetaV2 og
+		*/
+		/**
+		* Constructs a new ItemMetaV2.
+		* @memberof pb
+		* @classdesc Represents an ItemMetaV2.
+		* @implements IItemMetaV2
+		* @constructor
+		* @param {pb.IItemMetaV2=} [properties] Properties to set
+		*/
+		function ItemMetaV2(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* ItemMetaV2 tsHide.
+		* @member {number} tsHide
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.tsHide = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemMetaV2 root.
+		* @member {number} root
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.root = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* ItemMetaV2 title.
+		* @member {string} title
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.title = "";
+		/**
+		* ItemMetaV2 original.
+		* @member {boolean} original
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.original = false;
+		/**
+		* ItemMetaV2 trivial.
+		* @member {boolean} trivial
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.trivial = false;
+		/**
+		* ItemMetaV2 og.
+		* @member {pb.IOpenGraph|null|undefined} og
+		* @memberof pb.ItemMetaV2
+		* @instance
+		*/
+		ItemMetaV2.prototype.og = null;
+		/**
+		* Creates a new ItemMetaV2 instance using the specified properties.
+		* @function create
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {pb.IItemMetaV2=} [properties] Properties to set
+		* @returns {pb.ItemMetaV2} ItemMetaV2 instance
+		*/
+		ItemMetaV2.create = function create(properties) {
+			return new ItemMetaV2(properties);
+		};
+		/**
+		* Encodes the specified ItemMetaV2 message. Does not implicitly {@link pb.ItemMetaV2.verify|verify} messages.
+		* @function encode
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {pb.IItemMetaV2} message ItemMetaV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemMetaV2.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.tsHide != null && Object.hasOwnProperty.call(message, "tsHide")) writer.uint32(8).uint64(message.tsHide);
+			if (message.root != null && Object.hasOwnProperty.call(message, "root")) writer.uint32(16).uint64(message.root);
+			if (message.title != null && Object.hasOwnProperty.call(message, "title")) writer.uint32(26).string(message.title);
+			if (message.original != null && Object.hasOwnProperty.call(message, "original")) writer.uint32(32).bool(message.original);
+			if (message.trivial != null && Object.hasOwnProperty.call(message, "trivial")) writer.uint32(40).bool(message.trivial);
+			if (message.og != null && Object.hasOwnProperty.call(message, "og")) $root.pb.OpenGraph.encode(message.og, writer.uint32(58).fork()).ldelim();
+			return writer;
+		};
+		/**
+		* Encodes the specified ItemMetaV2 message, length delimited. Does not implicitly {@link pb.ItemMetaV2.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {pb.IItemMetaV2} message ItemMetaV2 message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		ItemMetaV2.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes an ItemMetaV2 message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.ItemMetaV2} ItemMetaV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemMetaV2.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.ItemMetaV2();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.tsHide = reader.uint64();
+						break;
+					case 2:
+						message.root = reader.uint64();
+						break;
+					case 3:
+						message.title = reader.string();
+						break;
+					case 4:
+						message.original = reader.bool();
+						break;
+					case 5:
+						message.trivial = reader.bool();
+						break;
+					case 7:
+						message.og = $root.pb.OpenGraph.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes an ItemMetaV2 message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.ItemMetaV2} ItemMetaV2
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		ItemMetaV2.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies an ItemMetaV2 message.
+		* @function verify
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		ItemMetaV2.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.tsHide != null && message.hasOwnProperty("tsHide")) {
+				if (!$util.isInteger(message.tsHide) && !(message.tsHide && $util.isInteger(message.tsHide.low) && $util.isInteger(message.tsHide.high))) return "tsHide: integer|Long expected";
+			}
+			if (message.root != null && message.hasOwnProperty("root")) {
+				if (!$util.isInteger(message.root) && !(message.root && $util.isInteger(message.root.low) && $util.isInteger(message.root.high))) return "root: integer|Long expected";
+			}
+			if (message.title != null && message.hasOwnProperty("title")) {
+				if (!$util.isString(message.title)) return "title: string expected";
+			}
+			if (message.original != null && message.hasOwnProperty("original")) {
+				if (typeof message.original !== "boolean") return "original: boolean expected";
+			}
+			if (message.trivial != null && message.hasOwnProperty("trivial")) {
+				if (typeof message.trivial !== "boolean") return "trivial: boolean expected";
+			}
+			if (message.og != null && message.hasOwnProperty("og")) {
+				let error = $root.pb.OpenGraph.verify(message.og, long + 1);
+				if (error) return "og." + error;
+			}
+			return null;
+		};
+		/**
+		* Creates an ItemMetaV2 message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.ItemMetaV2} ItemMetaV2
+		*/
+		ItemMetaV2.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.ItemMetaV2) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.ItemMetaV2();
+			if (object.tsHide != null) {
+				if ($util.Long) (message.tsHide = $util.Long.fromValue(object.tsHide)).unsigned = true;
+				else if (typeof object.tsHide === "string") message.tsHide = parseInt(object.tsHide, 10);
+				else if (typeof object.tsHide === "number") message.tsHide = object.tsHide;
+				else if (typeof object.tsHide === "object") message.tsHide = new $util.LongBits(object.tsHide.low >>> 0, object.tsHide.high >>> 0).toNumber(true);
+			}
+			if (object.root != null) {
+				if ($util.Long) (message.root = $util.Long.fromValue(object.root)).unsigned = true;
+				else if (typeof object.root === "string") message.root = parseInt(object.root, 10);
+				else if (typeof object.root === "number") message.root = object.root;
+				else if (typeof object.root === "object") message.root = new $util.LongBits(object.root.low >>> 0, object.root.high >>> 0).toNumber(true);
+			}
+			if (object.title != null) message.title = String(object.title);
+			if (object.original != null) message.original = Boolean(object.original);
+			if (object.trivial != null) message.trivial = Boolean(object.trivial);
+			if (object.og != null) {
+				if (typeof object.og !== "object") throw TypeError(".pb.ItemMetaV2.og: object expected");
+				message.og = $root.pb.OpenGraph.fromObject(object.og, long + 1);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from an ItemMetaV2 message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {pb.ItemMetaV2} message ItemMetaV2
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		ItemMetaV2.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsHide = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsHide = options.longs === String ? "0" : 0;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.root = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.root = options.longs === String ? "0" : 0;
+				object.title = "";
+				object.original = false;
+				object.trivial = false;
+				object.og = null;
+			}
+			if (message.tsHide != null && message.hasOwnProperty("tsHide")) if (typeof message.tsHide === "number") object.tsHide = options.longs === String ? String(message.tsHide) : message.tsHide;
+			else object.tsHide = options.longs === String ? $util.Long.prototype.toString.call(message.tsHide) : options.longs === Number ? new $util.LongBits(message.tsHide.low >>> 0, message.tsHide.high >>> 0).toNumber(true) : message.tsHide;
+			if (message.root != null && message.hasOwnProperty("root")) if (typeof message.root === "number") object.root = options.longs === String ? String(message.root) : message.root;
+			else object.root = options.longs === String ? $util.Long.prototype.toString.call(message.root) : options.longs === Number ? new $util.LongBits(message.root.low >>> 0, message.root.high >>> 0).toNumber(true) : message.root;
+			if (message.title != null && message.hasOwnProperty("title")) object.title = message.title;
+			if (message.original != null && message.hasOwnProperty("original")) object.original = message.original;
+			if (message.trivial != null && message.hasOwnProperty("trivial")) object.trivial = message.trivial;
+			if (message.og != null && message.hasOwnProperty("og")) object.og = $root.pb.OpenGraph.toObject(message.og, options);
+			return object;
+		};
+		/**
+		* Converts this ItemMetaV2 to JSON.
+		* @function toJSON
+		* @memberof pb.ItemMetaV2
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		ItemMetaV2.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for ItemMetaV2
+		* @function getTypeUrl
+		* @memberof pb.ItemMetaV2
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		ItemMetaV2.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.ItemMetaV2";
+		};
+		return ItemMetaV2;
+	})();
 	pb.ItemEdit = (function() {
 		/**
 		* Properties of an ItemEdit.
 		* @memberof pb
 		* @interface IItemEdit
 		* @property {number|null} [id] ItemEdit id
-		* @property {pb.IRevision|null} [content] ItemEdit content
+		* @property {pb.IItemContent|null} [content] ItemEdit content
 		* @property {string|null} [title] ItemEdit title
 		* @property {number|null} [root] ItemEdit root
 		* @property {number|null} [tsCreate] ItemEdit tsCreate
@@ -4300,7 +5946,7 @@ var pb = $root.pb = (() => {
 		ItemEdit.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
 		/**
 		* ItemEdit content.
-		* @member {pb.IRevision|null|undefined} content
+		* @member {pb.IItemContent|null|undefined} content
 		* @memberof pb.ItemEdit
 		* @instance
 		*/
@@ -4384,7 +6030,7 @@ var pb = $root.pb = (() => {
 		ItemEdit.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
 			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
-			if (message.content != null && Object.hasOwnProperty.call(message, "content")) $root.pb.Revision.encode(message.content, writer.uint32(18).fork()).ldelim();
+			if (message.content != null && Object.hasOwnProperty.call(message, "content")) $root.pb.ItemContent.encode(message.content, writer.uint32(18).fork()).ldelim();
 			if (message.title != null && Object.hasOwnProperty.call(message, "title")) writer.uint32(26).string(message.title);
 			if (message.root != null && Object.hasOwnProperty.call(message, "root")) writer.uint32(32).uint64(message.root);
 			if (message.tsCreate != null && Object.hasOwnProperty.call(message, "tsCreate")) writer.uint32(40).uint64(message.tsCreate);
@@ -4431,7 +6077,7 @@ var pb = $root.pb = (() => {
 						message.id = reader.uint64();
 						break;
 					case 2:
-						message.content = $root.pb.Revision.decode(reader, reader.uint32(), void 0, long + 1);
+						message.content = $root.pb.ItemContent.decode(reader, reader.uint32(), void 0, long + 1);
 						break;
 					case 3:
 						message.title = reader.string();
@@ -4494,7 +6140,7 @@ var pb = $root.pb = (() => {
 				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
 			}
 			if (message.content != null && message.hasOwnProperty("content")) {
-				let error = $root.pb.Revision.verify(message.content, long + 1);
+				let error = $root.pb.ItemContent.verify(message.content, long + 1);
 				if (error) return "content." + error;
 			}
 			if (message.title != null && message.hasOwnProperty("title")) {
@@ -4545,7 +6191,7 @@ var pb = $root.pb = (() => {
 			}
 			if (object.content != null) {
 				if (typeof object.content !== "object") throw TypeError(".pb.ItemEdit.content: object expected");
-				message.content = $root.pb.Revision.fromObject(object.content, long + 1);
+				message.content = $root.pb.ItemContent.fromObject(object.content, long + 1);
 			}
 			if (object.title != null) message.title = String(object.title);
 			if (object.root != null) {
@@ -4605,7 +6251,7 @@ var pb = $root.pb = (() => {
 			}
 			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
 			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
-			if (message.content != null && message.hasOwnProperty("content")) object.content = $root.pb.Revision.toObject(message.content, options);
+			if (message.content != null && message.hasOwnProperty("content")) object.content = $root.pb.ItemContent.toObject(message.content, options);
 			if (message.title != null && message.hasOwnProperty("title")) object.title = message.title;
 			if (message.root != null && message.hasOwnProperty("root")) if (typeof message.root === "number") object.root = options.longs === String ? String(message.root) : message.root;
 			else object.root = options.longs === String ? $util.Long.prototype.toString.call(message.root) : options.longs === Number ? new $util.LongBits(message.root.low >>> 0, message.root.high >>> 0).toNumber(true) : message.root;
@@ -4647,7 +6293,7 @@ var pb = $root.pb = (() => {
 		* Properties of an ItemList.
 		* @memberof pb
 		* @interface IItemList
-		* @property {Array.<pb.IItem>|null} [list] ItemList list
+		* @property {Array.<pb.IItemV2>|null} [list] ItemList list
 		* @property {number|null} [cursor] ItemList cursor
 		* @property {number|null} [effected] ItemList effected
 		*/
@@ -4667,7 +6313,7 @@ var pb = $root.pb = (() => {
 		}
 		/**
 		* ItemList list.
-		* @member {Array.<pb.IItem>} list
+		* @member {Array.<pb.IItemV2>} list
 		* @memberof pb.ItemList
 		* @instance
 		*/
@@ -4708,7 +6354,7 @@ var pb = $root.pb = (() => {
 		*/
 		ItemList.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
-			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.Item.encode(message.list[i], writer.uint32(10).fork()).ldelim();
+			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.ItemV2.encode(message.list[i], writer.uint32(10).fork()).ldelim();
 			if (message.cursor != null && Object.hasOwnProperty.call(message, "cursor")) writer.uint32(16).uint64(message.cursor);
 			if (message.effected != null && Object.hasOwnProperty.call(message, "effected")) writer.uint32(24).uint64(message.effected);
 			return writer;
@@ -4747,7 +6393,7 @@ var pb = $root.pb = (() => {
 				switch (tag >>> 3) {
 					case 1:
 						if (!(message.list && message.list.length)) message.list = [];
-						message.list.push($root.pb.Item.decode(reader, reader.uint32(), void 0, long + 1));
+						message.list.push($root.pb.ItemV2.decode(reader, reader.uint32(), void 0, long + 1));
 						break;
 					case 2:
 						message.cursor = reader.uint64();
@@ -4791,7 +6437,7 @@ var pb = $root.pb = (() => {
 			if (message.list != null && message.hasOwnProperty("list")) {
 				if (!Array.isArray(message.list)) return "list: array expected";
 				for (let i = 0; i < message.list.length; ++i) {
-					let error = $root.pb.Item.verify(message.list[i], long + 1);
+					let error = $root.pb.ItemV2.verify(message.list[i], long + 1);
 					if (error) return "list." + error;
 				}
 			}
@@ -4821,7 +6467,7 @@ var pb = $root.pb = (() => {
 				message.list = [];
 				for (let i = 0; i < object.list.length; ++i) {
 					if (typeof object.list[i] !== "object") throw TypeError(".pb.ItemList.list: object expected");
-					message.list[i] = $root.pb.Item.fromObject(object.list[i], long + 1);
+					message.list[i] = $root.pb.ItemV2.fromObject(object.list[i], long + 1);
 				}
 			}
 			if (object.cursor != null) {
@@ -4863,7 +6509,7 @@ var pb = $root.pb = (() => {
 			}
 			if (message.list && message.list.length) {
 				object.list = [];
-				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.Item.toObject(message.list[j], options);
+				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.ItemV2.toObject(message.list[j], options);
 			}
 			if (message.cursor != null && message.hasOwnProperty("cursor")) if (typeof message.cursor === "number") object.cursor = options.longs === String ? String(message.cursor) : message.cursor;
 			else object.cursor = options.longs === String ? $util.Long.prototype.toString.call(message.cursor) : options.longs === Number ? new $util.LongBits(message.cursor.low >>> 0, message.cursor.high >>> 0).toNumber(true) : message.cursor;
@@ -4894,6 +6540,181 @@ var pb = $root.pb = (() => {
 			return typeUrlPrefix + "/pb.ItemList";
 		};
 		return ItemList;
+	})();
+	pb.Format = (function() {
+		/**
+		* Properties of a Format.
+		* @memberof pb
+		* @interface IFormat
+		*/
+		/**
+		* Constructs a new Format.
+		* @memberof pb
+		* @classdesc Represents a Format.
+		* @implements IFormat
+		* @constructor
+		* @param {pb.IFormat=} [properties] Properties to set
+		*/
+		function Format(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* Creates a new Format instance using the specified properties.
+		* @function create
+		* @memberof pb.Format
+		* @static
+		* @param {pb.IFormat=} [properties] Properties to set
+		* @returns {pb.Format} Format instance
+		*/
+		Format.create = function create(properties) {
+			return new Format(properties);
+		};
+		/**
+		* Encodes the specified Format message. Does not implicitly {@link pb.Format.verify|verify} messages.
+		* @function encode
+		* @memberof pb.Format
+		* @static
+		* @param {pb.IFormat} message Format message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Format.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			return writer;
+		};
+		/**
+		* Encodes the specified Format message, length delimited. Does not implicitly {@link pb.Format.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.Format
+		* @static
+		* @param {pb.IFormat} message Format message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		Format.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes a Format message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.Format
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.Format} Format
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Format.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.Format();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes a Format message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.Format
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.Format} Format
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		Format.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies a Format message.
+		* @function verify
+		* @memberof pb.Format
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		Format.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			return null;
+		};
+		/**
+		* Creates a Format message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.Format
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.Format} Format
+		*/
+		Format.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.Format) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			return new $root.pb.Format();
+		};
+		/**
+		* Creates a plain object from a Format message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.Format
+		* @static
+		* @param {pb.Format} message Format
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		Format.toObject = function toObject() {
+			return {};
+		};
+		/**
+		* Converts this Format to JSON.
+		* @function toJSON
+		* @memberof pb.Format
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		Format.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for Format
+		* @function getTypeUrl
+		* @memberof pb.Format
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		Format.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.Format";
+		};
+		/**
+		* Enum enum.
+		* @name pb.Format.Enum
+		* @enum {number}
+		* @property {number} PLAIN=0 PLAIN value
+		* @property {number} MARKDOWN=1 MARKDOWN value
+		* @property {number} ASCIIDOC=2 ASCIIDOC value
+		*/
+		Format.Enum = (function() {
+			const valuesById = {}, values = Object.create(valuesById);
+			values[valuesById[0] = "PLAIN"] = 0;
+			values[valuesById[1] = "MARKDOWN"] = 1;
+			values[valuesById[2] = "ASCIIDOC"] = 2;
+			return values;
+		})();
+		return Format;
 	})();
 	pb.Revision = (function() {
 		/**
@@ -5334,181 +7155,6 @@ var pb = $root.pb = (() => {
 			return typeUrlPrefix + "/pb.RevisionDB";
 		};
 		return RevisionDB;
-	})();
-	pb.Format = (function() {
-		/**
-		* Properties of a Format.
-		* @memberof pb
-		* @interface IFormat
-		*/
-		/**
-		* Constructs a new Format.
-		* @memberof pb
-		* @classdesc Represents a Format.
-		* @implements IFormat
-		* @constructor
-		* @param {pb.IFormat=} [properties] Properties to set
-		*/
-		function Format(properties) {
-			if (properties) {
-				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
-			}
-		}
-		/**
-		* Creates a new Format instance using the specified properties.
-		* @function create
-		* @memberof pb.Format
-		* @static
-		* @param {pb.IFormat=} [properties] Properties to set
-		* @returns {pb.Format} Format instance
-		*/
-		Format.create = function create(properties) {
-			return new Format(properties);
-		};
-		/**
-		* Encodes the specified Format message. Does not implicitly {@link pb.Format.verify|verify} messages.
-		* @function encode
-		* @memberof pb.Format
-		* @static
-		* @param {pb.IFormat} message Format message or plain object to encode
-		* @param {$protobuf.Writer} [writer] Writer to encode to
-		* @returns {$protobuf.Writer} Writer
-		*/
-		Format.encode = function encode(message, writer) {
-			if (!writer) writer = $Writer.create();
-			return writer;
-		};
-		/**
-		* Encodes the specified Format message, length delimited. Does not implicitly {@link pb.Format.verify|verify} messages.
-		* @function encodeDelimited
-		* @memberof pb.Format
-		* @static
-		* @param {pb.IFormat} message Format message or plain object to encode
-		* @param {$protobuf.Writer} [writer] Writer to encode to
-		* @returns {$protobuf.Writer} Writer
-		*/
-		Format.encodeDelimited = function encodeDelimited(message, writer) {
-			return this.encode(message, writer).ldelim();
-		};
-		/**
-		* Decodes a Format message from the specified reader or buffer.
-		* @function decode
-		* @memberof pb.Format
-		* @static
-		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-		* @param {number} [length] Message length if known beforehand
-		* @returns {pb.Format} Format
-		* @throws {Error} If the payload is not a reader or valid buffer
-		* @throws {$protobuf.util.ProtocolError} If required fields are missing
-		*/
-		Format.decode = function decode(reader, length, error, long) {
-			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
-			if (long === void 0) long = 0;
-			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
-			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.Format();
-			while (reader.pos < end) {
-				let tag = reader.uint32();
-				if (tag === error) break;
-				switch (tag >>> 3) {
-					default:
-						reader.skipType(tag & 7, long);
-						break;
-				}
-			}
-			return message;
-		};
-		/**
-		* Decodes a Format message from the specified reader or buffer, length delimited.
-		* @function decodeDelimited
-		* @memberof pb.Format
-		* @static
-		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-		* @returns {pb.Format} Format
-		* @throws {Error} If the payload is not a reader or valid buffer
-		* @throws {$protobuf.util.ProtocolError} If required fields are missing
-		*/
-		Format.decodeDelimited = function decodeDelimited(reader) {
-			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
-			return this.decode(reader, reader.uint32());
-		};
-		/**
-		* Verifies a Format message.
-		* @function verify
-		* @memberof pb.Format
-		* @static
-		* @param {Object.<string,*>} message Plain object to verify
-		* @returns {string|null} `null` if valid, otherwise the reason why it is not
-		*/
-		Format.verify = function verify(message, long) {
-			if (typeof message !== "object" || message === null) return "object expected";
-			if (long === void 0) long = 0;
-			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
-			return null;
-		};
-		/**
-		* Creates a Format message from a plain object. Also converts values to their respective internal types.
-		* @function fromObject
-		* @memberof pb.Format
-		* @static
-		* @param {Object.<string,*>} object Plain object
-		* @returns {pb.Format} Format
-		*/
-		Format.fromObject = function fromObject(object, long) {
-			if (object instanceof $root.pb.Format) return object;
-			if (long === void 0) long = 0;
-			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
-			return new $root.pb.Format();
-		};
-		/**
-		* Creates a plain object from a Format message. Also converts values to other types if specified.
-		* @function toObject
-		* @memberof pb.Format
-		* @static
-		* @param {pb.Format} message Format
-		* @param {$protobuf.IConversionOptions} [options] Conversion options
-		* @returns {Object.<string,*>} Plain object
-		*/
-		Format.toObject = function toObject() {
-			return {};
-		};
-		/**
-		* Converts this Format to JSON.
-		* @function toJSON
-		* @memberof pb.Format
-		* @instance
-		* @returns {Object.<string,*>} JSON object
-		*/
-		Format.prototype.toJSON = function toJSON() {
-			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
-		};
-		/**
-		* Gets the default type url for Format
-		* @function getTypeUrl
-		* @memberof pb.Format
-		* @static
-		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-		* @returns {string} The default type url
-		*/
-		Format.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
-			return typeUrlPrefix + "/pb.Format";
-		};
-		/**
-		* Enum enum.
-		* @name pb.Format.Enum
-		* @enum {number}
-		* @property {number} PLAIN=0 PLAIN value
-		* @property {number} MARKDOWN=1 MARKDOWN value
-		* @property {number} ASCIIDOC=2 ASCIIDOC value
-		*/
-		Format.Enum = (function() {
-			const valuesById = {}, values = Object.create(valuesById);
-			values[valuesById[0] = "PLAIN"] = 0;
-			values[valuesById[1] = "MARKDOWN"] = 1;
-			values[valuesById[2] = "ASCIIDOC"] = 2;
-			return values;
-		})();
-		return Format;
 	})();
 	pb.OpenGraph = (function() {
 		/**
@@ -8234,7 +9880,7 @@ var pb = $root.pb = (() => {
 		* @memberof pb
 		* @interface IRenderArticleYear
 		* @property {number|null} [year] RenderArticleYear year
-		* @property {Array.<pb.IItemLite>|null} [list] RenderArticleYear list
+		* @property {Array.<pb.IRenderArticleItem>|null} [list] RenderArticleYear list
 		*/
 		/**
 		* Constructs a new RenderArticleYear.
@@ -8259,7 +9905,7 @@ var pb = $root.pb = (() => {
 		RenderArticleYear.prototype.year = 0;
 		/**
 		* RenderArticleYear list.
-		* @member {Array.<pb.IItemLite>} list
+		* @member {Array.<pb.IRenderArticleItem>} list
 		* @memberof pb.RenderArticleYear
 		* @instance
 		*/
@@ -8287,7 +9933,7 @@ var pb = $root.pb = (() => {
 		RenderArticleYear.encode = function encode(message, writer) {
 			if (!writer) writer = $Writer.create();
 			if (message.year != null && Object.hasOwnProperty.call(message, "year")) writer.uint32(8).uint32(message.year);
-			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.ItemLite.encode(message.list[i], writer.uint32(18).fork()).ldelim();
+			if (message.list != null && message.list.length) for (let i = 0; i < message.list.length; ++i) $root.pb.RenderArticleItem.encode(message.list[i], writer.uint32(18).fork()).ldelim();
 			return writer;
 		};
 		/**
@@ -8327,7 +9973,7 @@ var pb = $root.pb = (() => {
 						break;
 					case 2:
 						if (!(message.list && message.list.length)) message.list = [];
-						message.list.push($root.pb.ItemLite.decode(reader, reader.uint32(), void 0, long + 1));
+						message.list.push($root.pb.RenderArticleItem.decode(reader, reader.uint32(), void 0, long + 1));
 						break;
 					default:
 						reader.skipType(tag & 7, long);
@@ -8368,7 +10014,7 @@ var pb = $root.pb = (() => {
 			if (message.list != null && message.hasOwnProperty("list")) {
 				if (!Array.isArray(message.list)) return "list: array expected";
 				for (let i = 0; i < message.list.length; ++i) {
-					let error = $root.pb.ItemLite.verify(message.list[i], long + 1);
+					let error = $root.pb.RenderArticleItem.verify(message.list[i], long + 1);
 					if (error) return "list." + error;
 				}
 			}
@@ -8393,7 +10039,7 @@ var pb = $root.pb = (() => {
 				message.list = [];
 				for (let i = 0; i < object.list.length; ++i) {
 					if (typeof object.list[i] !== "object") throw TypeError(".pb.RenderArticleYear.list: object expected");
-					message.list[i] = $root.pb.ItemLite.fromObject(object.list[i], long + 1);
+					message.list[i] = $root.pb.RenderArticleItem.fromObject(object.list[i], long + 1);
 				}
 			}
 			return message;
@@ -8415,7 +10061,7 @@ var pb = $root.pb = (() => {
 			if (message.year != null && message.hasOwnProperty("year")) object.year = message.year;
 			if (message.list && message.list.length) {
 				object.list = [];
-				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.ItemLite.toObject(message.list[j], options);
+				for (let j = 0; j < message.list.length; ++j) object.list[j] = $root.pb.RenderArticleItem.toObject(message.list[j], options);
 			}
 			return object;
 		};
@@ -8639,6 +10285,247 @@ var pb = $root.pb = (() => {
 			return typeUrlPrefix + "/pb.RenderArticleIndex";
 		};
 		return RenderArticleIndex;
+	})();
+	pb.RenderArticleItem = (function() {
+		/**
+		* Properties of a RenderArticleItem.
+		* @memberof pb
+		* @interface IRenderArticleItem
+		* @property {number|null} [id] RenderArticleItem id
+		* @property {pb.IItemMetaV2|null} [meta] RenderArticleItem meta
+		* @property {number|null} [tsCreate] RenderArticleItem tsCreate
+		*/
+		/**
+		* Constructs a new RenderArticleItem.
+		* @memberof pb
+		* @classdesc Represents a RenderArticleItem.
+		* @implements IRenderArticleItem
+		* @constructor
+		* @param {pb.IRenderArticleItem=} [properties] Properties to set
+		*/
+		function RenderArticleItem(properties) {
+			if (properties) {
+				for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i) if (properties[keys[i]] != null && keys[i] !== "__proto__") this[keys[i]] = properties[keys[i]];
+			}
+		}
+		/**
+		* RenderArticleItem id.
+		* @member {number} id
+		* @memberof pb.RenderArticleItem
+		* @instance
+		*/
+		RenderArticleItem.prototype.id = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* RenderArticleItem meta.
+		* @member {pb.IItemMetaV2|null|undefined} meta
+		* @memberof pb.RenderArticleItem
+		* @instance
+		*/
+		RenderArticleItem.prototype.meta = null;
+		/**
+		* RenderArticleItem tsCreate.
+		* @member {number} tsCreate
+		* @memberof pb.RenderArticleItem
+		* @instance
+		*/
+		RenderArticleItem.prototype.tsCreate = $util.Long ? $util.Long.fromBits(0, 0, true) : 0;
+		/**
+		* Creates a new RenderArticleItem instance using the specified properties.
+		* @function create
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {pb.IRenderArticleItem=} [properties] Properties to set
+		* @returns {pb.RenderArticleItem} RenderArticleItem instance
+		*/
+		RenderArticleItem.create = function create(properties) {
+			return new RenderArticleItem(properties);
+		};
+		/**
+		* Encodes the specified RenderArticleItem message. Does not implicitly {@link pb.RenderArticleItem.verify|verify} messages.
+		* @function encode
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {pb.IRenderArticleItem} message RenderArticleItem message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		RenderArticleItem.encode = function encode(message, writer) {
+			if (!writer) writer = $Writer.create();
+			if (message.id != null && Object.hasOwnProperty.call(message, "id")) writer.uint32(8).uint64(message.id);
+			if (message.meta != null && Object.hasOwnProperty.call(message, "meta")) $root.pb.ItemMetaV2.encode(message.meta, writer.uint32(18).fork()).ldelim();
+			if (message.tsCreate != null && Object.hasOwnProperty.call(message, "tsCreate")) writer.uint32(48).uint64(message.tsCreate);
+			return writer;
+		};
+		/**
+		* Encodes the specified RenderArticleItem message, length delimited. Does not implicitly {@link pb.RenderArticleItem.verify|verify} messages.
+		* @function encodeDelimited
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {pb.IRenderArticleItem} message RenderArticleItem message or plain object to encode
+		* @param {$protobuf.Writer} [writer] Writer to encode to
+		* @returns {$protobuf.Writer} Writer
+		*/
+		RenderArticleItem.encodeDelimited = function encodeDelimited(message, writer) {
+			return this.encode(message, writer).ldelim();
+		};
+		/**
+		* Decodes a RenderArticleItem message from the specified reader or buffer.
+		* @function decode
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @param {number} [length] Message length if known beforehand
+		* @returns {pb.RenderArticleItem} RenderArticleItem
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		RenderArticleItem.decode = function decode(reader, length, error, long) {
+			if (!(reader instanceof $Reader)) reader = $Reader.create(reader);
+			if (long === void 0) long = 0;
+			if (long > $Reader.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let end = length === void 0 ? reader.len : reader.pos + length, message = new $root.pb.RenderArticleItem();
+			while (reader.pos < end) {
+				let tag = reader.uint32();
+				if (tag === error) break;
+				switch (tag >>> 3) {
+					case 1:
+						message.id = reader.uint64();
+						break;
+					case 2:
+						message.meta = $root.pb.ItemMetaV2.decode(reader, reader.uint32(), void 0, long + 1);
+						break;
+					case 6:
+						message.tsCreate = reader.uint64();
+						break;
+					default:
+						reader.skipType(tag & 7, long);
+						break;
+				}
+			}
+			return message;
+		};
+		/**
+		* Decodes a RenderArticleItem message from the specified reader or buffer, length delimited.
+		* @function decodeDelimited
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+		* @returns {pb.RenderArticleItem} RenderArticleItem
+		* @throws {Error} If the payload is not a reader or valid buffer
+		* @throws {$protobuf.util.ProtocolError} If required fields are missing
+		*/
+		RenderArticleItem.decodeDelimited = function decodeDelimited(reader) {
+			if (!(reader instanceof $Reader)) reader = new $Reader(reader);
+			return this.decode(reader, reader.uint32());
+		};
+		/**
+		* Verifies a RenderArticleItem message.
+		* @function verify
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {Object.<string,*>} message Plain object to verify
+		* @returns {string|null} `null` if valid, otherwise the reason why it is not
+		*/
+		RenderArticleItem.verify = function verify(message, long) {
+			if (typeof message !== "object" || message === null) return "object expected";
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) return "maximum nesting depth exceeded";
+			if (message.id != null && message.hasOwnProperty("id")) {
+				if (!$util.isInteger(message.id) && !(message.id && $util.isInteger(message.id.low) && $util.isInteger(message.id.high))) return "id: integer|Long expected";
+			}
+			if (message.meta != null && message.hasOwnProperty("meta")) {
+				let error = $root.pb.ItemMetaV2.verify(message.meta, long + 1);
+				if (error) return "meta." + error;
+			}
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) {
+				if (!$util.isInteger(message.tsCreate) && !(message.tsCreate && $util.isInteger(message.tsCreate.low) && $util.isInteger(message.tsCreate.high))) return "tsCreate: integer|Long expected";
+			}
+			return null;
+		};
+		/**
+		* Creates a RenderArticleItem message from a plain object. Also converts values to their respective internal types.
+		* @function fromObject
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {Object.<string,*>} object Plain object
+		* @returns {pb.RenderArticleItem} RenderArticleItem
+		*/
+		RenderArticleItem.fromObject = function fromObject(object, long) {
+			if (object instanceof $root.pb.RenderArticleItem) return object;
+			if (long === void 0) long = 0;
+			if (long > $util.recursionLimit) throw Error("maximum nesting depth exceeded");
+			let message = new $root.pb.RenderArticleItem();
+			if (object.id != null) {
+				if ($util.Long) (message.id = $util.Long.fromValue(object.id)).unsigned = true;
+				else if (typeof object.id === "string") message.id = parseInt(object.id, 10);
+				else if (typeof object.id === "number") message.id = object.id;
+				else if (typeof object.id === "object") message.id = new $util.LongBits(object.id.low >>> 0, object.id.high >>> 0).toNumber(true);
+			}
+			if (object.meta != null) {
+				if (typeof object.meta !== "object") throw TypeError(".pb.RenderArticleItem.meta: object expected");
+				message.meta = $root.pb.ItemMetaV2.fromObject(object.meta, long + 1);
+			}
+			if (object.tsCreate != null) {
+				if ($util.Long) (message.tsCreate = $util.Long.fromValue(object.tsCreate)).unsigned = true;
+				else if (typeof object.tsCreate === "string") message.tsCreate = parseInt(object.tsCreate, 10);
+				else if (typeof object.tsCreate === "number") message.tsCreate = object.tsCreate;
+				else if (typeof object.tsCreate === "object") message.tsCreate = new $util.LongBits(object.tsCreate.low >>> 0, object.tsCreate.high >>> 0).toNumber(true);
+			}
+			return message;
+		};
+		/**
+		* Creates a plain object from a RenderArticleItem message. Also converts values to other types if specified.
+		* @function toObject
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {pb.RenderArticleItem} message RenderArticleItem
+		* @param {$protobuf.IConversionOptions} [options] Conversion options
+		* @returns {Object.<string,*>} Plain object
+		*/
+		RenderArticleItem.toObject = function toObject(message, options) {
+			if (!options) options = {};
+			let object = {};
+			if (options.defaults) {
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.id = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.id = options.longs === String ? "0" : 0;
+				object.meta = null;
+				if ($util.Long) {
+					let long = new $util.Long(0, 0, true);
+					object.tsCreate = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+				} else object.tsCreate = options.longs === String ? "0" : 0;
+			}
+			if (message.id != null && message.hasOwnProperty("id")) if (typeof message.id === "number") object.id = options.longs === String ? String(message.id) : message.id;
+			else object.id = options.longs === String ? $util.Long.prototype.toString.call(message.id) : options.longs === Number ? new $util.LongBits(message.id.low >>> 0, message.id.high >>> 0).toNumber(true) : message.id;
+			if (message.meta != null && message.hasOwnProperty("meta")) object.meta = $root.pb.ItemMetaV2.toObject(message.meta, options);
+			if (message.tsCreate != null && message.hasOwnProperty("tsCreate")) if (typeof message.tsCreate === "number") object.tsCreate = options.longs === String ? String(message.tsCreate) : message.tsCreate;
+			else object.tsCreate = options.longs === String ? $util.Long.prototype.toString.call(message.tsCreate) : options.longs === Number ? new $util.LongBits(message.tsCreate.low >>> 0, message.tsCreate.high >>> 0).toNumber(true) : message.tsCreate;
+			return object;
+		};
+		/**
+		* Converts this RenderArticleItem to JSON.
+		* @function toJSON
+		* @memberof pb.RenderArticleItem
+		* @instance
+		* @returns {Object.<string,*>} JSON object
+		*/
+		RenderArticleItem.prototype.toJSON = function toJSON() {
+			return this.constructor.toObject(this, import_minimal.default.util.toJSONOptions);
+		};
+		/**
+		* Gets the default type url for RenderArticleItem
+		* @function getTypeUrl
+		* @memberof pb.RenderArticleItem
+		* @static
+		* @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+		* @returns {string} The default type url
+		*/
+		RenderArticleItem.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+			if (typeUrlPrefix === void 0) typeUrlPrefix = "type.googleapis.com";
+			return typeUrlPrefix + "/pb.RenderArticleItem";
+		};
+		return RenderArticleItem;
 	})();
 	pb.UploadRsp = (function() {
 		/**
@@ -8975,7 +10862,7 @@ var showError = (form, e) => {
 var Edit = class {
 	id;
 	root;
-	item = pb.Item.create({ "meta": { "original": true } });
+	item = pb.ItemV2.create({ "meta": { "original": true } });
 	constructor(url, root) {
 		this.root = root;
 		this.id = Number(url.searchParams.get("id")) | 0;
@@ -8988,7 +10875,7 @@ var Edit = class {
 	async getData() {
 		const it = await api.itemGet(this.id);
 		if (!it) return;
-		this.item = pb.Item.create(it);
+		this.item = pb.ItemV2.create(it);
 		this.genHTML();
 	}
 	genHTML() {
@@ -9080,7 +10967,7 @@ var tplItemList = (li, div) => {
 };
 var tplItemRow = (it) => {
 	const d = document.createElement("div");
-	const datetime = formatDateTime(it.meta.tsCreate);
+	const datetime = formatDateTime(it.tsCreate);
 	d.innerHTML = `<div>
 		<div><a href="${`?action=edit&id=${it.id}`}" target="_blank">${it.id}</a></div>
 		<div class="content">${escapeHtml(it.content.raw)}</div>
@@ -9282,4 +11169,4 @@ var FileList = class {
 })();
 //#endregion
 
-//# sourceMappingURL=index-BYoEbn69.js.map
+//# sourceMappingURL=index-CR13AUYg.js.map
