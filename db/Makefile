@@ -1,7 +1,10 @@
 SHELL:=/usr/bin/env bash
 
-reset:
-	psql < ./table-init.sql
+dump:
+	./dump.sh
 
-migrate:
-	curl localhost:22709/api/migrate
+#reset:
+#	psql < ./table-init.sql
+#
+#migrate:
+#	curl localhost:22709/api/migrate

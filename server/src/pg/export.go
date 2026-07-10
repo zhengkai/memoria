@@ -19,7 +19,7 @@ type ExportRow struct {
 
 func (p *PG) GetExportTime() (t time.Time, err error) {
 
-	query := `SELECT time FROM export_time WHERE export_id = $1`
+	query := `SELECT time FROM public.export_time WHERE export_id = $1`
 	ctx, cancel := util.CTXTimeoutQuick()
 	err = p.p.QueryRow(ctx, query, exportTimeIDMain).Scan(&t)
 	cancel()
