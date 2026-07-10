@@ -5,7 +5,6 @@ import (
 	"os"
 	"project/build"
 	"project/config"
-	"project/db"
 	"project/pg"
 	"project/public"
 	"project/util"
@@ -29,7 +28,7 @@ func run() {
 		if !config.Prod {
 			go public.Handle.Run()
 		}
-		db.WaitConn()
+		// db.WaitConn()
 		pg.Init()
 	}
 
